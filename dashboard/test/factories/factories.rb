@@ -179,6 +179,20 @@ FactoryGirl.define do
           user.save validate: false
         end
       end
+
+      # We added validation to user accounts and some time which required
+      # teacher accounts to have emails. However, there were already existing
+      # teacher accounts which didn't have an email. Some of these have not yet
+      # been updated, so we need to make sure our system can handle them
+      # gracefully.
+      # FND-1130: This trait will no longer be required
+      trait :before_email_validation do
+        after(:create) do |user|
+          # Account created one day before the requirements were added.
+          user.created_at = User::DATE_TEACHER_EMAIL_REQUIREMENT_ADDED - 1
+          user.save validate: false
+        end
+      end
     end
 
     factory :student do
@@ -625,12 +639,6 @@ FactoryGirl.define do
 
   factory :level_source_image do
     level_source
-  end
-
-  factory :gallery_activity do
-    user
-    user_level {create(:user_level)}
-    level_source {create(:level_source, :with_image, level: user_level.level)}
   end
 
   factory :assessment_activity do

@@ -35,7 +35,7 @@ class Script < ActiveRecord::Base
 
   include Seeded
   has_many :levels, through: :script_levels
-  has_many :lesson_groups, dependent: :destroy
+  has_many :lesson_groups, -> {order('position ASC')}, dependent: :destroy
   has_many :script_levels, -> {order('chapter ASC')}, dependent: :destroy, inverse_of: :script # all script levels, even those w/ lessons, are ordered by chapter, see Script#add_script
   has_many :lessons, -> {order('absolute_position ASC')}, dependent: :destroy, inverse_of: :script, class_name: 'Lesson'
   has_many :users, through: :user_scripts
@@ -110,12 +110,12 @@ class Script < ActiveRecord::Base
       )
 
       lessons.reload
-      lessons.each do |stage|
-        lm = Plc::LearningModule.find_or_initialize_by(stage_id: stage.id)
+      lessons.each do |lesson|
+        lm = Plc::LearningModule.find_or_initialize_by(stage_id: lesson.id)
         lm.update!(
           plc_course_unit_id: unit.id,
-          name: stage.name,
-          module_type: stage.flex_category.try(:downcase) || Plc::LearningModule::REQUIRED_MODULE,
+          name: lesson.name,
+          module_type: lesson.lesson_group&.key.presence || Plc::LearningModule::REQUIRED_MODULE,
         )
       end
     end
@@ -130,7 +130,7 @@ class Script < ActiveRecord::Base
     project_widget_visible
     project_widget_types
     teacher_resources
-    stage_extras_available
+    lesson_extras_available
     has_verified_resources
     has_lesson_plan
     curriculum_path
@@ -201,8 +201,8 @@ class Script < ActiveRecord::Base
     Script.get_from_cache(Script::ARTIST_NAME)
   end
 
-  def self.stage_extras_script_ids
-    @@stage_extras_scripts ||= Script.all.select(&:stage_extras_available?).pluck(:id)
+  def self.lesson_extras_script_ids
+    @@lesson_extras_scripts ||= Script.all.select(&:lesson_extras_available?).pluck(:id)
   end
 
   def self.maker_unit_scripts
@@ -763,12 +763,12 @@ class Script < ActiveRecord::Base
     script_levels[chapter - 1] # order is by chapter
   end
 
-  def get_bonus_script_levels(current_stage)
+  def get_bonus_script_levels(current_stage, current_user)
     unless @all_bonus_script_levels
       @all_bonus_script_levels = lessons.map do |stage|
         {
           stageNumber: stage.relative_position,
-          levels: stage.script_levels.select(&:bonus).map(&:summarize_as_bonus)
+          levels: stage.script_levels.select(&:bonus).map {|bonus_level| bonus_level.summarize_as_bonus(current_user&.id)}
         }
       end
       @all_bonus_script_levels.select! {|stage| stage[:levels].any?}
@@ -875,6 +875,7 @@ class Script < ActiveRecord::Base
         name = "#{base_name}-#{new_suffix}" if new_suffix
         script_data, i18n = ScriptDSL.parse_file(script, name)
 
+        lesson_groups = script_data[:lesson_groups]
         lessons = script_data[:stages]
         custom_i18n.deep_merge!(i18n)
         # TODO: below is duplicated in update_text. and maybe can be refactored to pass script_data?
@@ -887,12 +888,12 @@ class Script < ActiveRecord::Base
           new_name: script_data[:new_name],
           family_name: script_data[:family_name],
           properties: Script.build_property_hash(script_data).merge(new_properties)
-        }, lessons]
+        }, lesson_groups, lessons]
       end
 
       # Stable sort by ID then add each script, ensuring scripts with no ID end up at the end
-      added_scripts = scripts_to_add.sort_by.with_index {|args, idx| [args[0][:id] || Float::INFINITY, idx]}.map do |options, raw_lessons|
-        add_script(options, raw_lessons, new_suffix: new_suffix, editor_experiment: new_properties[:editor_experiment])
+      added_scripts = scripts_to_add.sort_by.with_index {|args, idx| [args[0][:id] || Float::INFINITY, idx]}.map do |options, raw_lesson_groups, raw_lessons|
+        add_script(options, raw_lesson_groups, raw_lessons, new_suffix: new_suffix, editor_experiment: new_properties[:editor_experiment])
       end
       [added_scripts, custom_i18n]
     end
@@ -900,17 +901,72 @@ class Script < ActiveRecord::Base
 
   # if new_suffix is specified, copy the script, hide it, and copy all its
   # levelbuilder-defined levels.
-  def self.add_script(options, raw_lessons, new_suffix: nil, editor_experiment: nil)
+  def self.add_script(options, raw_lesson_groups, raw_lessons, new_suffix: nil, editor_experiment: nil)
     raw_script_levels = raw_lessons.map {|lesson| lesson[:scriptlevels]}.flatten
     script = fetch_script(options)
     script.update!(hidden: true) if new_suffix
     chapter = 0
     lesson_position = 0; script_level_position = Hash.new(0)
     script_lessons = []
+    script_lesson_groups = []
     script_levels_by_lesson = {}
     levels_by_key = script.levels.index_by(&:key)
     lockable_count = 0
     non_lockable_count = 0
+
+    unless raw_script_levels.empty?
+      if raw_lesson_groups.empty?
+        lesson_group = LessonGroup.find_or_create_by(
+          key: '',
+          script: script,
+          user_facing: false,
+          position: 0
+        )
+
+        script_lesson_groups << lesson_group
+      else
+        # Finds or creates Lesson Groups with the correct position.
+        # In addition it check for 3 things:
+        # 1. That all the lesson groups specified by the editor have a key and
+        # display name.
+        # 2. If the lesson group key is an existing key that the given display name
+        # for that key matches the already saved display name
+        # 3. PLC courses use certain lesson group keys for module types. We reserve those
+        # keys so they can only map to the display_name for their PLC purpose
+        raw_lesson_groups&.each_with_index do |raw_lesson_group, index|
+          Plc::LearningModule::RESERVED_LESSON_GROUPS_FOR_PLC.each do |reserved_lesson_group|
+            if reserved_lesson_group[:key] == raw_lesson_group[:key] && reserved_lesson_group[:display_name] != raw_lesson_group[:display_name]
+              raise "The key #{reserved_lesson_group[:key]} is a reserved key. It must have the display name: #{reserved_lesson_group[:display_name]}."
+            end
+          end
+          if raw_lesson_group[:display_name].blank?
+            raise "Expect all lesson groups to have display names. The following lesson group does not have a display name: #{raw_lesson_group[:key]}"
+          end
+
+          new_lesson_group = false
+
+          lesson_group = LessonGroup.find_or_create_by(
+            key: raw_lesson_group[:key],
+            script: script,
+            user_facing: true
+          ) do
+            # if you got in here, this is a new lesson_group
+            new_lesson_group = true
+          end
+
+          lesson_group.assign_attributes(position: index + 1)
+          lesson_group.save! if lesson_group.changed?
+
+          if !new_lesson_group && lesson_group.localized_display_name != raw_lesson_group[:display_name]
+            raise "Expect key and display name to match. The Lesson Group with key: #{raw_lesson_group[:key]} has display_name: #{lesson_group&.localized_display_name}"
+          end
+
+          script_lesson_groups << lesson_group
+        end
+      end
+    end
+
+    script.lesson_groups = script_lesson_groups
 
     # Overwrites current script levels
     script.script_levels = raw_script_levels.map do |raw_script_level|
@@ -919,7 +975,7 @@ class Script < ActiveRecord::Base
       assessment = nil
       named_level = nil
       bonus = nil
-      flex_category = nil
+      lesson_group_key = nil
       lockable = nil
 
       levels = raw_script_level[:levels].map do |raw_level|
@@ -934,7 +990,7 @@ class Script < ActiveRecord::Base
         assessment = raw_level.delete(:assessment)
         named_level = raw_level.delete(:named_level)
         bonus = raw_level.delete(:bonus)
-        flex_category = raw_level.delete(:stage_flex_category)
+        lesson_group_key = raw_level.delete(:lesson_group)
         lockable = !!raw_level.delete(:stage_lockable)
 
         key = raw_level.delete(:name)
@@ -996,17 +1052,33 @@ class Script < ActiveRecord::Base
       end || ScriptLevel.create!(script_level_attributes) do |sl|
         sl.levels = levels
       end
+
       # Set/create Lesson containing custom ScriptLevel
       if lesson_name
+        # We want a script to either have all of its lessons have lesson groups
+        # or none of the lessons have lesson groups. We know we have hit this case if
+        # there are lesson groups for a script but the lesson group key
+        # for this specific lesson is blank
+        if !lesson_group_key.present? && !raw_lesson_groups.empty?
+          raise "Expect if one lesson has a lesson group all lessons have lesson groups. Lesson #{lesson_name} does not have a lesson group."
+        end
+        # find the lesson group for this lesson
+        lesson_group = LessonGroup.find_by!(
+          key: lesson_group_key.presence || "",
+          script: script,
+          user_facing: lesson_group_key.present?
+        )
+
+        # check if that lesson exists for the script otherwise create a new lesson
         lesson = script.lessons.detect {|s| s.name == lesson_name} ||
           Lesson.find_or_create_by(
             name: lesson_name,
-            script: script,
+            script: script
           ) do |s|
             s.relative_position = 0 # will be updated below, but cant be null
           end
 
-        lesson.assign_attributes(flex_category: flex_category, lockable: lockable)
+        lesson.assign_attributes(lesson_group: lesson_group, lockable: lockable)
         lesson.save! if lesson.changed?
 
         script_level_attributes[:stage_id] = lesson.id
@@ -1053,16 +1125,43 @@ class Script < ActiveRecord::Base
       end
 
       raw_lesson = raw_lessons.find {|rs| rs[:stage].downcase == lesson.name.downcase}
-      lesson.stage_extras_disabled = raw_lesson[:stage_extras_disabled]
       lesson.visible_after = raw_lesson[:visible_after]
       lesson.save! if lesson.changed?
     end
+
+    Script.prevent_non_consecutive_lessons_with_same_lesson_group(script_lessons)
+    Script.prevent_lesson_group_with_no_lessons(script)
 
     script.lessons = script_lessons
     script.reload.lessons
     script.generate_plc_objects
 
     script
+  end
+
+  # All lesson groups should have lessons in them
+  def self.prevent_lesson_group_with_no_lessons(script)
+    script.lesson_groups.each do |lesson_group|
+      next if lesson_group.lessons.count > 0
+      raise "Every lesson group should have at least one lesson. Lesson Group #{lesson_group.key} has no lessons."
+    end
+  end
+
+  # Only consecutive lessons can have the same lesson group.
+  # Raise an error if non adjacent lessons have the same lesson
+  # group
+  def self.prevent_non_consecutive_lessons_with_same_lesson_group(script_lessons)
+    previous_lesson_groups = []
+    current_lesson_group = nil
+
+    script_lessons.each do |lesson|
+      next if lesson.lesson_group.key == current_lesson_group
+      if previous_lesson_groups.include?(lesson.lesson_group.key)
+        raise "Only consecutive lessons can have the same lesson group. Lesson Group #{lesson.lesson_group.key} is on two non-consecutive lessons."
+      end
+      previous_lesson_groups.append(current_lesson_group)
+      current_lesson_group = lesson.lesson_group.key
+    end
   end
 
   # Clone this script, appending a dash and the suffix to the name of this
@@ -1158,7 +1257,8 @@ class Script < ActiveRecord::Base
             family_name: general_params[:family_name].presence ? general_params[:family_name] : nil, # default nil
             properties: Script.build_property_hash(general_params)
           },
-          script_data[:stages],
+          script_data[:lesson_groups],
+          script_data[:stages]
         )
         if Rails.application.config.levelbuilder_mode
           Script.merge_and_write_i18n(i18n, script_name, metadata_i18n)
@@ -1261,6 +1361,9 @@ class Script < ActiveRecord::Base
   end
 
   def summarize(include_lessons = true, user = nil, include_bonus_levels = false)
+    # TODO: Set up peer reviews to be more consistent with the rest of the system
+    # so that they don't need a bunch of one off cases (example peer reviews
+    # don't have a lesson group in the database right now)
     if has_peer_reviews?
       levels = []
       peer_reviews_to_complete.times do |x|
@@ -1275,9 +1378,9 @@ class Script < ActiveRecord::Base
         }
       end
 
-      peer_review_stage = {
+      peer_review_lesson_info = {
         name: I18n.t('peer_review.review_count', {review_count: peer_reviews_to_complete}),
-        flex_category: 'Peer Review',
+        lesson_group_display_name: 'Peer Review',
         levels: levels,
         lockable: false
       }
@@ -1299,6 +1402,7 @@ class Script < ActiveRecord::Base
       beta_title: Script.beta?(name) ? I18n.t('beta') : nil,
       course_id: course.try(:id),
       hidden: hidden,
+      is_stable: is_stable,
       loginRequired: login_required,
       plc: professional_learning_course?,
       hideable_stages: hideable_stages?,
@@ -1306,12 +1410,14 @@ class Script < ActiveRecord::Base
       isHocScript: hoc?,
       csf: csf?,
       peerReviewsRequired: peer_reviews_to_complete || 0,
-      peerReviewStage: peer_review_stage,
+      peerReviewStage: peer_review_lesson_info, #TODO(dmcavoy) REMOVE AFTER A COUPLE DAYS April 2020
+      peerReviewLessonInfo: peer_review_lesson_info,
       student_detail_progress_view: student_detail_progress_view?,
       project_widget_visible: project_widget_visible?,
       project_widget_types: project_widget_types,
       teacher_resources: teacher_resources,
-      stage_extras_available: stage_extras_available,
+      stage_extras_available: lesson_extras_available, # TODO: remove after corresponding js code is changed and not cached anymore
+      lesson_extras_available: lesson_extras_available,
       has_verified_resources: has_verified_resources?,
       has_lesson_plan: has_lesson_plan?,
       curriculum_path: curriculum_path,
@@ -1459,29 +1565,45 @@ class Script < ActiveRecord::Base
     !Gatekeeper.allows('postMilestone', where: {script_name: name}, default: true)
   end
 
+  # Returns a property hash that always has the same keys, even if those keys were missing
+  # from the input. This ensures that values can be un-set via seeding or the script edit UI.
   def self.build_property_hash(script_data)
-    {
-      hideable_stages: script_data[:hideable_stages] || false, # default false
-      professional_learning_course: script_data[:professional_learning_course] || false, # default false
-      peer_reviews_to_complete: script_data[:peer_reviews_to_complete] || false,
-      student_detail_progress_view: script_data[:student_detail_progress_view] || false,
-      project_widget_visible: script_data[:project_widget_visible] || false,
-      project_widget_types: script_data[:project_widget_types] || false,
-      teacher_resources: script_data[:teacher_resources] || false,
-      stage_extras_available: script_data[:stage_extras_available] || false,
-      has_verified_resources: !!script_data[:has_verified_resources],
-      has_lesson_plan: !!script_data[:has_lesson_plan],
-      curriculum_path: script_data[:curriculum_path] || false,
-      script_announcements: script_data[:script_announcements] || false,
-      version_year: script_data[:version_year] || false,
-      is_stable: !!script_data[:is_stable],
-      supported_locales: script_data[:supported_locales] || false,
-      pilot_experiment: script_data[:pilot_experiment] || false,
-      editor_experiment: script_data[:editor_experiment] || false,
-      project_sharing: !!script_data[:project_sharing],
-      curriculum_umbrella: script_data[:curriculum_umbrella] || false,
-      tts: !!script_data[:tts]
-    }
+    nonboolean_keys = [
+      :hideable_stages,
+      :professional_learning_course,
+      :peer_reviews_to_complete,
+      :student_detail_progress_view,
+      :project_widget_visible,
+      :project_widget_types,
+      :stage_extras_available, # TODO: remove after corresponding dependencies are updated to use lesson_extras_available
+      :lesson_extras_available,
+      :curriculum_path,
+      :script_announcements,
+      :version_year,
+      :supported_locales,
+      :pilot_experiment,
+      :editor_experiment,
+      :curriculum_umbrella,
+    ]
+    boolean_keys = [
+      :has_verified_resources,
+      :has_lesson_plan,
+      :is_stable,
+      :project_sharing,
+      :tts
+    ]
+    not_defaulted_keys = [
+      :teacher_resources, # teacher_resources gets updated from the script edit UI through its own code path
+    ]
+
+    result = {}
+    # If a non-boolean prop was missing from the input, it'll get populated in the result hash as nil.
+    nonboolean_keys.each {|k| result[k] = script_data[k]}
+    # If a boolean prop was missing from the input, it'll get populated in the result hash as false.
+    boolean_keys.each {|k| result[k] = !!script_data[k]}
+    not_defaulted_keys.each {|k| result[k] = script_data[k] if script_data.keys.include?(k)}
+
+    result
   end
 
   # A script is considered to have a matching course if there is exactly one
@@ -1538,7 +1660,8 @@ class Script < ActiveRecord::Base
 
     info[:category] = I18n.t("data.script.category.#{info[:category]}_category_name", default: info[:category])
     info[:supported_locales] = supported_locale_names
-    info[:stage_extras_available] = stage_extras_available
+    # TODO: remove stage_extras_available after correesponding js change is deployed and not cached
+    info[:stage_extras_available] = info[:lesson_extras_available] = lesson_extras_available
     if has_standards_associations?
       info[:standards] = standards
     end

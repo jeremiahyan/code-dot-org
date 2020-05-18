@@ -1,36 +1,37 @@
 class FoormPreviewController < ApplicationController
   # GET '/foorm/preview/:name'
   def index
-    if Rails.env.production?
-      render_404
-      return
-    end
+    return render_404 if Rails.env.production?
 
     name = params[:name]
 
     form_questions, latest_version = Foorm::Form.get_questions_and_latest_version_for_name(name)
 
-    unless form_questions
-      render_404
-      return
-    end
+    return render_404 unless form_questions
 
     survey_data = {
       facilitators: [
         {
-          facilitatorId: 1,
-          facilitatorName: 'Alice'
+          facilitator_id: 1,
+          facilitator_name: 'Alice',
+          facilitator_position: 1
         },
         {
-          facilitatorId: 2,
-          facilitatorName: 'Bob'
+          facilitator_id: 2,
+          facilitator_name: 'Bob',
+          facilitator_position: 2
         },
         {
-          facilitatorId: 3,
-          facilitatorName: 'Chris'
+          facilitator_id: 3,
+          facilitator_name: 'Chris',
+          facilitator_position: 3
         }
       ],
-      workshop_course: "Summer Course"
+      workshop_course: "Summer Course",
+      workshop_subject: "Sample Subject",
+      regional_partner_name: "Regional Partner A",
+      is_virtual: false,
+      num_facilitators: 3
     }
 
     @script_data = {

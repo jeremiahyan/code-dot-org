@@ -712,7 +712,6 @@ class ActivitiesControllerTest < ActionController::TestCase
         post :milestone,
           params: @milestone_params.merge(
             user_id: 0,
-            save_to_gallery: 'true',
             image: Base64.encode64(@good_image)
           )
       end
@@ -722,10 +721,7 @@ class ActivitiesControllerTest < ActionController::TestCase
   end
 
   test 'sharing program with swear word returns error' do
-    # unless CDO.webpurify_key
-    # stub webpurify
-    WebPurify.stubs(:find_potential_profanity).returns true
-    # end
+    ProfanityFilter.stubs(:find_potential_profanity).returns 'shit'
 
     assert_does_not_create(LevelSource) do
       post :milestone, params: {
@@ -746,10 +742,7 @@ class ActivitiesControllerTest < ActionController::TestCase
   end
 
   test 'sharing program with swear word in German rejects word' do
-    # unless CDO.webpurify_key
-    # stub webpurify
-    WebPurify.stubs(:find_potential_profanity).returns true
-    # end
+    ProfanityFilter.stubs(:find_potential_profanity).returns 'scheiße'
 
     with_default_locale(:de) do
       assert_does_not_create(LevelSource) do
@@ -768,7 +761,7 @@ class ActivitiesControllerTest < ActionController::TestCase
   test 'sharing program with http error logs' do
     # allow sharing when there's an error, slog so it's possible to look up and review later
 
-    WebPurify.stubs(:find_potential_profanity).raises(OpenURI::HTTPError.new('something broke', 'fake io'))
+    ProfanityFilter.stubs(:find_potential_profanity).raises(OpenURI::HTTPError.new('something broke', 'fake io'))
     @controller.expects(:slog).with(:tag) {|params| params[:tag] == 'activity_finish'}
 
     assert_creates(LevelSource) do
@@ -788,7 +781,7 @@ class ActivitiesControllerTest < ActionController::TestCase
   end
 
   test 'sharing program with IO::EAGAINWaitReadable error logs' do
-    WebPurify.stubs(:find_potential_profanity).raises(IO::EAGAINWaitReadable)
+    ProfanityFilter.stubs(:find_potential_profanity).raises(IO::EAGAINWaitReadable)
     # allow sharing when there's an error, slog so it's possible to look up and review later
 
     @controller.expects(:slog).with(:tag) {|params| params[:tag] == 'activity_finish'}
@@ -810,10 +803,7 @@ class ActivitiesControllerTest < ActionController::TestCase
   end
 
   test 'sharing program with swear word in Spanish rejects word' do
-    # unless CDO.webpurify_key
-    # stub webpurify
-    WebPurify.stubs(:find_potential_profanity).returns true
-    # end
+    ProfanityFilter.stubs(:find_potential_profanity).returns 'putamadre'
 
     with_default_locale(:es) do
       assert_does_not_create(LevelSource) do
@@ -868,7 +858,7 @@ class ActivitiesControllerTest < ActionController::TestCase
   end
 
   test 'sharing when gatekeeper has disabled sharing for some other script still works' do
-    WebPurify.stubs(:find_potential_profanity).returns false
+    ProfanityFilter.stubs(:find_potential_profanity).returns nil
     Gatekeeper.set('shareEnabled', where: {script_name: 'Best script ever'}, value: false)
 
     post :milestone,
@@ -901,7 +891,7 @@ class ActivitiesControllerTest < ActionController::TestCase
       "stage 'Milestone Stage 1'; level 'Level 1'; level 'Level 2'; stage 'Milestone Stage 2'; level 'Level 3'",
       "a filename"
     )
-    script = Script.add_script({name: 'Milestone Script'}, script_dsl[0][:stages])
+    script = Script.add_script({name: 'Milestone Script'}, script_dsl[0][:lesson_groups], script_dsl[0][:stages])
 
     last_level_in_first_stage = script.lessons.first.script_levels.last
     post :milestone,
@@ -1033,9 +1023,8 @@ class ActivitiesControllerTest < ActionController::TestCase
     script = create :script
 
     # Create a LevelGroup level.
-    level = create :level_group, name: 'LevelGroupLevel1', type: 'LevelGroup'
+    level = create :level_group, :with_sublevels, name: 'LevelGroupLevel1'
     level.properties['title'] =  'Long assessment 1'
-    level.properties['pages'] = [{levels: ['level_free_response', 'level_multi_unsubmitted']}, {levels: ['level_multi_correct', 'level_multi_incorrect']}]
     level.properties['submittable'] = true
     level.save!
 

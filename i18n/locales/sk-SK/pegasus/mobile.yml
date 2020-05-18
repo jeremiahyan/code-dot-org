@@ -1407,6 +1407,7 @@
   user_header_gamelab: "Game Lab"
   user_header_playlab: "Play Lab"
   user_header_dance: "Tanečná Párty"
+  user_header_spritelab: "Sprite Lab"
   user_header_minecraft: "Minecraft"
   user_header_flappy: "Flappy"
   user_header_view_all: "Zobraziť všetky projekty..."
@@ -1420,7 +1421,7 @@
   sign_in_overview: 'Vaši študenti sa môžu prihlásiť do účtov Code.org pomocou nasledujúcich krokov:'
   sign_in_instruct_website: "Choďte na %{code_org_url}."
   sign_in_instruct_code: 'Vložte kód triedy: %{section_code}.'
-  sign_in_instruct_name: "Vyberte svoje meno."
+  sign_in_instruct_name: "Vyber svoje meno."
   sign_in_instruct_secret: "Vyberte správny prístupový %{secret}."
   sign_in_instruct_button: "Kliknite na tlačidlo \"Prihlásiť\"."
   sign_in_overview_cards: "Študenti nájdu všetky tieto informácie, vrátane prístupového %{secret}, na prihlasovacích kartičkách."

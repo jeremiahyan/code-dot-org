@@ -78,10 +78,6 @@ class DeleteAccountsHelper
       @log.puts "Cleaned #{updated_rows} OverflowActivity" if updated_rows > 0
     end
 
-    @log.puts "Cleaning GalleryActivity"
-    updated_rows = GalleryActivity.where(user_id: user_id).update_all(level_source_id: nil)
-    @log.puts "Cleaned #{updated_rows} GalleryActivity" if updated_rows > 0
-
     @log.puts "Cleaning AssessmentActivity"
     updated_rows = AssessmentActivity.where(user_id: user_id).update_all(level_source_id: nil)
     @log.puts "Cleaned #{updated_rows} AssessmentActivity" if updated_rows > 0
@@ -203,6 +199,13 @@ class DeleteAccountsHelper
 
   def remove_from_pardot_by_email(email)
     remove_from_pardot_and_contact_rollups @pegasus_db[:contact_rollups].where(email: email)
+  end
+
+  # Marks emails for deletion from Pardot via contact rollups process.
+  # Will eventually replace current steps in account deletion process
+  # that directly delete prospects via Pardot API.
+  def set_pardot_deletion_via_contact_rollups(email)
+    ContactRollupsPardotMemory.find_or_create_by(email: email).update(marked_for_deletion_at: Time.now.utc)
   end
 
   # Removes the StudioPerson record associated with the user IF it is not
@@ -329,6 +332,7 @@ class DeleteAccountsHelper
     remove_user_from_sections_as_student(user)
     remove_poste_data(user_email) if user_email&.present?
     remove_from_pardot_by_user_id(user.id)
+    set_pardot_deletion_via_contact_rollups(user_email) if user_email&.present?
     purge_unshared_studio_person(user)
     anonymize_user(user)
 
@@ -354,6 +358,7 @@ class DeleteAccountsHelper
 
     remove_poste_data(email)
     remove_from_pardot_by_email(email)
+    set_pardot_deletion_via_contact_rollups(email)
     clean_pegasus_forms_for_email(email)
   end
 

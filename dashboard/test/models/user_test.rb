@@ -679,10 +679,27 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
-  test "cannot create teacher without email" do
-    assert_does_not_create(User) do
-      User.create(user_type: User::TYPE_TEACHER, name: 'Bad Teacher', password: 'xxxxxxxx', provider: 'manual')
+  test "cannot create manual teacher without email" do
+    user = assert_does_not_create(User) do
+      User.create(user_type: User::TYPE_TEACHER, name: 'Bad Teacher',
+                  password: 'xxxxxxxx', provider: 'manual'
+      )
     end
+    assert_not_nil user.errors[:email]
+  end
+
+  # FND-1130: This test will no longer be required
+  test "teacher with no email created after 2016-06-14 should be invalid" do
+    user = create :teacher, :without_email
+    assert user.invalid?
+    assert_not_empty user.errors[:email]
+  end
+
+  # FND-1130: This test will no longer be required
+  test "teacher with no email created before 2016-06-14 should be valid" do
+    user = create :teacher, :without_email, :before_email_validation
+    assert user.valid?
+    assert_empty user.errors[:email]
   end
 
   test "cannot make an account without email a teacher" do
@@ -710,39 +727,6 @@ class UserTest < ActiveSupport::TestCase
       follower.student_user.update!(admin: true)
     end
     refute follower.student_user.reload.admin?
-  end
-
-  test "gallery" do
-    user = create(:user)
-    assert_equal [], user.gallery_activities
-
-    assert_does_not_create(GalleryActivity) do
-      create(:user_level, user: user)
-    end
-
-    ga2 = nil
-    assert_creates(GalleryActivity) do
-      user_level2 = create(:user_level, user: user)
-      ga2 = GalleryActivity.create!(
-        user: user,
-        user_level: user_level2
-      )
-    end
-
-    assert_does_not_create(GalleryActivity) do
-      create(:user_level, user: user)
-    end
-
-    ga4 = nil
-    assert_creates(GalleryActivity) do
-      user_level4 = create(:user_level, user: user)
-      ga4 = GalleryActivity.create!(
-        user: user,
-        user_level: user_level4
-      )
-    end
-
-    assert_equal [ga4, ga2], user.reload.gallery_activities
   end
 
   test "short name" do
@@ -1090,8 +1074,14 @@ class UserTest < ActiveSupport::TestCase
     sub_level1 = create :text_match, name: 'sublevel1'
     create :text_match, name: 'sublevel2'
 
-    level_group = create :level_group, name: 'LevelGroupLevel1', type: 'LevelGroup'
-    level_group.properties['pages'] = [{levels: ['level_multi1', 'level_multi2']}]
+    level_group_dsl = <<~DSL
+      name 'LevelGroupLevel1'
+
+      page
+      level 'sublevel1'
+      level 'sublevel2'
+    DSL
+    level_group = LevelGroup.create_from_level_builder({}, {name: 'LevelGroupLevel1', dsl_text: level_group_dsl})
 
     create(:script_level, script: script, levels: [level_group])
     create :user_script, user: user, script: script
@@ -3526,9 +3516,9 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
-  test 'stage_extras_enabled?' do
-    script = create :script, stage_extras_available: true
-    other_script = create :script, stage_extras_available: true
+  test 'lesson_extras_enabled?' do
+    script = create :script, lesson_extras_available: true
+    other_script = create :script, lesson_extras_available: true
     teacher = create :teacher
     student = create :student
 
@@ -3539,14 +3529,14 @@ class UserTest < ActiveSupport::TestCase
     section3 = create :section, stage_extras: true, script_id: other_script.id
     section3.add_student(teacher)
 
-    assert student.stage_extras_enabled?(script)
-    refute student.stage_extras_enabled?(other_script)
+    assert student.lesson_extras_enabled?(script)
+    refute student.lesson_extras_enabled?(other_script)
 
-    assert teacher.stage_extras_enabled?(script)
-    assert teacher.stage_extras_enabled?(other_script)
+    assert teacher.lesson_extras_enabled?(script)
+    assert teacher.lesson_extras_enabled?(other_script)
 
-    refute (create :student).stage_extras_enabled?(script)
-    assert (create :teacher).stage_extras_enabled?(script)
+    refute (create :student).lesson_extras_enabled?(script)
+    assert (create :teacher).lesson_extras_enabled?(script)
   end
 
   class HiddenIds < ActiveSupport::TestCase

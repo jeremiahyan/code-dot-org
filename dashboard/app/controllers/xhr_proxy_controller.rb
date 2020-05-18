@@ -50,6 +50,7 @@ class XhrProxyController < ApplicationController
     bible-api.com
     code.org
     compete.hsctf.com
+    covidtracking.com
     data.austintexas.gov
     data.cityofchicago.org
     data.gv.at
@@ -73,6 +74,7 @@ class XhrProxyController < ApplicationController
     quizlet.com
     rejseplanen.dk
     maker.ifttt.com
+    maps.googleapis.com
     noaa.gov
     numbersapi.com
     pastebin.com

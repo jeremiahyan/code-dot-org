@@ -7,6 +7,20 @@ class Api::V1::Pd::WorkshopSurveyFoormSubmissionsController < ApplicationControl
     facilitator_answers = answers["facilitators"]
     answers.delete("facilitators")
 
+    pd_session_id = params[:pd_session_id].blank? ? nil : params[:pd_session_id].to_i
+    day = params[:day].blank? ? nil : params[:day].to_i
+    form_name = params[:form_name].presence
+
+    if Pd::WorkshopSurveyFoormSubmission.has_submitted_form?(
+      params[:user_id].to_i,
+      params[:pd_workshop_id].to_i,
+      pd_session_id,
+      day,
+      form_name
+    )
+      return render json: {error: 'User has already submitted a response'}, status: :conflict
+    end
+
     survey_submission = ::Pd::WorkshopSurveyFoormSubmission.new(
       user_id: params[:user_id],
       pd_session_id: params[:pd_session_id],
@@ -38,13 +52,13 @@ class Api::V1::Pd::WorkshopSurveyFoormSubmissionsController < ApplicationControl
     survey_submission_ids = []
     if facilitator_answers
       facilitator_answers.each do |_, data|
-        next unless data["facilitatorId"]
+        next unless data["facilitator_id"]
         survey_submission = ::Pd::WorkshopSurveyFoormSubmission.new(
           user_id: params[:user_id],
           pd_session_id: params[:pd_session_id],
           pd_workshop_id: params[:pd_workshop_id],
           day: params[:day],
-          facilitator_id: data["facilitatorId"]
+          facilitator_id: data["facilitator_id"]
         )
         begin
           survey_submission.save_with_foorm_submission(data.to_json, params[:form_name], params[:form_version])

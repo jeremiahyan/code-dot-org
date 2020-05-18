@@ -4,6 +4,7 @@ require 'digest/sha1'
 require 'dynamic_config/gatekeeper'
 require 'firebase_token_generator'
 require 'image_size'
+require 'cdo/firehose'
 
 module LevelsHelper
   include ApplicationHelper
@@ -255,7 +256,7 @@ module LevelsHelper
     end
 
     # Blockly caches level properties, whereas this field depends on the user
-    @app_options['teacherMarkdown'] = @level.properties['teacher_markdown'] if I18n.en? && can_view_teacher_markdown?
+    @app_options['teacherMarkdown'] = @level.localized_teacher_markdown if can_view_teacher_markdown?
 
     @app_options[:dialog] = {
       skipSound: !!(@level.properties['options'].try(:[], 'skip_sound')),
@@ -787,7 +788,19 @@ module LevelsHelper
     return false unless level.game == Game.applab || level.game == Game.gamelab || level.game == Game.weblab
 
     if current_user && current_user.under_13? && current_user.terms_version.nil?
-      error_message = current_user.teachers.any? ? I18n.t("errors.messages.teacher_must_accept_terms") : I18n.t("errors.messages.too_young")
+      if current_user.teachers.any?
+        error_message = I18n.t("errors.messages.teacher_must_accept_terms")
+      else
+        error_message = I18n.t("errors.messages.too_young")
+        FirehoseClient.instance.put_record(
+          study: "redirect_under_13",
+          event: "student_with_no_teacher_redirected",
+          user_id: current_user.id,
+          data_json: {
+            game: level.game.name
+          }.to_json
+        )
+      end
       redirect_to '/', flash: {alert: error_message}
       return true
     end

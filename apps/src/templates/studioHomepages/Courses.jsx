@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import HeaderBanner from '../HeaderBanner';
-import {CourseBlocksAll} from './CourseBlocks';
+import {CourseBlocksIntl} from './CourseBlocks';
 import CoursesTeacherEnglish from './CoursesTeacherEnglish';
 import CoursesStudentEnglish from './CoursesStudentEnglish';
 import ProtectedStatefulDiv from '../ProtectedStatefulDiv';
@@ -106,13 +106,10 @@ class Courses extends Component {
 
         <ProtectedStatefulDiv ref="flashes" />
 
-        <SpecialAnnouncement isTeacher={isTeacher} />
-
         {/* English, teacher.  (Also can be shown when signed out.) */}
         {isEnglish && isTeacher && (
           <div>
-            {/* Hide the SpecialAnnouncementActionBlock for now in favor of SpecialAnnouncement since SpecialAnnouncementActionBlock is not translatable */}
-            {specialAnnouncement && false && (
+            {specialAnnouncement && (
               <SpecialAnnouncementActionBlock
                 announcement={specialAnnouncement}
               />
@@ -122,12 +119,17 @@ class Courses extends Component {
         )}
 
         {/* English, student.  (Also the default to be shown when signed out.) */}
-        {isEnglish && !isTeacher && <CoursesStudentEnglish />}
+        {isEnglish && !isTeacher && (
+          <div>
+            <SpecialAnnouncement isTeacher={isTeacher} />
+            <CoursesStudentEnglish />
+          </div>
+        )}
 
         {/* Non-English */}
         {!isEnglish && (
-          <CourseBlocksAll
-            isEnglish={false}
+          <CourseBlocksIntl
+            isTeacher={isTeacher}
             showModernElementaryCourses={modernElementaryCoursesAvailable}
           />
         )}

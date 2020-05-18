@@ -482,6 +482,9 @@ Dashboard::Application.routes.draw do
           get :fit_cohort
         end
       end
+
+      post 'foorm/form_with_library_items', action: :fill_in_library_items, controller: 'foorm'
+      get 'foorm/form_questions', action: :get_form_questions, controller: 'foorm'
     end
   end
 
@@ -563,7 +566,6 @@ Dashboard::Application.routes.draw do
 
   get '/dashboardapi/section_progress/:section_id', to: 'api#section_progress'
   get '/dashboardapi/section_text_responses/:section_id', to: 'api#section_text_responses'
-  get '/dashboardapi/student_progress/:section_id/:student_id', to: 'api#student_progress'
   scope 'dashboardapi', module: 'api/v1' do
     concerns :section_api_routes
     concerns :assessments_routes
@@ -591,7 +593,6 @@ Dashboard::Application.routes.draw do
   get '/dashboardapi/script_standards/:script', to: 'api#script_standards'
   get '/api/section_progress/:section_id', to: 'api#section_progress', as: 'section_progress'
   get '/dashboardapi/section_level_progress/:section_id', to: 'api#section_level_progress', as: 'section_level_progress'
-  get '/api/student_progress/:section_id/:student_id', to: 'api#student_progress', as: 'student_progress'
   get '/api/user_progress/:script', to: 'api#user_progress', as: 'user_progress'
   get '/api/user_progress/:script/:stage_position/:level_position', to: 'api#user_progress_for_stage', as: 'user_progress_for_stage'
   get '/api/user_progress/:script/:stage_position/:level_position/:level', to: 'api#user_progress_for_stage', as: 'user_progress_for_stage_and_level'
@@ -703,7 +704,13 @@ Dashboard::Application.routes.draw do
 
   get 'foorm/preview/:name', to: 'foorm_preview#index', constraints: {name: /.*/}
 
+  get 'foorm/editor', to: 'foorm_editor#index', constraints: {name: /.*/}
+
   post '/safe_browsing', to: 'safe_browsing#safe_to_open', defaults: {format: 'json'}
 
   get '/curriculum_tracking_pixel', to: 'curriculum_tracking_pixel#index'
+
+  post '/profanity/find', to: 'profanity#find'
+
+  get '/help', to: redirect("https://support.code.org")
 end

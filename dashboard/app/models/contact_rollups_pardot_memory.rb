@@ -2,21 +2,23 @@
 #
 # Table name: contact_rollups_pardot_memory
 #
-#  id                   :integer          not null, primary key
-#  email                :string(255)      not null
-#  pardot_id            :integer
-#  pardot_id_updated_at :datetime
-#  data_synced          :json
-#  data_synced_at       :datetime
-#  data_rejected_at     :datetime
-#  data_rejected_reason :string(255)
-#  created_at           :datetime         not null
-#  updated_at           :datetime         not null
+#  id                     :integer          not null, primary key
+#  email                  :string(255)      not null
+#  pardot_id              :integer
+#  pardot_id_updated_at   :datetime
+#  data_synced            :json
+#  data_synced_at         :datetime
+#  data_rejected_at       :datetime
+#  data_rejected_reason   :string(255)
+#  marked_for_deletion_at :datetime
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
 #
 # Indexes
 #
-#  index_contact_rollups_pardot_memory_on_email      (email) UNIQUE
-#  index_contact_rollups_pardot_memory_on_pardot_id  (pardot_id) UNIQUE
+#  index_contact_rollups_pardot_memory_on_email                   (email) UNIQUE
+#  index_contact_rollups_pardot_memory_on_marked_for_deletion_at  (marked_for_deletion_at)
+#  index_contact_rollups_pardot_memory_on_pardot_id               (pardot_id) UNIQUE
 #
 
 require 'cdo/contact_rollups/v2/pardot'
@@ -24,18 +26,89 @@ require 'cdo/contact_rollups/v2/pardot'
 class ContactRollupsPardotMemory < ApplicationRecord
   self.table_name = 'contact_rollups_pardot_memory'
 
-  # Retrieves new email-Pardot ID mappings from Pardot and saves them to the database.
-  # @param [Integer, nil] last_id retrieves only Pardot ID greater than this value
-  def self.add_and_update_pardot_ids(last_id = nil)
+  # Downloads and saves new email-Pardot ID mappings from Pardot.
+  # *Warning:* This method overwrites existing data.
+  #
+  # @param [Integer] last_id retrieves only Pardot ID greater than this value
+  # @param [Integer] limit the maximum number of Pardot prospects to download
+  def self.download_pardot_ids(last_id = nil, limit = nil)
     last_id ||= ContactRollupsPardotMemory.maximum(:pardot_id) || 0
+    fields = %w(id email)
 
-    PardotV2.retrieve_new_ids(last_id) do |mappings|
+    PardotV2.retrieve_prospects(last_id, fields, limit) do |prospects|
       current_time = Time.now.utc
-      batch = mappings.map {|item| item.merge(pardot_id_updated_at: current_time)}
+      batch = prospects.map do |item|
+        {
+          email: item['email'],
+          pardot_id: item['id'].to_i,
+          pardot_id_updated_at: current_time
+        }
+      end
 
       import! batch,
         validate: false,
         on_duplicate_key_update: [:pardot_id, :pardot_id_updated_at]
+    end
+  end
+
+  # Downloads and saves prospect data from Pardot.
+  # *Warning:* This method overwrites existing data.
+  #
+  # @param [Integer] last_id retrieves only Pardot ID greater than this value
+  # @param [Integer] limit the maximum number of Pardot prospects to download
+  def self.download_pardot_prospects(last_id = nil, limit = nil)
+    last_id ||= ContactRollupsPardotMemory.maximum(:pardot_id) || 0
+
+    # Note: db_* fields are sorted alphabetically
+    fields = %w(
+      id
+      email
+      db_City
+      db_Country
+      db_Form_Roles
+      db_Forms_Submitted
+      db_Has_Teacher_Account
+      db_Hour_of_Code_Organizer
+      db_Opt_In
+      db_Postal_Code
+      db_Professional_Learning_Attended
+      db_Professional_Learning_Enrolled
+      db_Roles
+      db_State
+    )
+
+    PardotV2.retrieve_prospects(last_id, fields, limit) do |prospects|
+      current_time = Time.now.utc
+      batch = prospects.map do |item|
+        {
+          email: item['email'],
+          pardot_id: item['id'].to_i,
+          pardot_id_updated_at: current_time,
+          data_synced: item.except('email', 'id'),
+          data_synced_at: current_time
+        }
+      end
+
+      import! batch,
+        validate: false,
+        on_duplicate_key_update: [:pardot_id, :pardot_id_updated_at, :data_synced, :data_synced_at]
+    end
+  end
+
+  def self.download_deleted_pardot_prospects(last_id = nil, limit = nil)
+    PardotV2.retrieve_prospects(last_id, %w(id email), limit, true) do |deleted_prospects|
+      current_time = Time.now.utc
+      batch = deleted_prospects.map do |item|
+        {
+          email: item['email'],
+          data_rejected_at: current_time,
+          data_rejected_reason: PardotHelpers::ERROR_PROSPECT_DELETED_FROM_PARDOT
+        }
+      end
+
+      import! batch,
+        validate: false,
+        on_duplicate_key_update: [:data_rejected_at, :data_rejected_reason]
     end
   end
 
@@ -82,7 +155,8 @@ class ContactRollupsPardotMemory < ApplicationRecord
   def self.query_new_contacts
     # New contacts are the ones exist in the production database but not in Pardot
     # (i.e., no valid Pardot IDs in contact_rollups_pardot_memory.)
-    # In addition, they must not be previously rejected by Pardot as invalid emails.
+    # In addition, they must not be previously rejected by Pardot as invalid emails
+    # or have been deleted by someone in Pardot.
     <<-SQL.squish
       SELECT processed.email, processed.data
       FROM contact_rollups_processed AS processed
@@ -90,6 +164,7 @@ class ContactRollupsPardotMemory < ApplicationRecord
         ON processed.email = pardot.email
       WHERE pardot.pardot_id IS NULL
         AND NOT (pardot.data_rejected_reason <=> '#{PardotHelpers::ERROR_INVALID_EMAIL}')
+        AND NOT (pardot.data_rejected_reason <=> '#{PardotHelpers::ERROR_PROSPECT_DELETED_FROM_PARDOT}')
     SQL
   end
 
@@ -97,6 +172,9 @@ class ContactRollupsPardotMemory < ApplicationRecord
     # Updated contacts are contacts that exist in both the production database and Pardot
     # (have valid Pardot IDs). However, their content or Pardot ID mappings have changed since the
     # last sync.
+    # We explicitly exclude contacts that have been deleted from Pardot,
+    # as attempting to update a prospect that has been deleted from Pardot
+    # will resuscitate it as an active prospect.
     <<-SQL.squish
       SELECT
         processed.email, processed.data,
@@ -111,10 +189,25 @@ class ContactRollupsPardotMemory < ApplicationRecord
           OR (processed.data->>'$.updated_at' > pardot.data_synced_at)
           OR (pardot.pardot_id_updated_at > pardot.data_synced_at)
         )
+        AND NOT (pardot.data_rejected_reason <=> '#{PardotHelpers::ERROR_PROSPECT_DELETED_FROM_PARDOT}')
     SQL
   end
 
-  # TODO: sync deleted contacts
+  # Deletes prospects from Pardot API that have been marked for deletion
+  # by the account deletion process.
+  def self.delete_pardot_prospects
+    emails = ContactRollupsPardotMemory.
+               where.not(marked_for_deletion_at: nil).
+               pluck(:email)
+
+    deleted_emails = []
+    emails.each do |email|
+      deleted_emails << email if PardotV2.delete_prospects_by_email(email)
+    end
+
+    # clean-up step to delete rows once they've been deleted from Pardot
+    ContactRollupsPardotMemory.where(email: deleted_emails).delete_all if deleted_emails.present?
+  end
 
   # Saves sync results to database.
   # @param [Array<Hash>] submissions an array of prospects that were synced/submitted to Pardot
