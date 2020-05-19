@@ -20,7 +20,6 @@ require 'aws-sdk-firehose'
 #   )
 
 ANALYSIS_EVENTS_STREAM_NAME = 'analysis-events'.freeze
-# TODO: DAYNE change this with the prod one.
 I18N_STRING_TRACKING_EVENTS_STREAM_NAME = 'i18n-string-tracking-events'.freeze
 
 class FirehoseClient
@@ -43,9 +42,9 @@ class FirehoseClient
     return unless Gatekeeper.allows('firehose', default: true)
 
     # convert the given data into the format Firehose expects
-    datas_with_common_values = []
+    records = []
     datas.each do |data|
-      datas_with_common_values << {data: add_common_values(data)}
+      records << create_record_from_data(add_common_values(data))
     end
 
     # don't update our Firehose tables on dev or test environments.
@@ -59,17 +58,17 @@ class FirehoseClient
     # at once. This will break up the list of records in multiple lists of
     # the max batch size and then upload those.
     i = 0
-    while i < datas_with_common_values.size
+    while i < records.size
       # get a batch of records to send
       batch_end = i + FIREHOSE_PUT_MAX_RECORDS
-      datas_with_common_values_batch = datas_with_common_values[i..batch_end]
-      responses = @firehose.put_record_batch(
+      records_batch = records[i..batch_end]
+      batch_response = @firehose.put_record_batch(
         {
           delivery_stream_name: stream_name,
-          records: {data: datas_with_common_values_batch.to_json}
+          records: records_batch
         }
       )
-      responses.each do |response|
+      batch_response.request_responses.each do |response|
         if response.error_code
           Honeybadger.notify(error_code: response.error_code, error_message: response.error_message)
         end
@@ -81,6 +80,7 @@ class FirehoseClient
     # TODO(suresh): if the exception is Firehose ServiceUnavailableException, we should consider
     # backing off and retrying.
     # See http://docs.aws.amazon.com/sdkforruby/api/Aws/Firehose/Client.html#put_record-instance_method.
+    CDO.log.info("firehose error=#{error}")
     Honeybadger.notify(error)
   end
 
@@ -103,5 +103,11 @@ class FirehoseClient
     )
     data_with_common_values[user_id] ||= current_user.id if current_user
     data_with_common_values
+  end
+
+  def create_record_from_data(data)
+    {
+      data: data.to_json
+    }
   end
 end
