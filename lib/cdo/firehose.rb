@@ -3,7 +3,7 @@ require 'aws-sdk-firehose'
 
 # A wrapper client to the AWS Firehose service.
 # @example
-#   FirehoseClient.instance.put_record(
+#   FirehoseClient.instance.put_record(ANALYSIS_EVENTS_STREAM_NAME,
 #     {
 #       study: 'underwater basket weaving', # REQUIRED
 #       study_group: 'control',             # OPTIONAL
@@ -19,7 +19,9 @@ require 'aws-sdk-firehose'
 #     }
 #   )
 
-STREAM_NAME = 'analysis-events'.freeze
+ANALYSIS_EVENTS_STREAM_NAME = 'analysis-events'.freeze
+# TODO: DAYNE change this with the prod one.
+I18N_STRING_TRACKING_EVENTS_STREAM_NAME = 'i18n-string-tracking-events'.freeze
 
 class FirehoseClient
   include Singleton
@@ -36,7 +38,7 @@ class FirehoseClient
     @firehose = Aws::Firehose::Client.new(region: REGION)
   end
 
-  def put_record_batch(datas)
+  def put_record_batch(stream_name, datas)
     return if datas.nil_or_empty?
     return unless Gatekeeper.allows('firehose', default: true)
 
@@ -48,7 +50,7 @@ class FirehoseClient
 
     # don't update our Firehose tables on dev or test environments.
     if [:development, :test].include? rack_env
-      CDO.log.info "Skipped sending record to #{STREAM_NAME}: "
+      CDO.log.info "Skipped sending record to #{stream_name}: "
       CDO.log.info datas
       return
     end
@@ -61,12 +63,17 @@ class FirehoseClient
       # get a batch of records to send
       batch_end = i + FIREHOSE_PUT_MAX_RECORDS
       datas_with_common_values_batch = datas_with_common_values[i..batch_end]
-      @firehose.put_record_batch(
+      responses = @firehose.put_record_batch(
         {
-          delivery_stream_name: STREAM_NAME,
-          records: datas_with_common_values_batch.to_json
+          delivery_stream_name: stream_name,
+          records: {data: datas_with_common_values_batch.to_json}
         }
       )
+      responses.each do |response|
+        if response.error_code
+          Honeybadger.notify(error_code: response.error_code, error_message: response.error_message)
+        end
+      end
       i += FIREHOSE_PUT_MAX_RECORDS
     end
   # Swallow and log all errors because an issue sending analytics should not prevent the caller from continuing.
@@ -79,8 +86,8 @@ class FirehoseClient
 
   # Posts a record to the analytics stream.
   # @param data [hash] The data to insert into the stream.
-  def put_record(data)
-    put_record_batch([data])
+  def put_record(stream_name, data)
+    put_record_batch(stream_name, [data])
   end
 
   private

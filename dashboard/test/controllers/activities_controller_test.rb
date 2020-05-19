@@ -6,7 +6,7 @@ class ActivitiesControllerTest < ActionController::TestCase
   include UsersHelper
 
   def stub_firehose
-    FirehoseClient.instance.stubs(:put_record).with do |args|
+    FirehoseClient.instance.stubs(:put_record).with do |_, args|
       @firehose_record = args
       true
     end

@@ -133,7 +133,7 @@ module OmniauthCallbacksControllerTests
     # Instead record the sequence of events logged, for easy validation in test cases.
     def stub_firehose
       @firehose_records = []
-      FirehoseClient.instance.stubs(:put_record).with do |args|
+      FirehoseClient.instance.stubs(:put_record).with do |_, args|
         @firehose_records << args
         true
       end
