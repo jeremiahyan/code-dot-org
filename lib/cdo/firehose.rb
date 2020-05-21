@@ -37,6 +37,9 @@ class FirehoseClient
     @firehose = Aws::Firehose::Client.new(region: REGION)
   end
 
+  # Posts records in batches to the given AWS Kinesis Firehose stream.
+  # @param stream_name [string] The Kinesis stream to send the data to.
+  # @param datas [array[hash]] The list of data to send to the stream.
   def put_record_batch(stream_name, datas)
     return if datas.nil_or_empty?
     return unless Gatekeeper.allows('firehose', default: true)
@@ -80,12 +83,12 @@ class FirehoseClient
     # TODO(suresh): if the exception is Firehose ServiceUnavailableException, we should consider
     # backing off and retrying.
     # See http://docs.aws.amazon.com/sdkforruby/api/Aws/Firehose/Client.html#put_record-instance_method.
-    CDO.log.info("firehose error=#{error}")
     Honeybadger.notify(error)
   end
 
-  # Posts a record to the analytics stream.
-  # @param data [hash] The data to insert into the stream.
+  # Posts a record to the given AWS Kinesis Firehose stream.
+  # @param stream_name [string] The Kinesis stream to send the data to.
+  # @param data [hash] The data to send to the stream.
   def put_record(stream_name, data)
     put_record_batch(stream_name, [data])
   end
@@ -105,6 +108,9 @@ class FirehoseClient
     data_with_common_values
   end
 
+  # Take the hash of data and converts it in the record structure which Firehose expects.
+  # @param data [hash] The data to add the key-value pairs to.
+  # @return [hash] a hash which the Firehose API will accept.
   def create_record_from_data(data)
     {
       data: data.to_json

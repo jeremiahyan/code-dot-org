@@ -148,7 +148,7 @@ module Cdo
         result = super(locale, key, options)
         url = RequestStore.store[:current_request_url]
         normalized_key = key.to_s.downcase
-        I18nStringUrlTracker.log_association(normalized_key, url) if key && url
+        I18nStringUrlTracker.instance.log_association(normalized_key, url) if key && url
         result
       end
     end
