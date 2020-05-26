@@ -95,25 +95,50 @@ class ContactRollupsPardotMemory < ApplicationRecord
     end
   end
 
-  def self.create_new_pardot_prospects
+  def self.download_deleted_pardot_prospects(last_id = nil, limit = nil)
+    PardotV2.retrieve_prospects(last_id, %w(id email), limit, true) do |deleted_prospects|
+      current_time = Time.now.utc
+      batch = deleted_prospects.map do |item|
+        {
+          email: item['email'],
+          data_rejected_at: current_time,
+          data_rejected_reason: PardotHelpers::ERROR_PROSPECT_DELETED_FROM_PARDOT
+        }
+      end
+
+      import! batch,
+        validate: false,
+        on_duplicate_key_update: [:data_rejected_at, :data_rejected_reason]
+    end
+  end
+
+  def self.create_new_pardot_prospects(is_dry_run: false)
+    record_count = 0
+
     # Adds contacts to a batch and then sends batch requests to create new Pardot prospects.
     # Requests may not be sent immediately until batch size is big enough.
-    pardot_writer = PardotV2.new
+    pardot_writer = PardotV2.new is_dry_run: is_dry_run
     ActiveRecord::Base.connection.exec_query(query_new_contacts).each do |record|
+      record_count += 1
       data = JSON.parse(record['data']).deep_symbolize_keys
       submissions, errors = pardot_writer.batch_create_prospects record['email'], data
-      save_sync_results(submissions, errors, Time.now.utc) if submissions.present?
+      save_sync_results(submissions, errors, Time.now.utc, is_dry_run)
     end
 
     # There could be prospects left in the batch because batch size is not yet big enough
     # to trigger a Pardot request. Sends the remaining of the batch to Pardot now.
     submissions, errors = pardot_writer.batch_create_remaining_prospects
-    save_sync_results(submissions, errors, Time.now.utc) if submissions.present?
+    save_sync_results(submissions, errors, Time.now.utc, is_dry_run)
+
+    CDO.log.info "[Total] #{record_count} new prospects to be added" if is_dry_run
   end
 
-  def self.update_pardot_prospects
-    pardot_writer = PardotV2.new
+  def self.update_pardot_prospects(is_dry_run: false)
+    record_count = 0
+    pardot_writer = PardotV2.new is_dry_run: is_dry_run
     ActiveRecord::Base.connection.exec_query(query_updated_contacts).each do |record|
+      record_count += 1
+
       # If pardot_id has changed since the last data sync, we should assume that
       # Pardot prospect data is currently empty and re-sync all contact data.
       old_prospect_data =
@@ -128,17 +153,20 @@ class ContactRollupsPardotMemory < ApplicationRecord
         old_prospect_data,
         new_contact_data
       )
-      save_sync_results(submissions, errors, Time.now.utc) if submissions.present?
+      save_sync_results(submissions, errors, Time.now.utc, is_dry_run)
     end
 
     submissions, errors = pardot_writer.batch_update_remaining_prospects
-    save_sync_results(submissions, errors, Time.now.utc) if submissions.present?
+    save_sync_results(submissions, errors, Time.now.utc, is_dry_run)
+
+    CDO.log.info "[Total] #{record_count} prospects to be updated" if is_dry_run
   end
 
   def self.query_new_contacts
     # New contacts are the ones exist in the production database but not in Pardot
     # (i.e., no valid Pardot IDs in contact_rollups_pardot_memory.)
-    # In addition, they must not be previously rejected by Pardot as invalid emails.
+    # In addition, they must not be previously rejected by Pardot as invalid emails
+    # or have been deleted by someone in Pardot.
     <<-SQL.squish
       SELECT processed.email, processed.data
       FROM contact_rollups_processed AS processed
@@ -146,6 +174,7 @@ class ContactRollupsPardotMemory < ApplicationRecord
         ON processed.email = pardot.email
       WHERE pardot.pardot_id IS NULL
         AND NOT (pardot.data_rejected_reason <=> '#{PardotHelpers::ERROR_INVALID_EMAIL}')
+        AND NOT (pardot.data_rejected_reason <=> '#{PardotHelpers::ERROR_PROSPECT_DELETED_FROM_PARDOT}')
     SQL
   end
 
@@ -153,6 +182,9 @@ class ContactRollupsPardotMemory < ApplicationRecord
     # Updated contacts are contacts that exist in both the production database and Pardot
     # (have valid Pardot IDs). However, their content or Pardot ID mappings have changed since the
     # last sync.
+    # We explicitly exclude contacts that have been deleted from Pardot,
+    # as attempting to update a prospect that has been deleted from Pardot
+    # will resuscitate it as an active prospect.
     <<-SQL.squish
       SELECT
         processed.email, processed.data,
@@ -167,17 +199,35 @@ class ContactRollupsPardotMemory < ApplicationRecord
           OR (processed.data->>'$.updated_at' > pardot.data_synced_at)
           OR (pardot.pardot_id_updated_at > pardot.data_synced_at)
         )
+        AND NOT (pardot.data_rejected_reason <=> '#{PardotHelpers::ERROR_PROSPECT_DELETED_FROM_PARDOT}')
     SQL
   end
 
-  # TODO: sync deleted contacts
+  # Deletes prospects from Pardot API that have been marked for deletion
+  # by the account deletion process.
+  def self.delete_pardot_prospects
+    emails = ContactRollupsPardotMemory.
+               where.not(marked_for_deletion_at: nil).
+               pluck(:email)
+
+    deleted_emails = []
+    emails.each do |email|
+      deleted_emails << email if PardotV2.delete_prospects_by_email(email)
+    end
+
+    # clean-up step to delete rows once they've been deleted from Pardot
+    ContactRollupsPardotMemory.where(email: deleted_emails).delete_all if deleted_emails.present?
+  end
 
   # Saves sync results to database.
   # @param [Array<Hash>] submissions an array of prospects that were synced/submitted to Pardot
   # @param [Array<Hash>] errors an array of hashes, each containing an index and an error message
   #   of a rejected prospect. Rejected prospects are a subset of all prospects submitted to Pardot.
+  # @param [Boolean] whether this is a dry run of the pipeline and sync to database should be skipped.
   # @param [Time] submitted_time time when submissions were sent to Pardot
-  def self.save_sync_results(submissions, errors, submitted_time)
+  def self.save_sync_results(submissions, errors, submitted_time, is_dry_run)
+    return if submissions.blank? || is_dry_run
+
     rejected_indexes = Set.new errors.pluck(:prospect_index)
     accepted_submissions = submissions.reject.with_index do |_, index|
       rejected_indexes.include? index

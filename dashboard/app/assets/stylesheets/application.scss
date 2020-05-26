@@ -22,7 +22,6 @@
  *
  * Shared
  *= require user-menu
- *= require user-progress
  *= require buttons
  *= require course-blocks
  *= require details-polyfill
@@ -1085,6 +1084,24 @@ input.header_input {
     position: relative;
     top: -230px;
   }
+}
+
+body.iframe_embed_app_and_code {
+  background-color: transparent;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+
+  .full_container {
+    padding: 0;
+  }
+
+  #codeApp {
+    height: 100%;
+  }
+
 }
 
 #codeApp.pin_bottom {

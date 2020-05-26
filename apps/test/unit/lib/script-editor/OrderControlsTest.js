@@ -14,10 +14,11 @@ describe('OrderControls', () => {
     defaultProps = {
       move,
       remove,
-      type: ControlTypes.Stage,
+      type: ControlTypes.Lesson,
       position: 1,
+      parentPosition: 1,
       total: 2,
-      name: 'My Stage'
+      name: 'My Lesson'
     };
   });
   it('renders default props', () => {

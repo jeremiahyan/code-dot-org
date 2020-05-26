@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {ControlTypes} from './constants';
-import {moveGroup, moveStage, removeGroup, removeStage} from './editorRedux';
+import {moveGroup, moveLesson, removeGroup, removeLesson} from './editorRedux';
 import Dialog from '../../templates/Dialog';
 
 const styles = {
@@ -21,6 +21,7 @@ export class UnconnectedOrderControls extends Component {
     remove: PropTypes.func.isRequired,
     type: PropTypes.oneOf(Object.keys(ControlTypes)).isRequired,
     position: PropTypes.number.isRequired,
+    parentPosition: PropTypes.number,
     total: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired
   };
@@ -31,13 +32,23 @@ export class UnconnectedOrderControls extends Component {
 
   handleMoveUp = () => {
     if (this.props.position !== 1) {
-      this.props.move(this.props.type, this.props.position, 'up');
+      this.props.move(
+        this.props.type,
+        this.props.position,
+        this.props.parentPosition,
+        'up'
+      );
     }
   };
 
   handleMoveDown = () => {
     if (this.props.position !== this.props.total) {
-      this.props.move(this.props.type, this.props.position, 'down');
+      this.props.move(
+        this.props.type,
+        this.props.position,
+        this.props.parentPosition,
+        'down'
+      );
     }
   };
 
@@ -47,7 +58,11 @@ export class UnconnectedOrderControls extends Component {
 
   handleConfirm = () => {
     this.setState({showConfirm: false});
-    this.props.remove(this.props.type, this.props.position);
+    this.props.remove(
+      this.props.type,
+      this.props.position,
+      this.props.parentPosition
+    );
   };
 
   handleClose = () => {
@@ -95,15 +110,15 @@ export class UnconnectedOrderControls extends Component {
 const OrderControls = connect(
   state => ({}),
   dispatch => ({
-    move(type, position, direction) {
+    move(type, position, parentPosition, direction) {
       type === ControlTypes.Group
         ? dispatch(moveGroup(position, direction))
-        : dispatch(moveStage(position, direction));
+        : dispatch(moveLesson(parentPosition, position, direction));
     },
-    remove(type, position) {
+    remove(type, position, parentPosition) {
       type === ControlTypes.Group
         ? dispatch(removeGroup(position))
-        : dispatch(removeStage(position));
+        : dispatch(removeLesson(parentPosition, position));
     }
   })
 )(UnconnectedOrderControls);
