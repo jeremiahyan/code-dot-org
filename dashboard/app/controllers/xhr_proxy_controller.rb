@@ -51,6 +51,7 @@ class XhrProxyController < ApplicationController
     code.org
     compete.hsctf.com
     covidtracking.com
+    cryptonator.com
     data.austintexas.gov
     data.cityofchicago.org
     data.gv.at
@@ -67,6 +68,7 @@ class XhrProxyController < ApplicationController
     images-api.nasa.gov
     isenseproject.org
     lakeside-cs.org
+    maps.googleapis.com
     opentdb.com
     pokeapi.co
     qrng.anu.edu.au
