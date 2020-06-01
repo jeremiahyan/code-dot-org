@@ -18,8 +18,18 @@ require 'aws-sdk-firehose'
 #       data_json: "{\"key\":\"value\"}"    # OPTIONAL
 #     }
 #   )
+# The `data` in the records which are sent to Firehose will be JSON encoded, so make sure your Redshift "Copy options"
+# have `json 'auto'`. This will tell Redshift to parse the data as a JSON blob.
+#
+# All records uploaded to Firehose will have some common attributes added to them which you can optionally tell Firehose
+# top copy.
+#   `created_at` timestamp - The timestamp of when this record was created.
+#   `environment` varchar(128) - The Ruby RACK_ENV which produced this record e.g. 'Production', 'Test'
+#   `device` varchar(1024) - JSON blob with information about the source of the record
+#    e.g. "server-side", {"useragent: ..."}
 
 ANALYSIS_EVENTS_STREAM_NAME = 'analysis-events'.freeze
+# This Firehose stream is used for collecting data about string:url associations.
 I18N_STRING_TRACKING_EVENTS_STREAM_NAME = 'i18n-string-tracking-events'.freeze
 
 class FirehoseClient
@@ -32,7 +42,7 @@ class FirehoseClient
   # Initializes the @firehose to an AWS Firehose client.
   def initialize
     if [:development, :test].include? rack_env
-      return
+      # return
     end
     @firehose = Aws::Firehose::Client.new(region: REGION)
   end
@@ -51,7 +61,7 @@ class FirehoseClient
     end
 
     # don't update our Firehose tables on dev or test environments.
-    if [:development, :test].include? rack_env
+    if [:development, :test].include?(rack_env) && stream_name != I18N_STRING_TRACKING_EVENTS_STREAM_NAME
       CDO.log.info "Skipped sending record to #{stream_name}: "
       CDO.log.info datas
       return
