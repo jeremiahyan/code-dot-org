@@ -35,13 +35,14 @@ class I18nStringUrlTracker
         jitter = rand(UPDATE_THREAD_PERIOD_JITTER) - (UPDATE_THREAD_PERIOD_JITTER / 2)
         update_thread_period = UPDATE_THREAD_PERIOD + jitter
         sleep update_thread_period
-        upload_data
+        flush_data
       end
     end
   end
 
-  # sends the buffered string:url association data to Firehose.
-  def upload_data
+  # Sends the buffered string:url association data to Firehose.
+  # This method is only meant to be called for testing purposes.
+  def flush_data
     # upload the data to Firehose.
     FirehoseClient.instance.put_record_batch(I18N_STRING_TRACKING_EVENTS_STREAM_NAME, @buffer) unless @buffer.empty?
     # the data has been uploaded; therefore it not longer needs to be buffered.
@@ -51,5 +52,14 @@ class I18nStringUrlTracker
   # returns true if the tracker has alive worker threads which are periodically uploading data.
   def alive?
     !@update_thread.nil? && @update_thread.alive?
+  end
+
+  # Used to stop any worker threads which were started and clear buffered data.
+  def kill
+    if alive?
+      @update_thread.kill
+      @update_thread = nil
+    end
+    @buffer.clear
   end
 end

@@ -41,8 +41,9 @@ class FirehoseClient
 
   # Initializes the @firehose to an AWS Firehose client.
   def initialize
-    if [:development, :test].include? rack_env
-      # return
+    @rack_env = rack_env
+    if [:development, :test].include? @rack_env
+      return
     end
     @firehose = Aws::Firehose::Client.new(region: REGION)
   end
@@ -51,7 +52,7 @@ class FirehoseClient
   # @param stream_name [string] The Kinesis stream to send the data to.
   # @param datas [array[hash]] The list of data to send to the stream.
   def put_record_batch(stream_name, datas)
-    return if datas.nil_or_empty?
+    return if datas.nil? || datas.empty?
     return unless Gatekeeper.allows('firehose', default: true)
 
     # convert the given data into the format Firehose expects
@@ -61,7 +62,7 @@ class FirehoseClient
     end
 
     # don't update our Firehose tables on dev or test environments.
-    if [:development, :test].include?(rack_env) && stream_name != I18N_STRING_TRACKING_EVENTS_STREAM_NAME
+    if [:development, :test].include?(@rack_env)
       CDO.log.info "Skipped sending record to #{stream_name}: "
       CDO.log.info datas
       return
@@ -111,10 +112,10 @@ class FirehoseClient
   def add_common_values(data)
     data_with_common_values = data.merge(
       created_at: DateTime.now,
-      environment: rack_env,
+      environment: @rack_env,
       device: 'server-side'.to_json
     )
-    data_with_common_values[user_id] ||= current_user.id if current_user
+    data_with_common_values[:user_id] ||= current_user.id if defined?(current_user) && current_user
     data_with_common_values
   end
 
