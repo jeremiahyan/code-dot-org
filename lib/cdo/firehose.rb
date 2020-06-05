@@ -1,5 +1,6 @@
 require 'singleton'
 require 'aws-sdk-firehose'
+require 'dynamic_config/dcdo'
 
 # A wrapper client to the AWS Firehose service.
 # @example
@@ -31,6 +32,9 @@ require 'aws-sdk-firehose'
 ANALYSIS_EVENTS_STREAM_NAME = 'analysis-events'.freeze
 # This Firehose stream is used for collecting data about string:url associations.
 I18N_STRING_TRACKING_EVENTS_STREAM_NAME = 'i18n-string-tracking-events'.freeze
+
+# Experiment name for using the Firehose put_record_batch API
+FIREHOSE_PUT_RECORD_BATCH_DCDO_KEY = 'firehose_put_record_batch'.freeze
 
 class FirehoseClient
   include Singleton
@@ -75,7 +79,7 @@ class FirehoseClient
     while i < records.size
       # get a batch of records to send
       batch_end = i + FIREHOSE_PUT_MAX_RECORDS
-      records_batch = records[i..batch_end]
+      records_batch = records[i..batch_end - 1]
       batch_response = @firehose.put_record_batch(
         {
           delivery_stream_name: stream_name,
@@ -101,8 +105,45 @@ class FirehoseClient
   # @param stream_name [string] The Kinesis stream to send the data to.
   # @param data [hash] The data to send to the stream.
   def put_record(stream_name, data)
-    put_record_batch(stream_name, [data])
+    if DCDO.get(FIREHOSE_PUT_RECORD_BATCH_DCDO_KEY, false)
+      put_record_batch(stream_name, [data])
+    else
+      put_record_old(data)
+    end
   end
+
+  # ----------------- START Old Code Remove when firehose_put_record_batch ends --------------------
+  # Posts a record to the analytics stream.
+  # @param data [hash] The data to insert into the stream.
+  def put_record_old(data)
+    return unless Gatekeeper.allows('firehose', default: true)
+
+    data_with_common_values = add_common_values(data)
+
+    if [:development, :test].include? @rack_env
+      CDO.log.info "Skipped sending record to #{ANALYSIS_EVENTS_STREAM_NAME}: "
+      CDO.log.info data
+      return
+    end
+
+    # TODO(asher): Determine whether these should be cached and batched via
+    # put_record_batch. See
+    #   http://docs.aws.amazon.com/sdkforruby/api/Aws/Firehose/Client.html#put_record_batch-instance_method
+    # for documentation.
+    @firehose.put_record(
+      {
+        delivery_stream_name: ANALYSIS_EVENTS_STREAM_NAME,
+        record: {data: data_with_common_values.to_json}
+      }
+    )
+  # Swallow and log all errors because an issue sending analytics should not prevent the caller from continuing.
+  rescue StandardError => error
+    # TODO(suresh): if the exception is Firehose ServiceUnavailableException, we should consider
+    # backing off and retrying.
+    # See http://docs.aws.amazon.com/sdkforruby/api/Aws/Firehose/Client.html#put_record-instance_method.
+    Honeybadger.notify(error)
+  end
+  # ----------------- END Old Code Remove when firehose_put_record_batch ends --------------------
 
   private
 
