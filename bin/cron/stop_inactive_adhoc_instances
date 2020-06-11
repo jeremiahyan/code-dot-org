@@ -1,7 +1,8 @@
 #!/usr/bin/env ruby
+require_relative 'only_one'
+exit unless only_one_running?(__FILE__)
 
 require_relative '../../deployment'
-require_relative '../../lib/cdo/only_one'
 require 'aws-sdk-cloudformation'
 require 'aws-sdk-cloudwatch'
 require 'aws-sdk-ec2'
@@ -122,4 +123,4 @@ def main
   ChatClient.message 'adhoc', "Adhoc Environments Status: \n\n" + job_status_csv
 end
 
-main if only_one_running?(__FILE__)
+main
