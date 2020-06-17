@@ -4,6 +4,7 @@ require 'cdo/key_value'
 require 'cdo/honeybadger'
 require 'cdo/i18n_string_url_tracker'
 require 'request_store'
+require 'dynamic_config/dcdo'
 
 module Cdo
   module I18n
@@ -142,13 +143,17 @@ module Cdo
       end
     end
 
+    I18N_STRING_TRACKING_DCDO_KEY = 'i18n_string_tracking'.freeze
+
     # Plugin for logging usage information about i18n strings.
     module I18nStringUrlTrackerPlugin
       def translate(locale, key, options = ::I18n::EMPTY_HASH)
         result = super(locale, key, options)
-        url = RequestStore.store[:current_request_url]
-        normalized_key = key.to_s.downcase
-        I18nStringUrlTracker.instance.log_association(normalized_key, url) if key && url
+        if DCDO.get(I18N_STRING_TRACKING_DCDO_KEY, false)
+          url = RequestStore.store[:current_request_url]
+          normalized_key = key.to_s.downcase
+          I18nStringUrlTracker.instance.log_association(normalized_key, url) if key && url
+        end
         result
       end
     end
