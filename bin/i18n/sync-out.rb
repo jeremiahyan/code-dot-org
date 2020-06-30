@@ -16,17 +16,17 @@ require_relative 'redact_restore_utils'
 require_relative 'hoc_sync_utils'
 
 def sync_out
-  rename_from_crowdin_name_to_locale
-  restore_redacted_files
+  #rename_from_crowdin_name_to_locale
+  #restore_redacted_files
   distribute_translations
-  copy_untranslated_apps
-  rebuild_blockly_js_files
-  restore_markdown_headers
-  HocSyncUtils.sync_out
-  puts "updating TTS I18n (should usually take 2-3 minutes, may take up to 15 if there are a whole lot of translation updates)"
-  I18nScriptUtils.with_synchronous_stdout do
-    I18nScriptUtils.run_standalone_script "dashboard/scripts/update_tts_i18n.rb"
-  end
+  #copy_untranslated_apps
+  #rebuild_blockly_js_files
+  #restore_markdown_headers
+  #HocSyncUtils.sync_out
+  #puts "updating TTS I18n (should usually take 2-3 minutes, may take up to 15 if there are a whole lot of translation updates)"
+  #I18nScriptUtils.with_synchronous_stdout do
+  #  I18nScriptUtils.run_standalone_script "dashboard/scripts/update_tts_i18n.rb"
+  #end
 end
 
 # Files downloaded from Crowdin are organized by language name; rename folders
@@ -201,7 +201,7 @@ def distribute_course_content(locale)
     type_data[locale] = Hash.new
     type_data[locale]["data"] = Hash.new
     type_data[locale]["data"][type] = translations.sort.to_h
-    sanitize_data_and_write(type_data, "dashboard/config/locales/#{type}.#{locale}.yml")
+    sanitize_data_and_write(type_data, "dashboard/config/locales/#{type}.#{locale}.json")
   end
 end
 
