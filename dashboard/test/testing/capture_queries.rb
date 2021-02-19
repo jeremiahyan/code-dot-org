@@ -50,7 +50,9 @@ module CaptureQueries
     queries = []
     query = lambda do |_name, start, finish, _id, payload|
       duration = finish - start
-      next if %w(CACHE SCHEMA).include? payload[:name]
+
+      next if payload.fetch(:cached, false)
+
       cleaner = Rails::BacktraceCleaner.new
       cleaner.add_silencer {|line| line.include?(__dir__.sub("#{Rails.root}/", ''))}
       cleaner.add_silencer {|line| line =~ /application_controller.*with_locale/}

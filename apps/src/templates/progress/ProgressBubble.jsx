@@ -145,7 +145,7 @@ class ProgressBubble extends React.Component {
 
     const number = level.levelNumber;
     const url = level.url;
-    const levelName = level.name || level.progression;
+    const levelName = level.name || level.progressionDisplayName;
     const levelIcon = getIconForLevel(level);
 
     const disabled = this.props.disabled || levelIcon === 'lock';
@@ -158,7 +158,7 @@ class ProgressBubble extends React.Component {
       ...(smallBubble && styles.small),
       ...(level.isConceptLevel &&
         (smallBubble ? styles.smallDiamond : styles.largeDiamond)),
-      ...levelProgressStyle(level, disabled),
+      ...levelProgressStyle(level.status, level.kind, disabled),
       ...(disabled && level.bonus && styles.disabledStageExtras)
     };
 
@@ -205,8 +205,8 @@ class ProgressBubble extends React.Component {
         <ProgressPill
           levels={[level]}
           text={i18n.unpluggedActivity()}
-          fontSize={16}
           tooltip={this.props.hideToolTips ? null : tooltip}
+          progressStyle={true}
         />
       );
     }

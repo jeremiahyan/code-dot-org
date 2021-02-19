@@ -8,6 +8,7 @@
 require File.expand_path('../../../dashboard/config/environment', __FILE__)
 require 'fileutils'
 require 'json'
+require 'digest/md5'
 
 require_relative 'hoc_sync_utils'
 require_relative 'i18n_script_utils'
@@ -15,16 +16,22 @@ require_relative 'redact_restore_utils'
 require_relative '../../tools/scripts/ManifestBuilder'
 
 def sync_in
+  puts "Sync in starting"
   HocSyncUtils.sync_in
   localize_level_content
   localize_project_content
   localize_block_content
   localize_animation_library
+  localize_shared_functions
   puts "Copying source files"
   I18nScriptUtils.run_bash_script "bin/i18n-codeorg/in.sh"
   redact_level_content
   redact_block_content
   localize_markdown_content
+  puts "Sync in completed successfully"
+rescue => e
+  puts "Sync in failed from the error: #{e}"
+  raise e
 end
 
 def get_i18n_strings(level)
@@ -98,6 +105,19 @@ def get_i18n_strings(level)
         name = behavior.at_xpath('./title[@name="NAME"]')
         i18n_strings['behavior_names'][name.content] = name.content if name
       end
+
+      ## Placeholder texts
+      i18n_strings['placeholder_texts'] = Hash.new
+      i18n_strings['placeholder_texts'].merge! get_placeholder_texts(blocks, 'text', ['TEXT'])
+      i18n_strings['placeholder_texts'].merge! get_placeholder_texts(blocks, 'studio_ask', ['TEXT'])
+      i18n_strings['placeholder_texts'].merge! get_placeholder_texts(blocks, 'studio_showTitleScreen', %w(TEXT TITLE))
+    end
+  end
+
+  if level.is_a? BubbleChoice
+    i18n_strings["sublevels"] = {}
+    level.sublevels.map do |sublevel|
+      i18n_strings["sublevels"][sublevel.name] = get_i18n_strings sublevel
     end
   end
 
@@ -106,6 +126,25 @@ def get_i18n_strings(level)
   end
 
   i18n_strings.delete_if {|_, value| value.blank?}
+end
+
+def get_placeholder_texts(blocks, block_type, title_names)
+  results = {}
+  blocks.xpath("//block[@type=\"#{block_type}\"]").each do |block|
+    title_names.each do |title_name|
+      title = block.at_xpath("./title[@name=\"#{title_name}\"]")
+
+      # Skip empty or untranslatable string.
+      # A translatable string must have at least 3 consecutive alphabetic characters.
+      next unless title&.content =~ /[a-zA-Z]{3,}/
+
+      # Use only alphanumeric characters in lower cases as string key
+      text_key = Digest::MD5.hexdigest title.content
+      results[text_key] = title.content
+    end
+  end
+
+  results
 end
 
 def localize_project_content
@@ -134,6 +173,7 @@ def localize_level_content
   puts "Preparing level content"
 
   block_category_strings = {}
+  progression_strings = {}
   level_content_directory = "../#{I18N_SOURCE_DIR}/course_content"
 
   # We have to run this specifically from the Rails directory because
@@ -151,6 +191,7 @@ def localize_level_content
 
         url = I18nScriptUtils.get_level_url_key(script, level)
         script_strings[url] = get_i18n_strings(level)
+        progression_strings[script_level.progression] = script_level.progression if script_level.progression
 
         # extract block category strings; although these are defined for each
         # level, the expectation here is that there is a massive amount of
@@ -218,6 +259,17 @@ def localize_level_content
     }
     file.write(I18nScriptUtils.to_crowdin_yaml(formatted_data))
   end
+  File.open(File.join(I18N_SOURCE_DIR, "dashboard/progressions.yml"), 'w') do |file|
+    # Format strings for consumption by the rails i18n engine
+    formatted_data = {
+      "en" => {
+        "data" => {
+          "progressions" => progression_strings.sort.to_h
+        }
+      }
+    }
+    file.write(I18nScriptUtils.to_crowdin_yaml(formatted_data))
+  end
 end
 
 # Pull in various fields for custom blocks from .json files and save them to
@@ -259,6 +311,19 @@ def localize_animation_library
   File.open(spritelab_animation_source_file, "w") do |file|
     animation_strings = ManifestBuilder.new({spritelab: true, silent: true}).get_animation_strings
     file.write(JSON.pretty_generate(animation_strings))
+  end
+end
+
+def localize_shared_functions
+  puts "Preparing shared functions"
+
+  shared_functions = SharedBlocklyFunction.where(level_type: 'GamelabJr').pluck(:name)
+  hash = {}
+  shared_functions.sort.each do |func|
+    hash[func] = func
+  end
+  File.open("i18n/locales/source/dashboard/shared_functions.yml", "w+") do |f|
+    f.write(I18nScriptUtils.to_crowdin_yaml({"en" => {"data" => {"shared_functions" => hash}}}))
   end
 end
 
@@ -328,14 +393,27 @@ def redact_block_content
 end
 
 def localize_markdown_content
-  markdown_files_to_localize = ['international/about.md.partial',
-                                'educate/curriculum/csf-transition-guide.md',
-                                'athome.md.partial',
-                                'athome/csf.md.partial',
-                                'break.md.partial',
-                                'csforgood.md']
+  markdown_files_to_localize = %w[
+    international/about.md.partial
+    educate/curriculum/csf-transition-guide.md
+    athome.md.partial
+    break.md.partial
+    csforgood.md
+    hourofcode/artist.md.partial
+    hourofcode/flappy.md.partial
+    hourofcode/frozen.md.partial
+    hourofcode/hourofcode.md.partial
+    hourofcode/infinity.md.partial
+    hourofcode/mc.md.partial
+    hourofcode/playlab.md.partial
+    hourofcode/starwars.md.partial
+    hourofcode/unplugged-conditionals-with-cards.md.partial
+  ]
   markdown_files_to_localize.each do |path|
     original_path = File.join('pegasus/sites.v3/code.org/public', path)
+    original_path_exists = File.exist?(original_path)
+    puts "#{original_path} does not exist" unless original_path_exists
+    next unless original_path_exists
     # Remove the .partial if it exists
     source_path = File.join(I18N_SOURCE_DIR, 'markdown/public', File.dirname(path), File.basename(path, '.partial'))
     FileUtils.mkdir_p(File.dirname(source_path))

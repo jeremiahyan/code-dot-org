@@ -13,9 +13,17 @@ import {
 import NameFailureDialog from '../NameFailureDialog';
 import NameFailureError from '../../NameFailureError';
 
-const styles = {
+export const styles = {
   buttonWrapper: {
-    float: 'left'
+    float: 'left',
+    display: 'flex'
+  },
+  buttonSpacing: {
+    marginTop: 0,
+    marginBottom: 0,
+    marginLeft: 10,
+    marginRight: 0,
+    boxShadow: 'none'
   }
 };
 
@@ -28,18 +36,20 @@ class UnconnectedDisplayProjectName extends React.Component {
   render() {
     return (
       <div style={styles.buttonWrapper}>
-        <div className="project_name_wrapper header_text">
+        <div className="project_name_wrapper header_text" tabIndex={0}>
           <div className="project_name header_text">
             {this.props.projectName}
           </div>
           <ProjectUpdatedAt />
         </div>
-        <div
-          className="project_edit header_button header_button_light"
+        <button
+          type="button"
+          className="project_edit header_button header_button_light no-mc"
+          style={styles.buttonSpacing}
           onClick={this.props.beginEdit}
         >
           {i18n.rename()}
-        </div>
+        </button>
       </div>
     );
   }
@@ -112,13 +122,15 @@ class UnconnectedEditProjectName extends React.Component {
             }}
           />
         </div>
-        <div
-          className="project_save header_button header_button_light"
+        <button
+          type="button"
+          className="project_save header_button header_button_light no-mc"
           onClick={this.saveNameChange}
           disabled={this.state.savingName}
+          style={styles.buttonSpacing}
         >
           {i18n.save()}
-        </div>
+        </button>
         <NameFailureDialog
           flaggedText={this.props.projectNameFailure}
           isOpen={!!this.props.projectNameFailure}
@@ -141,6 +153,16 @@ const EditProjectName = connect(
 )(UnconnectedEditProjectName);
 
 export default class EditableProjectName extends React.Component {
+  static propTypes = {
+    onChangedWidth: PropTypes.func
+  };
+
+  componentDidUpdate() {
+    if (this.props.onChangedWidth) {
+      this.props.onChangedWidth();
+    }
+  }
+
   state = {
     editName: false
   };

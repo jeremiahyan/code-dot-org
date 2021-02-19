@@ -85,6 +85,8 @@ import {
 import {setExportGeneratedProperties} from '../code-studio/components/exportDialogRedux';
 import {userAlreadyReportedAbuse} from '@cdo/apps/reportAbuse';
 import {workspace_running_background, white} from '@cdo/apps/util/color';
+import {MB_API} from '../lib/kits/maker/boards/microBit/MicroBitConstants';
+import autogenerateML from '@cdo/apps/applab/ai';
 
 /**
  * Create a namespace for the application.
@@ -680,8 +682,10 @@ Applab.init = function(config) {
     showDebugSlider: showDebugConsole,
     showDebugWatch:
       !!config.level.isProjectLevel || config.level.showDebugWatch,
+    debugConsoleDisabled: config.readonlyWorkspace,
     showMakerToggle:
       !!config.level.isProjectLevel || config.level.makerlabEnabled,
+    validationEnabled: !!config.level.validationEnabled,
     widgetMode: config.level.widgetMode
   });
 
@@ -689,15 +693,38 @@ Applab.init = function(config) {
 
   if (config.level.makerlabEnabled) {
     makerToolkit.enable();
+
     config.dropletConfig = utils.deepMergeConcatArrays(
       config.dropletConfig,
       makerToolkit.dropletConfig
     );
+
+    if (config.level.makerlabEnabled === MB_API) {
+      config.dropletConfig = utils.deepMergeConcatArrays(
+        config.dropletConfig,
+        makerToolkit.configMicrobit
+      );
+    } else {
+      config.dropletConfig = utils.deepMergeConcatArrays(
+        config.dropletConfig,
+        makerToolkit.configCircuitPlayground
+      );
+    }
   } else {
-    // Push gray, no-autocomplete versions of maker blocks for display purposes.
-    const disabledMakerDropletConfig = makeDisabledConfig(
-      makerToolkit.dropletConfig
+    // Combine all maker blocks for both CP and MB since all maker blocks, regardless
+    // of board type, should be disabled in this branch
+    let allBoardsConfig = utils.deepMergeConcatArrays(
+      makerToolkit.configCircuitPlayground,
+      makerToolkit.configMicrobit
     );
+
+    const makerConfig = utils.deepMergeConcatArrays(
+      makerToolkit.dropletConfig,
+      allBoardsConfig
+    );
+
+    // Push gray, no-autocomplete versions of maker blocks for display purposes.
+    const disabledMakerDropletConfig = makeDisabledConfig(makerConfig);
     config.dropletConfig = utils.deepMergeConcatArrays(
       config.dropletConfig,
       disabledMakerDropletConfig
@@ -774,6 +801,7 @@ Applab.init = function(config) {
 };
 
 async function initDataTab(levelOptions) {
+  const channelExists = await Applab.storage.channelExists();
   if (levelOptions.dataTables) {
     Applab.storage.populateTable(levelOptions.dataTables).catch(outputError);
   }
@@ -785,7 +813,6 @@ async function initDataTab(levelOptions) {
     );
   }
   if (levelOptions.dataLibraryTables) {
-    const channelExists = await Applab.storage.channelExists();
     const libraryManifest = await Applab.storage.getLibraryManifest();
     if (!channelExists) {
       const tables = levelOptions.dataLibraryTables.split(',');
@@ -947,7 +974,8 @@ Applab.render = function() {
     isEditingProject: project.isEditing(),
     screenIds: designMode.getAllScreenIds(),
     onScreenCreate: designMode.createScreen,
-    handleVersionHistory: Applab.handleVersionHistory
+    handleVersionHistory: Applab.handleVersionHistory,
+    autogenerateML: autogenerateML
   });
   ReactDOM.render(
     <Provider store={getStore()}>
@@ -1494,8 +1522,11 @@ Applab.onPuzzleFinish = function() {
 };
 
 Applab.onPuzzleComplete = function(submit) {
+  const sourcesUnchanged = !studioApp().validateCodeChanged();
   if (Applab.executionError) {
     Applab.result = ResultType.ERROR;
+  } else if (sourcesUnchanged) {
+    Applab.result = ResultType.FAILURE;
   } else {
     // In most cases, submit all results as success
     Applab.result = ResultType.SUCCESS;
@@ -1515,6 +1546,8 @@ Applab.onPuzzleComplete = function(submit) {
     );
     Applab.testResults = results.testResult;
     Applab.message = results.message;
+  } else if (sourcesUnchanged) {
+    Applab.testResults = TestResults.FREE_PLAY_UNCHANGED_FAIL;
   } else if (!submit) {
     Applab.testResults = TestResults.FREE_PLAY;
   } else {

@@ -34,8 +34,17 @@ const styles = {
   text: {
     display: 'inline-block',
     fontFamily: '"Gotham 5r", sans-serif',
-    fontSize: 14,
     letterSpacing: -0.12
+  },
+  textProgressStyle: {
+    display: 'inline-block',
+    fontFamily: '"Gotham 5r", sans-serif',
+    fontSize: 12,
+    letterSpacing: -0.12,
+    width: 120,
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis'
   },
   iconMargin: {
     marginLeft: 10
@@ -52,10 +61,10 @@ class ProgressPill extends React.Component {
     levels: PropTypes.arrayOf(levelType),
     icon: PropTypes.string,
     text: PropTypes.string,
-    fontSize: PropTypes.number,
     tooltip: PropTypes.element,
     disabled: PropTypes.bool,
-    selectedSectionId: PropTypes.string
+    selectedSectionId: PropTypes.string,
+    progressStyle: PropTypes.bool
   };
 
   render() {
@@ -63,10 +72,10 @@ class ProgressPill extends React.Component {
       levels,
       icon,
       text,
-      fontSize,
       tooltip,
       disabled,
-      selectedSectionId
+      selectedSectionId,
+      progressStyle
     } = this.props;
 
     const multiLevelStep = levels.length > 1;
@@ -78,7 +87,8 @@ class ProgressPill extends React.Component {
     let style = {
       ...styles.levelPill,
       ...(url && hoverStyle),
-      ...(!multiLevelStep && levelProgressStyle(levels[0], false))
+      ...(!multiLevelStep &&
+        levelProgressStyle(levels[0].status, levels[0].kind, false))
     };
 
     // If we're passed a tooltip, we also need to reference it from our div
@@ -94,6 +104,8 @@ class ProgressPill extends React.Component {
     const levelIsAssessment =
       isLevelAssessment(levels[0]) && levels.length === 1;
 
+    const textStyle = progressStyle ? styles.textProgressStyle : styles.text;
+
     return (
       <a
         href={url}
@@ -104,9 +116,9 @@ class ProgressPill extends React.Component {
           {icon && <FontAwesome icon={icon} />}
           {text && (
             <div
+              className="ProgressPillTextAndIcon"
               style={{
-                ...styles.text,
-                fontSize,
+                ...textStyle,
                 ...(icon && styles.iconMargin)
               }}
             >

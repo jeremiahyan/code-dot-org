@@ -68,6 +68,7 @@ describe('entry tests', () => {
 
   /** @const {string[]} */
   var ALL_APPS = [
+    'ailab',
     'applab',
     'bounce',
     'calc',
@@ -179,6 +180,12 @@ describe('entry tests', () => {
           src: ['**'],
           dest: 'build/package/media/skins/fish'
         },
+        {
+          expand: true,
+          cwd: 'node_modules/@code-dot-org/ml-playground/dist/assets',
+          src: ['**'],
+          dest: 'build/package/media/skins/ailab'
+        },
 
         // We have to do some weird stuff to get our fallback video player working.
         // video.js expects some of its own files to be served by the application, so
@@ -247,13 +254,6 @@ describe('entry tests', () => {
           cwd: './' + path.relative(process.cwd(), piskelRoot),
           src: ['**'],
           dest: 'build/package/js/piskel/'
-        },
-        // Bramble must not be minified or digested in order to work properly.
-        {
-          expand: true,
-          cwd: './node_modules/@code-dot-org/bramble/dist',
-          src: ['**'],
-          dest: 'build/package/js/bramble/'
         },
         {
           expand: true,
@@ -333,6 +333,7 @@ describe('entry tests', () => {
             'build/package/css/code-studio.css',
             'style/code-studio/code-studio.scss'
           ],
+          ['build/package/css/lessons.css', 'style/lessons.scss'],
           [
             'build/package/css/levelbuilder.css',
             'style/code-studio/levelbuilder.scss'
@@ -347,7 +348,11 @@ describe('entry tests', () => {
             'build/package/css/publicKeyCryptography.css',
             'style/publicKeyCryptography/publicKeyCryptography.scss'
           ],
-          ['build/package/css/foorm.css', 'style/code-studio/foorm.scss']
+          [
+            'build/package/css/foorm_editor.css',
+            'style/code-studio/foorm_editor.scss'
+          ],
+          ['build/package/css/javalab.css', 'style/javalab/style.scss']
         ].concat(
           appsToBuild.map(function(app) {
             return [
@@ -506,15 +511,18 @@ describe('entry tests', () => {
     'home/_homepage': './src/sites/studio/pages/home/_homepage.js',
     'layouts/_parent_email_banner':
       './src/sites/studio/pages/layouts/_parent_email_banner.js',
-    'layouts/_header': './src/sites/studio/pages/layouts/_header.js',
     'layouts/_race_interstitial':
       './src/sites/studio/pages/layouts/_race_interstitial.js',
     'layouts/_school_info_confirmation_dialog':
       './src/sites/studio/pages/layouts/_school_info_confirmation_dialog.js',
     'layouts/_school_info_interstitial':
       './src/sites/studio/pages/layouts/_school_info_interstitial.js',
+    'layouts/_small_footer':
+      './src/sites/studio/pages/layouts/_small_footer.js',
     'layouts/_terms_interstitial':
       './src/sites/studio/pages/layouts/_terms_interstitial.js',
+    'layouts/_thank_donors_interstitial':
+      './src/sites/studio/pages/layouts/_thank_donors_interstitial.js',
     'levels/_bubble_choice':
       './src/sites/studio/pages/levels/_bubble_choice.js',
     'levels/_content': './src/sites/studio/pages/levels/_content.js',
@@ -547,18 +555,20 @@ describe('entry tests', () => {
     'maker/setup': './src/sites/studio/pages/maker/setup.js',
     'projects/featured': './src/sites/studio/pages/projects/featured.js',
     'projects/index': './src/sites/studio/pages/projects/index.js',
+    'report_abuse/report_abuse_form':
+      './src/sites/studio/pages/report_abuse/report_abuse_form.js',
     'scripts/show': './src/sites/studio/pages/scripts/show.js',
     'scripts/stage_extras': './src/sites/studio/pages/scripts/stage_extras.js',
     'sections/show': './src/sites/studio/pages/sections/show.js',
-    'shared/_header_progress':
-      './src/sites/studio/pages/shared/_header_progress.js',
     'shared/_school_info': './src/sites/studio/pages/shared/_school_info.js',
     'teacher_dashboard/show':
       './src/sites/studio/pages/teacher_dashboard/show.js',
     'teacher_dashboard/parent_letter':
       './src/sites/studio/pages/teacher_dashboard/parent_letter.js',
     'teacher_feedbacks/index':
-      './src/sites/studio/pages/teacher_feedbacks/index.js'
+      './src/sites/studio/pages/teacher_feedbacks/index.js',
+    'vocabularies/edit': './src/sites/studio/pages/vocabularies/edit.js',
+    'javalab/index': './src/sites/studio/pages/javalab/index.js'
   };
 
   var internalEntries = {
@@ -571,12 +581,16 @@ describe('entry tests', () => {
     'datasets/index': './src/sites/studio/pages/datasets/index.js',
     'datasets/edit_manifest':
       './src/sites/studio/pages/datasets/edit_manifest.js',
+    'lessons/edit': './src/sites/studio/pages/lessons/edit.js',
+    'lessons/show': './src/sites/studio/pages/lessons/show.js',
     levelbuilder: './src/sites/studio/pages/levelbuilder.js',
     'levels/editors/_applab':
       './src/sites/studio/pages/levels/editors/_applab.js',
     'levels/editors/_craft':
       './src/sites/studio/pages/levels/editors/_craft.js',
     'levels/editors/_dsl': './src/sites/studio/pages/levels/editors/_dsl.js',
+    'levels/editors/fields/_animation':
+      './src/sites/studio/pages/levels/editors/fields/_animation.js',
     'levels/editors/fields/_blockly':
       './src/sites/studio/pages/levels/editors/fields/_blockly.js',
     'levels/editors/fields/_callouts':
@@ -589,6 +603,8 @@ describe('entry tests', () => {
       './src/sites/studio/pages/levels/editors/fields/_preload_assets.js',
     'levels/editors/fields/_special_level_types':
       './src/sites/studio/pages/levels/editors/fields/_special_level_types.js',
+    'levels/editors/fields/_validation_code':
+      './src/sites/studio/pages/levels/editors/fields/_validation_code.js',
     'levels/editors/fields/_video':
       './src/sites/studio/pages/levels/editors/fields/_video.js',
     'levels/editors/_gamelab':
@@ -607,8 +623,6 @@ describe('entry tests', () => {
 
   var pegasusEntries = {
     // code.org
-    'code.org/public/administrators':
-      './src/sites/code.org/pages/public/administrators.js',
     'code.org/public/dance': './src/sites/code.org/pages/public/dance.js',
     'code.org/public/educate/curriculum/courses':
       './src/sites/code.org/pages/public/educate/curriculum/courses.js',
@@ -656,6 +670,8 @@ describe('entry tests', () => {
       './src/sites/code.org/pages/views/professional_learning_apply_banner.js',
     'code.org/views/at_home_banner':
       './src/sites/code.org/pages/views/at_home_banner.js',
+    'code.org/views/virtual_hoc_banner':
+      './src/sites/code.org/pages/views/virtual_hoc_banner.js',
 
     'pd/_jotform_loader': './src/sites/studio/pages/pd/_jotform_loader.js',
     'pd/_jotform_embed': './src/sites/studio/pages/pd/_jotform_embed.js',
@@ -699,7 +715,7 @@ describe('entry tests', () => {
 
     'foorm/preview/index': './src/sites/studio/pages/foorm/preview/index.js',
     'foorm/preview/name': './src/sites/studio/pages/foorm/preview/name.js',
-    'foorm/editor/index': './src/sites/studio/pages/foorm/editor/index.js',
+    'foorm/forms/editor': './src/sites/studio/pages/foorm/forms/editor.js',
     'foorm/misc_survey/new': './src/sites/studio/pages/foorm/misc_survey/new.js'
   };
 
@@ -713,6 +729,7 @@ describe('entry tests', () => {
     // The blockly dependency is huge, so we currently control when it is
     // loaded explicitly via script tags rather than via normal imports.
     blockly: './src/sites/studio/pages/blockly.js',
+    googleblockly: './src/sites/studio/pages/googleblockly.js',
 
     // Build embedVideo.js in its own step (skipping factor-bundle) so that
     // we don't have to include the large code-studio-common file in the
@@ -1128,7 +1145,7 @@ describe('entry tests', () => {
           '/*' +
           item +
           '*/ ' +
-          'module.exports = window.blockly.' +
+          'module.exports = window.locales.' +
           localeType +
           ';';
         fs.writeFileSync(path.join(current, item + '.js'), localeString);
