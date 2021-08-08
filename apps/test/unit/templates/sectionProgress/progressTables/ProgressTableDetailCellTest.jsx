@@ -9,6 +9,8 @@ import {
   fakeLevel,
   fakeProgressForLevels
 } from '@cdo/apps/templates/progress/progressTestHelpers';
+import {ReviewStates} from '@cdo/apps/templates/feedback/types';
+import {LevelStatus} from '@cdo/apps/util/sharedConstants';
 
 const level_1 = fakeLevel({
   id: '123',
@@ -24,8 +26,9 @@ const DEFAULT_PROPS = {
   studentId: 1,
   sectionId: 123,
   levels: levels,
-  studentProgress: fakeProgressForLevels(levels),
-  stageExtrasEnabled: false
+  studentProgress: fakeProgressForLevels(levels, LevelStatus.passed, {
+    teacher_feedback_review_state: ReviewStates.keepWorking
+  })
 };
 
 const setUp = (overrideProps = {}) => {
@@ -42,6 +45,11 @@ describe('ProgressTableDetailCell', () => {
     firehoseClient.putRecord.restore();
   });
 
+  it('renders nothing if levels array is empty', () => {
+    const wrapper = setUp({levels: []});
+    expect(wrapper).to.be.empty;
+  });
+
   it('displays a progress table level bubble for each level and sublevel', () => {
     const wrapper = setUp();
     const levelBubble1 = wrapper.findWhere(node => node.key() === '123_1');
@@ -52,18 +60,17 @@ describe('ProgressTableDetailCell', () => {
     expect(levelBubble3.find(ProgressTableLevelBubble)).to.have.length(1);
   });
 
-  it('disables progress bubble if there is a bonus and stageExtrasEnabled is false', () => {
+  it('passes expected values to ProgressTableLevelBubble', () => {
     const wrapper = setUp();
-    const levelBubble3 = wrapper.findWhere(node => node.key() === '999_3');
-    const progressBubble = levelBubble3.find(ProgressTableLevelBubble);
-    expect(progressBubble.props().disabled).to.be.true;
-  });
-
-  it('disable is false for progress bubble if there is a bonus and stageExtrasEnabled is true', () => {
-    const wrapper = setUp({stageExtrasEnabled: true});
-    const levelBubble3 = wrapper.findWhere(node => node.key() === '999_3');
-    const progressBubble = levelBubble3.find(ProgressTableLevelBubble);
-    expect(progressBubble.props().disabled).to.be.false;
+    const levelBubble3 = wrapper
+      .findWhere(node => node.key() === '999_3')
+      .find(ProgressTableLevelBubble);
+    const levelBubble3Props = levelBubble3.props();
+    expect(levelBubble3Props.levelStatus).to.equal(LevelStatus.passed);
+    expect(levelBubble3Props.isLocked).to.be.false;
+    expect(levelBubble3Props.isUnplugged).to.be.false;
+    expect(levelBubble3Props.isBonus).to.be.true;
+    expect(levelBubble3Props.reviewState).to.equal(ReviewStates.keepWorking);
   });
 
   it('generates the right url for level bubble', () => {

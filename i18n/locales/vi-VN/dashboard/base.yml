@@ -76,7 +76,7 @@ vi:
   courses: 'Các khóa học'
   courses_page:
     title_student: "Học Khoa học Máy tính"
-    title_teacher: "Giảng dạy với Code Studio"
+    title_teacher: "Dạy Khoa học Máy tính"
   unplugged_activity: 'Hoạt động không dùng máy'
   of: "của"
   more: "NHIỀU HƠN"
@@ -148,8 +148,8 @@ vi:
     additional_information: "Chúng tôi cần một số thông tin bổ sung để tiếp tục đăng ký cho bạn."
     user_type_button: "Cập nhật tài khoản"
     user_type_label: "Kiểu tài khoản"
-    user_type_teacher: "Giáo viên"
     user_type_student: "Học sinh"
+    user_type_teacher: "Giáo viên"
     field_is_required: "là bắt buộc"
     accept_terms: "Bạn phải đồng ý để tạo một tài khoản"
     error: "Đã xảy ra lỗi."
@@ -250,6 +250,7 @@ vi:
     invite_sent: 'Đã gửi lời mời'
     added_teacher: '%{name} được thêm như giáo viên của bạn'
     registered: "Bạn đã đăng kí cho mục %{section_name}."
+    already_exists: 'Bạn đã tham gia nhóm đào tạo %{section_name}.'
     error:
       signed_in: 'Xin vui lòng đăng xuất trước khi tiếp tục'
       username_not_found: 'Tên người sử dụng % {username} không tìm thấy'
@@ -259,6 +260,7 @@ vi:
       blank_code: "Vui lòng nhập một phần mã"
       cant_join_own_section: "Xin lỗi, bạn không thể tham gia phần riêng của bạn."
       provider_managed_section: "Mục này được quản lý bởi nhà cung cấp khác và bạn không thể tham gia. Vui lòng liên hệ giáo viên của bạn để %{provider} thêm bạn vào và tham gia mục này."
+      restricted_section: "Chúng tôi không thể thêm bạn vào nhóm đào tạo %{section_code} vì nhóm này bị khóa. Vui lòng liên hệ với giáo viên của bạn để được giúp đỡ."
     mail:
       student_disassociated:
         subject: "Thông báo từ Code.org: %{student_name} không còn trong danh sách là học viên của bạn."
@@ -294,7 +296,7 @@ vi:
       project_gallery: "Dự án"
       sections: "Mục"
       help_support: "Giúp đỡ và hỗ trợ"
-      report_bug: "Báo lỗi"
+      report_bug: "Báo cáo sự cố"
       teacher_community: "Cộng đồng giáo viên"
       professional_learning: "Học tập nâng cao chuyên môn"
       documentation: "Tài liệu"
@@ -320,10 +322,11 @@ vi:
       about_contact: "Liên hệ"
       about_faqs: "Hỏi đáp"
       learn: "Học"
+      stats: "Xem thống kê"
       help_us: "Giúp đỡ chúng tôi"
       teach: "Dạy"
-      about: "Thông tin"
-      legal_privacy: "Chính sách riêng tư"
+      about: "về chúng tôi"
+      legal_privacy: "Chính sách bảo mật"
       legal_tos: "Các điều khoản của Code.org"
     user:
       classroom: 'Trang chủ giáo viên'
@@ -334,7 +337,7 @@ vi:
       settings: 'Cài đặt tài khoản'
       logout: 'Đăng xuất'
       signin: 'Đăng nhập'
-      signup: 'Tạo tài khoản'
+      signup: 'Tạo một tài khoản'
       already_registered: 'Đã đăng ký?'
       pair_programming: 'Lập trình theo cặp'
       team: 'Nhóm'
@@ -351,19 +354,24 @@ vi:
       dance: 'Bữa Tiệc Khiêu Vũ'
       eval: 'Eval'
       flappy: 'Flappy bird'
-      frozen: 'Bộ phim Frozen'
-      gamelab: 'Kho Trò chơi'
+      frozen: 'Frozen'
+      gamelab: 'Phòng thí nghiệm trò chơi'
       gamelab_jr: 'Kho Trò chơi (beta)'
       gumball: 'Thế giới kì diệu của Gumball'
       iceage: 'Kỉ băng hà'
       infinity: 'Vô cùng'
+      minecraft_adventurer: 'Minecraft Chuyến phiêu lưu'
       minecraft_designer: 'Minecraft'
       minecraft_hero: 'Minecraft Hero'
       playlab: 'Phòng trò chơi'
       playlab_k1: 'Kho trò chơi (dành cho trẻ chưa biết đọc)'
       scratch: 'Scratch'
-      starwars: 'Cuộc Chiến Giữa Các Vì Sao'
+      sports: 'Thể thao'
+      starwars: 'Chiến tranh giữa các vì sao'
+      starwarsblocks: 'Chiến tranh giữa các vì sao (Khối)'
+      starwarsblocks_hour: 'Chiến tranh giữa các vì sao (Khối)'
       weblab: 'Kho Web'
+      view_all: 'Xem tất cả các dự án ...'
     popup:
       progress_for_user: "Tiến trình của %{name}"
       progress: 'Qua trình của bạn'
@@ -397,6 +405,7 @@ vi:
       example: 'Ví dụ'
       example_with_number: 'Ví dụ giải pháp %{solution_number}'
       submitted_on: 'Gửi lên ngày:'
+      last_updated: 'Cập nhật lần cuối:'
       unsubmit: 'Ngưng gửi'
       worked_with: 'Làm việc với'
       update_lock_settings: 'Cập Nhật khóa cài đặt tại đây.'
@@ -434,6 +443,7 @@ vi:
     for_parents_and_guardians: "Dành cho Phụ huynh và Người giám hộ"
     link_a_parent_email: "Liên kết địa chỉ email phụ huynh/người giám hộ với tài khoản này để luôn được cập nhật về tiến triển và các bài tập của con bạn. Bạn cũng sẽ có thể sử dụng địa chỉ email này để khôi phục mật khẩu."
     parent_guardian_email_label: "Email của phụ huynh/người giám hộ"
+    remove_parent_email_label: "Loại bỏ"
     none: "Không có"
     only_one_parent_email_supported_warning: "Lưu ý: Hiện tại, chúng tôi chỉ có thể hỗ trợ một địa chỉ thư điện tử của phụ huynh/người giám hộ cho mỗi học sinh."
   user_level:
@@ -477,6 +487,7 @@ vi:
     print_certificate: "In giấy chứng nhận"
   move_students:
     new_section_dne: "Xin lỗi, nhưng phần học %{new_section_code} không tồn tại. Vui lòng nhập một mã khác cho phần học."
+    current_section_dne: "Xin lỗi, nhưng phần học %{current_section_code} không tồn tại. Vui lòng nhập một mã khác cho phần học."
     student_ids_not_entered: "Vui lòng cung cấp student_ids."
     student_not_found: "Không thể tìm thấy một hoặc vài sinh viên."
     all_students_must_be_in_current_section: "Tất cả các sinh viên hiện phải đăng ký trong phần của bạn."
@@ -494,7 +505,7 @@ vi:
   footer:
     thank_you: 'Chúng tôi cảm ơn<a href="https://code.org/about/donors"> các nhà tài trợ</a>, <a href="https://code.org/about/partners">các đối tác</a>, <a href="https://code.org/about/team">các thành viên trong nhóm mở rộng của chúng tôi</a>, các <a href="https://code.org/about/advisors">chuyên gia video và giáo dục</a> của chúng tôi vì sự hỗ trợ của các bạn trong việc tạo nên Xưởng Mã.'
     help_from_html: 'Các kỹ sư từ Google, Microsoft, Facebook và Twitter đã giúp tạo ra hướng dẫn này.'
-    help_from_html_old: 'Các kỹ sư từ Google, Microsoft, Facebook và Twitter đã giúp tạo ra các tài liệu này.'
+    help_from_html_old: 'Các kỹ sư từ Amazon, Google và Microsoft đã giúp tạo ra những tài liệu này.'
     art_from_html: 'Minecraft&#8482; &copy; %{current_year} Microsoft. Bản Quyền Đã Được Bảo Hộ. < br / >Star Wars&#8482; &copy; %{current_year} Disney và Lucasfilm. Bản Quyền Đã Được Bảo Hộ. < br / >Frozen&#8482; &copy; %{current_year} Disney. Bản Quyền Đã Được Bảo Hộ. < br / >Ice Age&#8482; &copy; %{current_year} 20th Century Fox. Bản Quyền Đã Được Bảo Hộ. < br / >Angry Birds&#8482; &copy; 2009-%{current_year} Rovio Entertainment Ltd. Bản Quyền Đã Được Bảo Hộ. < br / >Plants vs. Zombies&#8482; &copy; %{current_year} Electronic Arts Inc. Bản Quyền Đã Được Bảo Hộ. < br / >The Amazing World of Gumball là thương hiệu và &copy; 2015 Cartoon Network.'
     art_from_html_old: 'Minecraft&#8482; &copy; %{current_year} Microsoft. Bản Quyền Đã Được Bảo Hộ. Star Wars&#8482; &copy; %{current_year} Disney và Lucasfilm. Bản Quyền Đã Được Bảo Hộ. Frozen&#8482; &copy; %{current_year} Disney. Bản Quyền Đã Được Bảo Hộ. Ice Age&#8482; &copy; %{current_year} 20th Century Fox. Bản Quyền Đã Được Bảo Hộ. Angry Birds&#8482; &copy; 2009-%{current_year} Rovio Entertainment Ltd. Bản Quyền Đã Được Bảo Hộ. Plants vs. Zombies&#8482; &copy; %{current_year} Electronic Arts Inc. Bản Quyền Đã Được Bảo Hộ. The Amazing World of Gumball là thương hiệu và &copy; 2015 Cartoon Network.'
     code_from_html: 'Code.org sử dụng p5.play, được cấp phép theo <a href="http://www.gnu.org/licenses/old-licenses/lgpl-2.1-standalone.html"> GNU LGPL 2.1</a>.'
@@ -504,11 +515,11 @@ vi:
     copyright: 'Bản quyền'
     more: 'Nhiều hơn'
     feedback: 'Cung cấp thông tin phản hồi'
-    translate: 'Giúp chúng tôi dịch sang ngôn ngữ của bạn'
+    translate: 'Tình nguyện dịch nội dung của chúng tôi'
     support: 'Trợ giúp và Cộng đồng'
-    tos_short: 'Các điều khoản của Code.org'
+    tos_short: 'Điều khoản'
     tos: 'Các điều khoản của Code.org'
-    privacy: 'Chính sách riêng tư'
+    privacy: 'Chính sách bảo mật'
     secure: 'Phiên bản an toàn'
     report_abuse: 'Báo cáo lạm dụng'
     built_on_code_studio: 'Được xây dựng trên Code Studio'
@@ -544,7 +555,7 @@ vi:
   next_stage: 'Hoàn thành! Tiếp tục màn tiếp theo'
   download_pdf: 'Mở giáo án'
   lesson_plan: 'Giáo Án'
-  view_lesson_plan: 'Xem Giáo Án'
+  view_lesson_plan: 'Xem giáo án'
   pdf_download: 'Tải phiên bản PDF'
   download_coming_soon: 'Tải về các hoạt động sắp diễn ra.'
   video_coming_soon: 'Video sắp tới!'
@@ -583,14 +594,14 @@ vi:
       title: 'Bữa Tiệc Khiêu Vũ'
     hoc:
       title: 'Mê cung cổ điển'
-      body: 'Hãy thử những lớp khoa học máy tính că bản. Hàng triệu người đã thử học các khóa này.'
+      body: 'Hãy thử những điều cơ bản của khoa học máy tính. Hàng triệu người đã sử dụng nó.'
     flappy:
       title: 'Lập trình Flappy'
       body: 'Muốn viết trò chơi của riêng bạn trong vòng chưa đầy 10 phút? Hãy thử lớp học lập trình Flappy của chúng tôi!'
     20-hour:
       title: 'Khóa học cấp tốc'
       body: 'Khóa học 20-giờ sẽ giới thiệu mục đích ngành khoa học máy tính và các khái niệm lập trình. Khóa học được soạn cho các lớp K-8, tuy nhiên nó khá thú vị để tìm hiểu ở tất cả các lứa tuổi.'
-      body_short: 'Học những căn bản về khoa học máy tính với phiên bản cấp tốc của các lớp 2-4.'
+      body_short: 'Học môn khoa học máy tính cơ bản trong phiên bản cấp tốc của các khóa học 2-4.'
     hoc2014:
       try_new_tutorial: 'Hãy thử lớp học Giờ Lập trình phiên bản beta của chúng tôi'
       try_frozen: 'Họa sĩ vẽ Anna và Elsa, từ bộ phim Frozen'
@@ -598,21 +609,22 @@ vi:
       title: "Bộ sưu tập"
       body: "Xem một bộ sưu tập các ứng dụng và họa sĩ thiết kế hình ảnh được tạo bởi người dùng của chúng tôi"
     gamelab:
-      title: "Kho Trò chơi"
-      body: "Game Lab là một môi trường lập trình, nơi bạn có thể tạo các hình động và trò chơi đơn giản với các đối tượng và các nhân vật tương tác với nhau."
+      title: "Phòng thí nghiệm trò chơi"
+      body: "Game Lab là một môi trường lập trình nơi bạn có thể tạo các hoạt ảnh và trò chơi đơn giản với các đối tượng và nhân vật tương tác với nhau."
       audience: "13 tuổi trở lên"
       cta: "Học cách làm"
     hoc-encryption:
+      title: "Mã hóa đơn giản"
       body: "Học sinh sẽ học các kỹ thuật tạo và giải mã các tin nhắn được mã hóa."
     weblab:
-      title: "Web Lab (beta)"
-      body: "Web Lab là một môi trường lập trình, nơi bạn có thể tạo các trang web đơn giản sử dụng HTML và CSS. Thiết kế trang web của bạn và chia sẻ trang web của bạn chỉ trong vài giây."
+      title: "Phòng thí nghiệm web (beta)"
+      body: "Web Lab là một môi trường lập trình nơi bạn có thể tạo các trang web đơn giản bằng HTML và CSS. Thiết kế các trang web của bạn và chia sẻ trang web của bạn trong vài giây."
       audience: "13 tuổi trở lên"
       cta: "Học cách làm"
     frozen:
-      title: "Bộ phim Frozen"
+      title: "Frozen"
     starwars:
-      title: "Cuộc Chiến Giữa Các Vì Sao"
+      title: "Chiến tranh giữa các vì sao"
     infinity:
       title: "Phòng thí nghiệm Vui Chơi Bất Tận"
       body: "Sử dụng trò chơi thử nghiệm để tạo ra một câu chuyện hay trò chơi với các nhân vật Disney Infinity nổi tiếng."
@@ -628,19 +640,21 @@ vi:
       title: "Minecraft"
       body: "Minecraft đã trở lại với một hoạt động hoàn toàn mới cho Hour of Code! Cuộc hành trình đi qua Minecraft với mật mã."
     sports:
+      title: "Thể thao"
       body: "Thực hiện một trò chơi bóng rổ hoặc trộn lẫn và kết hợp với thể thao."
     text-compression:
       title: "Nén văn bản"
       body: "Trong bài học này, học viên sẽ sử dụng Widget nén văn bản để nén văn bản bằng cách thay thế các mẫu với các ký hiệu."
     unplugged:
+      title: "Bài học không sử dụng thiết bị điện tử"
       audience: "4 tuổi trở lên"
       body: "Chúng tôi đã biên soạn một danh sách các bài học không cắm phí cho bạn để sử dụng trong lớp học của bạn. Bây giờ bạn có thể dạy các nguyên tắc cơ bản của khoa học máy tính, cho dù bạn có máy tính trong lớp học hay không! Hãy thử sử dụng những bài học này như là một khóa học độc lập hoặc làm những bài học bổ sung cho bất kỳ khóa học về khoa học máy tính nào."
-      body_short: "Nếu bạn không có máy tính, hãy thử các bài học cắm phít này trong lớp học của bạn."
+      body_short: "Nếu bạn không có máy tính, hãy thử các bài học không sử dụng thiết bị điện tử này trong lớp học của bạn."
     unplugged_conditionals:
       title: "Điều kiện"
       body: "Tìm hiểu về các thuật toán và tuyên bố có điều kiện trong hoạt động \"không cắm phín\" này bằng cách sử dụng một bộ bài."
     widgets:
-      title: "Widget"
+      title: "Vật dụng"
       body: "Sinh viên có thể khám phá các khái niệm từ các Nguyên tắc Khoa học Máy tính của chúng tôi thực hành bằng cách sử dụng các công cụ kỹ thuật số này. Sử dụng các vật dụng một mình, hoặc tạo một bài học khái niệm đơn cho lớp học của bạn."
       audience: "14 tuổi trở lên"
       cta: "Học cách làm"
@@ -719,7 +733,7 @@ vi:
     intro_desc_markdown: "Chúng tôi đã cập nhật Điều khoản Dịch vụ và Chính sách Bảo mật của chúng tôi, như được hiển thị bên dưới. Những thay đổi này có hiệu lực từ ngày 24 tháng 8 năm 2016. Sự thay đổi lớn nhất: chúng tôi sẽ_không còn lưu trữ địa chỉ email cho các tài khoản sinh viên trên Code Studio._ Đây là một vấn đề lớn đối với chúng tôi và chúng tôi hy vọng nó đặt ra một tiêu chuẩn mới cho sự riêng tư của sinh viên trong công nghệ giáo dục. Chúng tôi đã gửi cho bạn bản tóm tắt các thay đổi khác qua email."
     intro_instructions: "Bạn cần chấp nhận những điều khoản mới này cho học sinh dưới 13 tuổi trong lớp học của mình để có quyền truy cập đầy đủ vào tất cả các tính năng mới nhất trong Code Studio. Khi đăng ký một tài khoản cho một học sinh dưới 13, bạn sẽ được yêu cầu xác nhận rằng trường của bạn có sự đồng ý của cha mẹ về việc thu thập thông tin cá nhân của học sinh cho việc sử dụng và lợi ích của nhà trường, bao gồm các chương trình giáo dục như Code Studio."
     tos: "Các điều khoản của Code.org"
-    privacy: "Chính sách riêng tư"
+    privacy: "Chính sách bảo mật"
     privacy_notice: "Thông tin bảo mật"
     accept_label: 'Tôi đồng ý với cập nhật <a href="%{tos_url}" target="_blank">Điều khoản dịch vụ</a>và <a href="%{privacy_url}" target="_blank">Chính sách bảo mật</a>'
     accept_label_markdown: Tôi đồng ý với cập nhật [Điều khoản dịch vụ](%{tos_url})và [Chính sách bảo mật](%{privacy_url})
@@ -823,6 +837,8 @@ vi:
     title: 'Tải giờ của mã'
     instructions_headline: 'Không có Internet?'
     minecraft_name: 'Minecraft Hour of Code'
+    starwars_blocks_name: 'Star Wars: Tạo ra một ngân hà bằng mã lệnh (Khối)'
+    starwars_javascript_name: 'Star Wars: Tạo ra một ngân hà bằng mã lệnh (JavaScript)'
     download_in_Albanian: 'Tải xuống bằng Tiếng Albania:'
     download_in_Arabic: 'Tải xuống bằng tiếng Ả Rập:'
     download_in_Azerbaijani: 'Tải về tại Azerbaijan:'
@@ -878,7 +894,7 @@ vi:
       school_city: 'Thành phố của trường'
       school_country: 'Quốc gia'
       colombian_school_city: 'Thành phố của trường'
-      colombian_school_name: 'Tên trường'
+      colombian_chilean_school_name: 'Tên trường'
     form_entries:
       gender:
         male: 'Nam'
@@ -903,12 +919,23 @@ vi:
         scratch: 'Scratch'
       robotics:
         grok: 'Tìm hiểu Grok'
+      workshop_course:
+        csf_express: 'Nguyên tắc cơ bản của KHMT (Cấp tốc hoặc Cấp tốc cho trẻ chưa biết đọc)'
       email_opt_in:
         opt_in_yes: 'Đồng ý'
         opt_in_no: 'Không'
+    international_opt_in:
+      title: 'Tham gia hội thảo'
+      intro: "Cảm ơn bạn đã dành thời gian để tham gia đào tạo về chương trình giảng dạy của Code.org. Sứ mệnh của chúng tôi là mang đến cơ hội học môn khoa học máy tính cho tất cả trẻ em ở tất cả các trường học trên toàn thế giới. Sứ mệnh này sẽ không thể thực hiện được nếu thiếu bạn."
+      instructions: "Vui lòng điền vào biểu mẫu bên dưới để cho biết 1) bạn đã tham dự hội thảo đào tạo do một trong những đối tác quốc tế của Code.org tổ chức và 2) bạn đồng ý chia sẻ thông tin của mình với đối tác quốc tế của chúng tôi ở quốc gia của bạn để họ có thể giúp đỡ bạn trên hành trình trở thành một giáo viên dạy môn khoa học máy tính."
+      thanks_markdown: "Cảm ơn bạn đã gửi đơn! Chúng tôi rất mong được hỗ trợ bạn khi bạn hiểu chương trình giảng dạy và công cụ của Code.org. Vui lòng tiếp tục chia sẻ câu hỏi và phản hồi của bạn với chúng tôi bằng cách viết thư cho chúng tôi theo địa chỉ [support@code.org](%{support_email_url}) hoặc bằng cách đăng trên [diễn đàn giáo viên](%{teacher_forum_url})!"
+      facilitator_not_listed: "Điều hành viên của tôi không có trong danh sách"
+      organizer_not_listed: "Người tổ chức của tôi không có trong danh sách"
   cookie_banner:
-    accept: 'Tôi đồng ý'
+    accept: 'tôi đồng ý'
+  page_not_found_title: "Không tìm thấy trang"
   copy: 'Sao chép'
+  confirm: 'Xác nhận'
   parent_email_banner:
     text: "**Bạn là cha mẹ hay người giám hộ?** Hãy liên kết email của bạn với tài khoản này để luôn cập nhật về tiến trình và dự án của con bạn!"
     link_your_email: "Liên kết thư điện tử của bạn"

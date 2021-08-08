@@ -1,22 +1,20 @@
 import color from '@cdo/apps/util/color';
 import {LevelStatus, LevelKind} from '@cdo/apps/util/sharedConstants';
-import progressTableStyles from '@cdo/apps/templates/sectionProgress/progressTables/progressTableStyles.scss';
 
+/**
+ * Note: these constants will be removed in favor of `BubbleFactory.bubbleSizes`
+ * once we finish cleaning up all of our bubble components (LP-1662).
+ */
 export const DOT_SIZE = 30;
 export const DIAMOND_DOT_SIZE = 22;
 export const SMALL_DOT_SIZE = 9;
 export const SMALL_DIAMOND_SIZE = 6;
-export const BUBBLE_BORDER_WIDTH = 2;
 
-// Hard-coded container width to ensure all big bubbles have the same width
-// regardless of shape (circle vs. diamond).
-// Two pixels on each side for margin, plus 2 x border width
-export const BUBBLE_CONTAINER_WIDTH = DOT_SIZE + 4 + 2 * BUBBLE_BORDER_WIDTH;
-
-export const LETTER_BUBBLE_SIZE = 16;
-export const LETTER_BUBBLE_MARGIN = 3;
-export const LETTER_BUBBLE_CONTAINER_WIDTH =
-  LETTER_BUBBLE_SIZE + 2 * LETTER_BUBBLE_MARGIN + 2 * BUBBLE_BORDER_WIDTH;
+/**
+ * ======================================
+ * Layout helpers
+ * ======================================
+ */
 
 export const flex = {
   display: 'flex',
@@ -28,31 +26,30 @@ export const flexBetween = {...flex, justifyContent: 'space-between'};
 
 export const inlineBlock = {display: 'inline-block'};
 
-export const link = {
-  ...inlineBlock,
-  textDecoration: 'none'
+export const marginLeftRight = margin => {
+  return {
+    marginLeft: margin,
+    marginRight: margin
+  };
 };
+
+export const marginTopBottom = margin => {
+  return {
+    marginTop: margin,
+    marginBottom: margin
+  };
+};
+
+/**
+ * ======================================
+ * Shared styles
+ * ======================================
+ */
 
 export const font = {
   fontFamily: '"Gotham 5r", sans-serif'
 };
 
-export const CELL_PADDING = 4;
-export const cellContent = {
-  padding: `0px ${CELL_PADDING}px`
-};
-
-export const studentListContent = {
-  height: parseInt(progressTableStyles.ROW_HEIGHT),
-  boxSizing: 'border-box',
-  padding: 10,
-  fontSize: 14,
-  textOverflow: 'ellipsis',
-  whiteSpace: 'nowrap',
-  overflow: 'hidden'
-};
-
-// Style used when hovering
 export const hoverStyle = {
   ':hover': {
     textDecoration: 'none',
@@ -63,6 +60,35 @@ export const hoverStyle = {
   transition:
     'background-color .2s ease-out, border-color .2s ease-out, color .2s ease-out'
 };
+
+/**
+ * ======================================
+ * Progress styles
+ * ======================================
+ */
+
+/**
+ * Get border and background styling based on level kind and student progress.
+ */
+export function levelProgressStyle(levelStatus, levelKind) {
+  let style = {
+    borderWidth: 2,
+    borderColor: color.lighter_gray,
+    borderStyle: 'solid',
+    color: color.charcoal,
+    backgroundColor: color.level_not_tried
+  };
+
+  const statusStyle =
+    levelKind === LevelKind.assessment
+      ? assessmentStatusStyle[levelStatus]
+      : levelStatusStyle[levelStatus];
+
+  return {
+    ...style,
+    ...statusStyle
+  };
+}
 
 const assessmentStatusStyle = {
   [LevelStatus.attempted]: {
@@ -79,11 +105,6 @@ const assessmentStatusStyle = {
     color: color.white
   },
   [LevelStatus.perfect]: {
-    borderColor: color.level_submitted,
-    backgroundColor: color.level_submitted,
-    color: color.white
-  },
-  [LevelStatus.readonly]: {
     borderColor: color.level_submitted,
     backgroundColor: color.level_submitted,
     color: color.white
@@ -119,12 +140,6 @@ const levelStatusStyle = {
     backgroundColor: color.level_submitted,
     color: color.white
   },
-  // Note: There are submittable levels that are not assessments.
-  [LevelStatus.readonly]: {
-    borderColor: color.level_submitted,
-    backgroundColor: color.level_submitted,
-    color: color.white
-  },
   // Below are used by peer reviews
   [LevelStatus.review_rejected]: {
     color: color.white,
@@ -136,39 +151,4 @@ const levelStatusStyle = {
     borderColor: color.level_perfect,
     backgroundColor: color.level_perfect
   }
-};
-
-/**
- * Given a level object, figure out styling related to its color, border color,
- * and background color
- */
-export const levelProgressStyle = (levelStatus, levelKind, disabled) => {
-  let style = {
-    borderWidth: BUBBLE_BORDER_WIDTH,
-    borderColor: color.lighter_gray,
-    borderStyle: 'solid',
-    color: color.charcoal,
-    backgroundColor: color.level_not_tried
-  };
-
-  // We don't return early for disabled assessments that have been submitted
-  // so that they still show their submitted status.
-  if (
-    (disabled && levelStatus !== LevelStatus.submitted) ||
-    !levelStatus ||
-    levelStatus === levelStatus.not_tried ||
-    levelStatus === LevelStatus.locked
-  ) {
-    return style;
-  }
-
-  const statusStyle =
-    levelKind === LevelKind.assessment
-      ? assessmentStatusStyle[levelStatus]
-      : levelStatusStyle[levelStatus];
-
-  return {
-    ...style,
-    ...statusStyle
-  };
 };

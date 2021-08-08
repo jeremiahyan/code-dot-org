@@ -7,8 +7,8 @@ EMPTY_XML = '<xml></xml>'.freeze
 class LevelsController < ApplicationController
   include LevelsHelper
   include ActiveSupport::Inflector
-  before_action :authenticate_user!, except: [:show, :embed_level, :get_rubric]
-  before_action :require_levelbuilder_mode_or_test_env, except: [:show, :embed_level, :get_rubric]
+  before_action :authenticate_user!, except: [:show, :embed_level, :get_rubric, :get_serialized_maze]
+  before_action :require_levelbuilder_mode_or_test_env, except: [:show, :embed_level, :get_rubric, :get_serialized_maze]
   load_and_authorize_resource except: [:create]
 
   before_action :set_level, only: [:show, :edit, :update, :destroy]
@@ -37,6 +37,7 @@ class LevelsController < ApplicationController
     FrequencyAnalysis,
     Gamelab,
     GamelabJr,
+    Javalab,
     Karel,
     LevelGroup,
     Map,
@@ -136,9 +137,7 @@ class LevelsController < ApplicationController
   def edit
     # Make sure that the encrypted property is a boolean
     @level.properties['encrypted'] = @level.properties['encrypted'].to_bool if @level.properties['encrypted']
-    scripts = @level.script_levels.map(&:script)
-    @visible = scripts.reject(&:hidden).any?
-    @pilot = scripts.select(&:pilot_experiment).any?
+    @in_script = @level.script_levels.any?
     @standalone = ProjectsController::STANDALONE_PROJECTS.values.map {|h| h[:name]}.include?(@level.name)
     fb = FirebaseHelper.new('shared')
     @dataset_library_manifest = fb.get_library_manifest
@@ -155,6 +154,14 @@ class LevelsController < ApplicationController
       performanceLevel3: @level.rubric_performance_level_3,
       performanceLevel4: @level.rubric_performance_level_4
     }
+  end
+
+  # GET /levels/:id/get_serialized_maze
+  # Get the serialized_maze for the level, if it exists.
+  def get_serialized_maze
+    serialized_maze = @level.try(:get_serialized_maze)
+    return head :no_content unless serialized_maze
+    render json: serialized_maze
   end
 
   # GET /levels/:id/edit_blocks/:type
@@ -304,8 +311,14 @@ class LevelsController < ApplicationController
   # DELETE /levels/1
   # DELETE /levels/1.json
   def destroy
-    @level.destroy
-    redirect_to(params[:redirect] || levels_url)
+    result = @level.destroy
+    if result
+      flash.notice = "Deleted #{@level.name.inspect}"
+      redirect_to(params[:redirect] || levels_url)
+    else
+      flash.alert = @level.errors.full_messages.join(". ")
+      redirect_to(edit_level_path(@level))
+    end
   end
 
   def new
@@ -341,6 +354,8 @@ class LevelsController < ApplicationController
         @game = Game.curriculum_reference
       elsif @type_class <= Ailab
         @game = Game.ailab
+      elsif @type_class == Javalab
+        @game = Game.javalab
       end
       @level = @type_class.new
       render :edit

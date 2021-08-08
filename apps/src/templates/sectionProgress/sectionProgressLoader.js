@@ -3,13 +3,14 @@ import {
   startLoadingProgress,
   setCurrentView,
   finishLoadingProgress,
-  addDataByScript,
+  addDataByUnit,
   startRefreshingProgress,
   finishRefreshingProgress
 } from './sectionProgressRedux';
 import {
   processedLevel,
-  processServerSectionProgress
+  processServerSectionProgress,
+  lessonProgressForSection
 } from '@cdo/apps/templates/progress/progressHelpers';
 import {
   fetchStandardsCoveredForScript,
@@ -20,15 +21,15 @@ import _ from 'lodash';
 
 const NUM_STUDENTS_PER_PAGE = 50;
 
-export function loadScript(scriptId, sectionId) {
+export function loadScriptProgress(scriptId, sectionId) {
   const state = getStore().getState().sectionProgress;
   const sectionData = getStore().getState().sectionData.section;
 
   // TODO: Save Standards data in a way that allows us
   // not to reload all data to get correct standards data
   if (
-    state.studentLevelProgressByScript[scriptId] &&
-    state.scriptDataByScript[scriptId] &&
+    state.studentLevelProgressByUnit[scriptId] &&
+    state.unitDataByUnit[scriptId] &&
     state.currentView !== ViewType.STANDARDS
   ) {
     if (state.isRefreshingProgress) {
@@ -41,9 +42,10 @@ export function loadScript(scriptId, sectionId) {
   }
 
   let sectionProgress = {
-    scriptDataByScript: {},
-    studentLevelProgressByScript: {},
-    studentLastUpdateByScript: {}
+    unitDataByUnit: {},
+    studentLevelProgressByUnit: {},
+    studentLessonProgressByUnit: {},
+    studentLastUpdateByUnit: {}
   };
 
   // Get the script data
@@ -52,8 +54,11 @@ export function loadScript(scriptId, sectionId) {
   })
     .then(response => response.json())
     .then(scriptData => {
-      sectionProgress.scriptDataByScript = {
-        [scriptId]: postProcessDataByScript(scriptData)
+      sectionProgress.unitDataByUnit = {
+        [scriptId]: postProcessDataByScript(
+          scriptData,
+          sectionData.lessonExtras
+        )
       };
 
       if (
@@ -75,16 +80,16 @@ export function loadScript(scriptId, sectionId) {
     return fetch(url, {credentials: 'include'})
       .then(response => response.json())
       .then(data => {
-        sectionProgress.studentLevelProgressByScript = {
+        sectionProgress.studentLevelProgressByUnit = {
           [scriptId]: {
-            ...sectionProgress.studentLevelProgressByScript[scriptId],
+            ...sectionProgress.studentLevelProgressByUnit[scriptId],
             ...processServerSectionProgress(data.student_progress)
           }
         };
-        sectionProgress.studentLastUpdateByScript = {
+        sectionProgress.studentLastUpdateByUnit = {
           [scriptId]: {
-            ...sectionProgress.studentLastUpdateByScript[scriptId],
-            ...processStudentTimestamps(data.student_last_updates)
+            ...sectionProgress.studentLastUpdateByUnit[scriptId],
+            ...data.student_last_updates
           }
         };
       });
@@ -93,45 +98,54 @@ export function loadScript(scriptId, sectionId) {
   // Combine and transform the data
   requests.push(scriptRequest);
   Promise.all(requests).then(() => {
-    getStore().dispatch(addDataByScript(sectionProgress));
+    sectionProgress.studentLessonProgressByUnit = {
+      ...sectionProgress.studentLessonProgressByUnit,
+      [scriptId]: lessonProgressForSection(
+        sectionProgress.studentLevelProgressByUnit[scriptId],
+        sectionProgress.unitDataByUnit[scriptId].lessons
+      )
+    };
+    getStore().dispatch(addDataByUnit(sectionProgress));
     getStore().dispatch(finishLoadingProgress());
     getStore().dispatch(finishRefreshingProgress());
 
-    if (sectionProgress.scriptDataByScript[scriptId].hasStandards) {
+    if (sectionProgress.unitDataByUnit[scriptId].hasStandards) {
       getStore().dispatch(fetchStandardsCoveredForScript(scriptId));
       getStore().dispatch(fetchStudentLevelScores(scriptId, sectionId));
     }
   });
 }
 
-function processStudentTimestamps(timestamps) {
-  const studentTimestamps = _.mapValues(timestamps, seconds => seconds * 1000);
-  return studentTimestamps;
-}
-
-function postProcessDataByScript(scriptData) {
+function postProcessDataByScript(scriptData, includeBonusLevels) {
   // Filter to match scriptDataPropType
   const filteredScriptData = {
     id: scriptData.id,
-    csf: scriptData.csf,
+    csf: !!scriptData.csf,
     hasStandards: scriptData.hasStandards,
     title: scriptData.title,
     path: scriptData.path,
-    stages: scriptData.lessons,
+    lessons: scriptData.lessons,
     family_name: scriptData.family_name,
     version_year: scriptData.version_year,
     name: scriptData.name
   };
-  if (!filteredScriptData.stages) {
+  if (!filteredScriptData.lessons) {
     return filteredScriptData;
   }
   return {
     ...filteredScriptData,
-    stages: filteredScriptData.stages.map(stage => {
-      return {
-        ...stage,
-        levels: stage.levels.map(level => processedLevel(level))
-      };
-    })
+    lessons: filteredScriptData.lessons.map(lesson =>
+      postProcessLessonData(lesson, includeBonusLevels)
+    )
+  };
+}
+
+function postProcessLessonData(lesson, includeBonusLevels) {
+  const levels = includeBonusLevels
+    ? lesson.levels
+    : lesson.levels.filter(level => !level.bonus);
+  return {
+    ...lesson,
+    levels: levels.map(level => processedLevel(level))
   };
 }

@@ -7,7 +7,10 @@
 
 import _ from 'lodash';
 import {LevelStatus} from '@cdo/apps/util/sharedConstants';
-import {levelProgressFromStatus} from '@cdo/apps/templates/progress/progressHelpers';
+import {
+  levelProgressFromServer,
+  lessonProgressForSection
+} from '@cdo/apps/templates/progress/progressHelpers';
 import {createStore} from 'redux';
 import Immutable from 'immutable';
 
@@ -15,12 +18,12 @@ export const fakeLesson = (
   name,
   id,
   lockable = false,
-  stageNumber = undefined
+  lessonNumber = undefined
 ) => ({
   name,
   id,
   lockable,
-  stageNumber,
+  lessonNumber,
   isFocusArea: false
 });
 
@@ -31,6 +34,7 @@ export const fakeLevel = (overrides = {}) => {
   return {
     id: id,
     status: LevelStatus.not_tried,
+    isLocked: false,
     levelNumber: levelNumber,
     bubbleText: levelNumber.toString(),
     url: `/level${levelNumber}`,
@@ -54,11 +58,15 @@ export const fakeLevels = (numLevels, {startLevel = 1, named = true} = {}) =>
 
 export const fakeProgressForLevels = (
   levels,
-  status = LevelStatus.not_tried
+  status = LevelStatus.not_tried,
+  serverProgressOverrides = {}
 ) => {
   const progress = {};
   levels.forEach(level => {
-    progress[level.id] = levelProgressFromStatus(status);
+    progress[level.id] = levelProgressFromServer({
+      status: status,
+      ...serverProgressOverrides
+    });
   });
   return progress;
 };
@@ -70,22 +78,60 @@ export const fakeProgressForLevels = (
  */
 export const createStoreWithHiddenLesson = (viewAs, lessonId) => {
   return createStore(state => state, {
-    stageLock: {
-      stagesBySectionId: {
+    lessonLock: {
+      lessonsBySectionId: {
         '11': {}
-      }
+      },
+      lockableAuthorized: false
     },
     viewAs: viewAs,
     teacherSections: {
       selectedSectionId: '11'
     },
-    hiddenStage: Immutable.fromJS({
-      stagesBySection: {
+    hiddenLesson: Immutable.fromJS({
+      lessonsBySection: {
         '11': {[lessonId]: true}
       }
     }),
     progress: {
       showTeacherInfo: false
+    },
+    currentUser: {
+      userId: 1
+    }
+  });
+};
+
+/**
+ * Creates the shell of a redux store with the provided lessonId being hidden
+ * @param {ViewType} viewAs
+ * @param {number?} lessonId - Lesson to hide (or null if none)
+ */
+export const createStoreWithLockedLesson = (
+  viewAs,
+  lockableAuthorized = false
+) => {
+  return createStore(state => state, {
+    lessonLock: {
+      lessonsBySectionId: {
+        '11': {}
+      },
+      lockableAuthorized: lockableAuthorized
+    },
+    viewAs: viewAs,
+    teacherSections: {
+      selectedSectionId: '11'
+    },
+    hiddenLesson: Immutable.fromJS({
+      lessonsBySection: {
+        '11': {[lessonId]: true}
+      }
+    }),
+    progress: {
+      showTeacherInfo: false
+    },
+    currentUser: {
+      userId: 1
     }
   });
 };
@@ -130,13 +176,22 @@ export const fakeScriptData = (overrideFields = {}) => {
     id: 1,
     name: 'csd1-2020',
     title: 'CSD Unit 1 - Problem Solving and Computing (20-21)',
-    stages: [],
+    csf: false,
+    lessons: [],
     ...overrideFields
   };
 };
 
-export const fakeStudentLevelProgress = (levels, students) => {
-  const progressOnLessons = fakeProgressForLevels(levels);
+export const fakeStudentLevelProgress = (
+  levels,
+  students,
+  serverProgressOverrides = {}
+) => {
+  const progressOnLessons = fakeProgressForLevels(
+    levels,
+    serverProgressOverrides.status,
+    serverProgressOverrides
+  );
 
   const studentProgress = {};
   students.forEach(student => {
@@ -159,44 +214,51 @@ export const fakeStudentLastUpdateByScript = (scriptData, students) => {
 };
 
 export const fakeProgressTableReduxInitialState = (
-  stages,
+  lessons,
   scriptData,
   students = fakeStudents(2)
 ) => {
-  if (!stages) {
+  if (!lessons) {
     const lesson1 = fakeLessonWithLevels({position: 1, levels: fakeLevels(1)});
     const lesson2 = fakeLessonWithLevels({position: 2, levels: fakeLevels(2)});
-    stages = [lesson1, lesson2];
+    lessons = [lesson1, lesson2];
   }
   if (!scriptData) {
-    scriptData = fakeScriptData({stages});
+    scriptData = fakeScriptData({lessons: lessons});
   }
+  const levelProgressData = fakeStudentLevelProgress(
+    scriptData.lessons[0].levels,
+    students
+  );
 
   return {
     progress: {
       lessonGroups: [],
-      stages: stages,
-      focusAreaStageIds: [],
+      lessons: lessons,
+      focusAreaLessonIds: [],
       professionalLearningCourse: false
     },
     sectionData: {
       section: fakeSection(students)
     },
     sectionProgress: {
-      scriptDataByScript: {[scriptData.id]: scriptData},
-      studentLevelProgressByScript: {
-        [scriptData.id]: fakeStudentLevelProgress(
-          scriptData.stages[0].levels,
-          students
+      unitDataByUnit: {[scriptData.id]: scriptData},
+      studentLevelProgressByUnit: {
+        [scriptData.id]: levelProgressData
+      },
+      studentLessonProgressByUnit: {
+        [scriptData.id]: lessonProgressForSection(
+          levelProgressData,
+          scriptData.lessons
         )
       },
-      studentLastUpdateByScript: fakeStudentLastUpdateByScript(
+      studentLastUpdateByUnit: fakeStudentLastUpdateByScript(
         scriptData,
         students
       ),
       lessonOfInterest: 1
     },
-    scriptSelection: {scriptId: scriptData.id},
+    unitSelection: {scriptId: scriptData.id},
     locales: {localeCode: 'en-US'}
   };
 };

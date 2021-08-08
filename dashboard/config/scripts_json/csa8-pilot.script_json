@@ -2,12 +2,16 @@
   "script": {
     "name": "csa8-pilot",
     "wrapup_video_id": null,
-    "hidden": true,
     "login_required": false,
     "properties": {
+      "curriculum_umbrella": "CSA",
+      "is_migrated": true,
+      "pilot_experiment": "csa-pilot"
     },
     "new_name": null,
     "family_name": null,
+    "serialized_at": "2021-07-30 20:28:30 UTC",
+    "published_state": "pilot",
     "seeding_key": {
       "script.name": "csa8-pilot"
     }
@@ -36,13 +40,28 @@
   "lessons_resources": [
 
   ],
+  "scripts_resources": [
+
+  ],
+  "scripts_student_resources": [
+
+  ],
   "vocabularies": [
 
   ],
   "lessons_vocabularies": [
 
   ],
+  "lessons_programming_expressions": [
+
+  ],
   "objectives": [
+
+  ],
+  "lessons_standards": [
+
+  ],
+  "lessons_opportunity_standards": [
 
   ]
 }

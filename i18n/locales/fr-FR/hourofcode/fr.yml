@@ -14,22 +14,22 @@ fr:
   campaign_date_full_year: 7-13 décembre, 2020
   latam_campaign_date_start_short: 1 Oct.
   latam_campaign_date_start_long: Octobre 1
-  latam_campaign_date_short: Oct. 1 - Dec. 18
-  latam_campaign_date_full: October 1 - December 18
+  latam_campaign_date_short: Oct. 1 - Dec. 12
+  latam_campaign_date_full: October 1 - December 12
   latam_campaign_date_year: '2020'
-  latam_campaign_date_full_year: October 1, 2020 - December 18, 2020
-  europe_campaign_date_start_short: Oct. 10
-  europe_campaign_date_start_long: October 10
-  europe_campaign_date_short: Oct. 10-25
-  europe_campaign_date_full: October 10-25
+  latam_campaign_date_full_year: October 1, 2021 - December 12, 2021
+  europe_campaign_date_start_short: Oct. 9
+  europe_campaign_date_start_long: October 9
+  europe_campaign_date_short: Oct. 9-24
+  europe_campaign_date_full: October 9-24
   europe_campaign_date_year: '2020'
-  europe_campaign_date_full_year: October 10-25, 2020
+  europe_campaign_date_full_year: October 9-24, 2021
   africa_campaign_date_start_short: 1 Oct.
   africa_campaign_date_start_long: Octobre 1
   africa_campaign_date_short: Oct. 1-31
   africa_campaign_date_full: October 1-31
   africa_campaign_date_year: '2020'
-  africa_campaign_date_full_year: October 1-31, 2020
+  africa_campaign_date_full_year: October 1-31, 2021
   hoc2020_header: Apprenez aujourd'hui, construisez un avenir meilleur.
   hoc2020_header_with_line_break_markdown: Apprenez aujourd'hui,      construisez
     un avenir meilleur.
@@ -147,11 +147,17 @@ fr:
     tout au long de notre programme d'études.  "
   hoc_live: Hour of Code Live
   hoc_live_sign_up_title: Sign up for Hour of Code Live
+  hoc_live_learn_title: Learn with Hour of Code Live
   hoc_live_sign_up_message: Learn in real time alongside special guests! Students
     of all ages and abilities, including those without computers, are welcome. Join
     our mailing list to receive recordings of the episodes and resources to continue
     learning at home. See past episodes [here](%{episodes_url}).
+  hoc_live_learn_message: Learn basic concepts of computer science alongside special
+    guests! Students of all ages and abilities, including those without computers,
+    are welcome to our virtual workshop. Continue learning at home through our Hour
+    of Code Live episodes.
   hoc_live_join_us: Rejoignez-nous
+  hoc_live_learn_more: En savoir plus
   hoc_overview_oceans_tutorial_header: IA pour les Océans
   hoc_overview_oceans_tutorial_desc: Découvrez l'intelligence artificielle (IA), l'apprentissage
     automatique, les données de formation et le biais, tout en explorant les questions
@@ -227,7 +233,7 @@ fr:
     ou Steve dans leur aventures au sein de cet univers Minecraft.
   codeorg_homepage_hoc2019_dance_heading: Essaies la nouvelle <span class="highlight-word">Soirée&nbsp;Dansante
     !</span>
-  codeorg_homepage_hoc2019_dance_heading_markdown: Essaies la nouvelle **Soirée&nbsp;Dansante
+  codeorg_homepage_hoc2019_dance_heading_markdown: Essaie la nouvelle **Soirée&nbsp;Dansante
     !**
   codeorg_homepage_special2020_body1: Soutien pour parents et professeurs face à la
     fermeture des écoles.
@@ -8106,13 +8112,13 @@ fr:
   tutorial_mbbuttons_string_platforms: Windows, Mac OS, Linux, or Chromebook
   tutorial_meteor_string_platforms: Windows, Mac OS, Linux, or Chromebook
   tutorial_ballbounce_string_platforms: Chrome, Firefox, Safari, Android tablet, Android
-    phone
+    phone, iPad, iPhone
   tutorial_mitcodi_string_platforms: Chrome, Firefox, Safari, Android tablet, Android
-    phone
+    phone, iPad, iPhone
   tutorial_mitdoodle_string_platforms: Chrome, Firefox, Safari, Android tablet, Android
-    phone
+    phone, iPad, iPhone
   tutorial_talktome_string_platforms: Chrome, Firefox, Safari, Android tablet, Android
-    phone
+    phone, iPad, iPhone
   tutorial_mobilecspmap_string_platforms: Chrome, Firefox, Android tablet, Android
     phone
   tutorial_ozorandom_string_platforms: ''

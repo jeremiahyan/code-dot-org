@@ -19,7 +19,7 @@ class TeacherFeedbacksControllerTest < ActionController::TestCase
   end
 
   test 'index: returns success if signed in user - feedback' do
-    feedback = create :teacher_feedback
+    feedback = create :teacher_feedback, :with_script_level
     assert_equal TeacherFeedback.all.count, 1
     sign_in feedback.student
     get :index
@@ -33,17 +33,33 @@ class TeacherFeedbacksControllerTest < ActionController::TestCase
   test 'index returns many feedbacks' do
     student = create :student
     5.times do
-      create :teacher_feedback, student: student
+      create :teacher_feedback, :with_script_level, student: student
     end
     assert_equal TeacherFeedback.all.count, 5
     sign_in student
-    assert_queries 20 do
+    assert_queries 25 do
       get :index
       assert_response :success
     end
 
     all_feedback_data = get_all_response_feedback_data
     assert_equal 5, all_feedback_data.count
+  end
+
+  test 'index returns latest feedback per level marked as latest' do
+    student = create :student
+    script_level = create :script_level
+    3.times do
+      create :teacher_feedback, student: student, script: script_level.script, level: script_level.levels.first
+    end
+
+    sign_in student
+    get :index
+    assert_response :success
+
+    all_feedback_data = get_all_response_feedback_data
+    latest_for_level_vals = all_feedback_data.map {|feedback| feedback['is_latest_for_level']}
+    assert_equal latest_for_level_vals, [true, false, false]
   end
 
   private

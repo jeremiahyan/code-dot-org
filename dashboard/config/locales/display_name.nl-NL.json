@@ -107,7 +107,6 @@
         "courseA_video_Stevie_2018": "Stevie en het Grote Project",
         "courseB_video_Unspotted": "Onbekende bugs",
         "courseB_video_Unspotted_2018": "Onbekende bugs",
-        "outbreak_freeplay": "Vrije Speelruimte",
         "Alien Defender": "Alien Defender",
         "Course E: Artist Project": "Cursus E Artist Project",
         "Course E: Artist Project_2018": "Cursus E Artist Project",
@@ -118,7 +117,23 @@
         "outbreak4": "Uw simulatie modificeren",
         "outbreak6": "Willekeurige kans",
         "outbreak7": "Immuniteit en vaccines",
-        "outbreak8": "Een bericht delen"
+        "outbreak8": "Een bericht delen",
+        "CourseF_Oceans_Video_Machine_Learning_2021": "Video: Machinaal leren",
+        "CourseF_Oceans_Video_Societal_Implications_2021": "Video: Maatschappelijke implicaties",
+        "CourseF_Oceans_Video_Training_Data_2021": "Video: Trainingsgegevens",
+        "CourseF_outbreak1": "Virussimulatie",
+        "CourseF_outbreak2": "Virussimulatie",
+        "CourseF_outbreak3": "Virussimulatie",
+        "CourseF_outbreak4": "Uw simulatie modificeren",
+        "CourseF_outbreak6": "Willekeurige kans",
+        "CourseF_outbreak7": "Immuniteit en vaccines",
+        "CourseF_outbreak8": "Een bericht delen",
+        "courseF_bee_for5_2021": "Variabelen",
+        "courseF_events_freeplay_aquatic": "Aquatisch",
+        "courseF_sprites_freeplay_aquatic": "Aquatisch",
+        "ramp_artist_loops4_2021": "Ster",
+        "CourseD_Dance_2020_bonus1_2021": "Heen en weer",
+        "CourseD_Dance_2020_bonus3_2021": "Ga in positie staan"
       }
     }
   }

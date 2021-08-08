@@ -39,20 +39,20 @@ hu-HU:
         - {}
         - {}
         - {}
-        - {}
+        - text: "/script_assets/k_1_images/unplugged_images/big_event_1_a4.png"
         content2: A billentyűkombinációkat párosítása a táncmozdulatokhoz.
         questions:
         - {}
         - {}
         - {}
-        - {}
+        - text: "/script_assets/k_1_images/unplugged_images/big_event_1_q4.png"
         title: Megfelelő
       2-3 Binary Match 1:
         answers:
-        - {}
-        - {}
-        - {}
-        - {}
+        - text: "/script_assets/2-3_images/unplugged/binary_1_a3.png"
+        - text: "/script_assets/2-3_images/unplugged/binary_1_a1.png"
+        - text: "/script_assets/2-3_images/unplugged/binary_1_a2.png"
+        - text: "/script_assets/2-3_images/unplugged/binary_1_a4.png"
         content2: Használd a betűket és a kódokat a párosításhoz!
         questions:
         - text: "***N***"
@@ -60,15 +60,21 @@ hu-HU:
         - text: "***P***"
         - text: "***Q***"
         title: Megfelelő
+        content1: "/script_assets/2-3_images/unplugged/binary_1_q.png, 250"
       2-3 Conditionals Multi 1:
         answers:
-        - {}
-        - {}
-        - correct: true
-        - {}
+        - text: "/script_assets/2-3_images/unplugged/conditionals_1_a1.png"
+        - text: "/script_assets/2-3_images/unplugged/conditionals_1_a2.png"
+        - text: "/script_assets/2-3_images/unplugged/conditionals_1_a3.png"
+          correct: true
+        - text: "/script_assets/2-3_images/unplugged/conditionals_1_a4.png"
         questions:
         - text: A játék szabályai szerint, melyik sor kártya van helyesen pontozva?
         title: Feleletválasztós
+        content1: "/script_assets/2-3_images/unplugged/conditionals_1_q.png"
+        teacher_markdown: "## Tanárok:\n\nA diákok azt hihetik, hogy *nincs* helyes
+          válasz a kérdésre, és ez abból fakadhat, hogy félreértik a szabályokat.
+          \n\nItt egy videó, ami elmagyarázza, hogy mi is a lényeg ebben a feladatban:\n\nhttps://youtu.be/TbUaEnAYPjI\n"
       2-3 Getting Loopy Multi 1:
         answers:
         - text: "/script_assets/2-3_images/unplugged/getting_loopy_1_a1.png"
@@ -144,12 +150,16 @@ hu-HU:
         title: Feleletválasztós
       2-3 artist debug multi 1:
         answers:
-        - {}
-        - correct: true
-        - {}
-        - {}
+        - text: "/script_assets/2-3_images/artist/2-3_artistdebug_multi_1_a1.png"
+        - text: "/script_assets/2-3_images/artist/2-3_artistdebug_multi_1_a2.png"
+          correct: true
+        - text: "/script_assets/2-3_images/artist/2-3_artistdebug_multi_1_a3.png"
+        - text: "/script_assets/2-3_images/artist/2-3_artistdebug_multi_1_a4.png"
         questions:
-        - {}
+        - text: Mi az, amin változtatni kell, hogy egy teljes kör legyen a végeredmény?
+        content1: "/script_assets/2-3_images/artist/2-3_artistdebug_multi_1_q1.png,
+          700"
+        title: Művész hibakeresés Többszörös választás 1
       2-3 artist functions multi 1:
         answers:
         - correct: true
@@ -211,21 +221,27 @@ hu-HU:
         title: Művész - feleletválasztás
       2-3 bee conditionals multi 1:
         answers:
-        - {}
-        - {}
-        - correct: true
-        - {}
+        - text: "/script_assets/2-3_images/bee/2-3_beeconditionals_multi_1_a1.png"
+        - text: "/script_assets/2-3_images/bee/2-3_beeconditionals_multi_1_a2.png"
+        - text: "/script_assets/2-3_images/bee/2-3_beeconditionals_multi_1_a3.png"
+          correct: true
+        - text: "/script_assets/2-3_images/bee/2-3_beeconditionals_multi_1_a4.png"
         questions:
         - text: Melyik összehasonlítás helyes az alábbiak közül?
+        title: Méh feltételek Többszörös választás 1
       2-3 bee conditionals multi 3:
         answers:
-        - {}
-        - correct: true
-        - {}
-        - {}
+        - text: "/script_assets/2-3_images/bee/2-3_beeconditionals_multi_3_a1.png"
+        - text: "/script_assets/2-3_images/bee/2-3_beeconditionals_multi_3_a2.png"
+          correct: true
+        - text: "/script_assets/2-3_images/bee/2-3_beeconditionals_multi_3_a3.png"
+        - text: "/script_assets/2-3_images/bee/2-3_beeconditionals_multi_3_a4.png"
         questions:
         - text: Válaszd ki a legmegfelelőbb blokkokat! A lila virágokban 0 vagy 1
             nektár van.
+        content1: "/script_assets/2-3_images/bee/2-3_beeconditionals_multi_3_q.png,
+          500"
+        title: Méh feltételek Többszörös választás 2
       2-3 bee loops multi 1:
         answers:
         - text: "/script_assets/2-3_images/bee/2-3_beeloops_multi_1_a1.png"
@@ -487,12 +503,12 @@ hu-HU:
         markdown: |
           # A nagy esemény
 
-          A számítástechnikában az események a akciók, amit a számítógép kijelez. Ebben a leckében a gép másképp reagál, attól függően, hogy melyik gombot nyomod meg.
+          A számítástechnikában az események olyan akciók, amiket a számítógép kijelez. Ebben a leckében a gép mindenre másképp reagál, attól függően, hogy melyik gombot nyomod meg.
       BigEvent-Unplugged_2020:
         markdown: |
           # A nagy esemény
 
-          A számítástechnikában az események a akciók, amit a számítógép kijelez. Ebben a leckében a gép másképp reagál, attól függően, hogy melyik gombot nyomod meg.
+          A számítástechnikában az események olyan akciók, amiket a számítógép kijelez. Ebben a leckében a gép mindenre másképp reagál, attól függően, hogy melyik gombot nyomod meg.
       CSD Header Size MC:
         answers:
         - {}
@@ -1131,13 +1147,15 @@ hu-HU:
         title: Megfelelő
       K-1 Digital Footprint Multi 1:
         answers:
-        - {}
-        - {}
-        - correct: true
+        - text: "/script_assets/k_1_images/unplugged_images/digital_footprint_1_a1.png"
+        - text: "/script_assets/k_1_images/unplugged_images/digital_footprint_1_a2.png"
+        - text: "/script_assets/k_1_images/unplugged_images/digital_footprint_1_a3.png"
+          correct: true
         questions:
         - text: Melyik állatnak van olyan digitális lábnyoma, ami a <strong>legnagyobb
             veszélybe</strong> sodorja őt?
         title: Feleletválasztós
+        content1: "/script_assets/k_1_images/unplugged_images/digital_footprint_1_q.png"
       K-1 Getting Loopy Multi 1:
         answers:
         - correct: true
@@ -1325,6 +1343,7 @@ hu-HU:
         answers:
         - {}
         - correct: true
+          feedback: Helyes!
         - {}
         - {}
         questions:
@@ -1333,6 +1352,7 @@ hu-HU:
         answers:
         - {}
         - correct: true
+          feedback: Helyes!
         - {}
         - {}
         questions:
@@ -1341,6 +1361,7 @@ hu-HU:
         answers:
         - {}
         - correct: true
+          feedback: Helyes!
         - {}
         - {}
         questions:
@@ -1349,49 +1370,79 @@ hu-HU:
         answers:
         - {}
         - correct: true
+          feedback: Helyes!
         - {}
         - {}
         questions:
         - {}
       courseC_multi_artist_prog6_predict1:
         answers:
-        - {}
-        - {}
-        - correct: true
-        - {}
+        - text: A művész olyan háromszöget rajzol, amelyiknek mindhárom oldala egyenlő
+            hosszúságú.
+          feedback: Hibás! A művés egy négyzetet rajzol.
+        - text: A művész egy egyszerű vonalat rajzol.
+          feedback: Hibás! A művés egy négyzetet rajzol.
+        - text: A művész egy négyzetet rajzol.
+          correct: true
+          feedback: Helyes!
+        - text: Nem tudom.
+          feedback: A művész egy négyzetet rajzol.
         questions:
-        - {}
+        - text: Nézd meg figyelmesen az alábbi kódot! Mi történik, ha megnyomod a
+            "Futtatás" gombot?
       courseC_multi_artist_prog6_predict1_2018:
         answers:
-        - {}
-        - {}
-        - correct: true
-        - {}
+        - text: A művész olyan háromszöget rajzol, amelyiknek mindhárom oldala egyenlő
+            hosszúságú.
+          feedback: Hibás! A művés egy négyzetet rajzol.
+        - text: A művész egy egyszerű vonalat rajzol.
+          feedback: Hibás! A művés egy négyzetet rajzol.
+        - text: A művész egy négyzetet fog rajzolni.
+          correct: true
+          feedback: Helyes!
+        - text: Nem tudom.
+          feedback: A művész egy négyzetet rajzol.
         questions:
-        - {}
+        - text: Nézd meg figyelmesen az alábbi kódot! Mi történik, ha megnyomod a
+            "Futtatás" gombot?
       courseC_multi_artist_prog6_predict1_2018_2019:
         answers:
-        - {}
-        - {}
-        - correct: true
-        - {}
+        - text: A művész olyan háromszöget rajzol, amelyiknek mindhárom oldala egyenlő
+            hosszúságú.
+          feedback: Hibás! A művés egy négyzetet rajzol.
+        - text: A művész egy egyszerű vonalat rajzol.
+          feedback: Hibás! A művés egy négyzetet rajzol.
+        - text: A művész egy négyzetet fog rajzolni.
+          correct: true
+          feedback: Helyes!
+        - text: Nem tudom.
+          feedback: A művész egy négyzetet rajzol.
         questions:
-        - {}
+        - text: Nézd meg figyelmesen az alábbi kódot! Mi történik, ha megnyomod a
+            "Futtatás" gombot?
       courseC_multi_artist_prog6_predict1_2018_2019_2020:
         answers:
-        - {}
-        - {}
-        - correct: true
-        - {}
+        - text: A művész olyan háromszöget rajzol, amelyiknek mindhárom oldala egyenlő
+            hosszúságú.
+          feedback: Hibás! A művés egy négyzetet rajzol.
+        - text: A művész egy egyszerű vonalat rajzol.
+          feedback: Hibás! A művés egy négyzetet rajzol.
+        - text: A művész egy négyzetet fog rajzolni.
+          correct: true
+          feedback: Helyes!
+        - text: Nem tudom.
+          feedback: A művész egy négyzetet rajzol.
         questions:
-        - {}
+        - text: Nézd meg figyelmesen az alábbi kódot! Mi történik, ha megnyomod a
+            "Futtatás" gombot?
       courseC_multi_harvester_loops11_predict1:
         answers:
         - text: '4'
         - text: '12'
           correct: true
+          feedback: Helyes!
         - text: '15'
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseC_multi_harvester_loops11_predict1_2018:
@@ -1399,8 +1450,9 @@ hu-HU:
         - text: '4'
         - text: '12'
           correct: true
+          feedback: Helyes!
         - text: '15'
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseC_multi_harvester_loops11_predict1_2018_2019:
@@ -1408,8 +1460,9 @@ hu-HU:
         - text: '4'
         - text: '12'
           correct: true
+          feedback: Helyes!
         - text: '15'
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseC_multi_harvester_loops11_predict1_2018_2019_2020:
@@ -1417,32 +1470,36 @@ hu-HU:
         - text: '4'
         - text: '12'
           correct: true
+          feedback: Helyes!
         - text: '15'
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseC_multi_maze_debugging8_predict1:
         answers:
         - {}
         - correct: true
+          feedback: Helyes!
         - {}
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseC_multi_maze_debugging8_predict1_2018:
         answers:
         - {}
         - correct: true
+          feedback: Helyes!
         - {}
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseC_multi_maze_debugging8_predict1_2018_2019:
         answers:
         - {}
         - correct: true
+          feedback: Helyes!
         - {}
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseC_multi_maze_debugging8_predict1_2018_2019_2020:
@@ -1459,43 +1516,68 @@ hu-HU:
           correct: true
           feedback: Helyes! A motkány mindjárt az elején rossz irányba fordul, aztán
             nem lép eleget ahhoz, hogy a makkig elérjen.
-        - feedback: Két hiba is van a kódban. Először is, a motkány rossz irányba
+        - text: Nem tudom.
+          feedback: Két hiba is van a kódban. Először is, a motkány rossz irányba
             fordul, aztán nem lép eleget előre, hogy elérjen a makkig.
         questions:
         - text: Keress hibákat a kódban! Elér a motkány a makkig, vagy van valami
             gond a kóddal?
       courseC_multi_maze_programming8_predict1:
         answers:
-        - {}
-        - correct: true
-        - {}
-        - {}
+        - text: 'A madár egy lépéssel a malac előtt megáll. '
+          feedback: Nem jó! Ez a kód pontosan a malachoz visz.
+        - text: A madár eljut a malacig.
+          correct: true
+          feedback: Helyes!
+        - text: A madár beleszalad a TNT-be.
+          feedback: Nem jó! Ez a kód pontosan a malachoz visz.
+        - text: Nem tudom.
+          feedback: Ez a kód pontosan a malachoz visz.
         questions:
-        - {}
+        - text: Nézd végig a kódot nagyon alaposan! Mi történik, ha megnyomod a "Futtatás"
+            gombot?
       courseC_multi_maze_programming8_predict1_2018:
         answers:
-        - {}
-        - correct: true
-        - {}
-        - {}
+        - text: 'A madár egy lépéssel a malac előtt megáll. '
+          feedback: Nem jó! Ez a kód pontosan a malachoz visz.
+        - text: A madár eljut a malacig.
+          correct: true
+          feedback: Helyes!
+        - text: A madár beleszalad a TNT-be.
+          feedback: Nem jó! Ez a kód pontosan a malachoz visz.
+        - text: Nem tudom.
+          feedback: Ez a kód pontosan a malachoz visz.
         questions:
-        - {}
+        - text: Nézd végig a kódot nagyon alaposan! Mi történik, ha megnyomod a "Futtatás"
+            gombot?
       courseC_multi_maze_programming8_predict1_2018_2019:
         answers:
-        - {}
-        - correct: true
-        - {}
-        - {}
+        - text: 'A madár egy lépéssel a malac előtt megáll. '
+          feedback: Nem jó! Ez a kód pontosan a malachoz visz.
+        - text: A madár eljut a malacig.
+          correct: true
+          feedback: Helyes!
+        - text: A madár beleszalad a TNT-be.
+          feedback: Nem jó! Ez a kód pontosan a malachoz visz.
+        - text: Nem tudom.
+          feedback: Ez a kód pontosan a malachoz visz.
         questions:
-        - {}
+        - text: Nézd végig a kódot nagyon alaposan! Mi történik, ha megnyomod a "Futtatás"
+            gombot?
       courseC_multi_maze_programming8_predict1_2018_2019_2020:
         answers:
-        - {}
-        - correct: true
-        - {}
-        - {}
+        - text: 'A madár egy lépéssel a malac előtt megáll. '
+          feedback: Nem jó! Ez a kód pontosan a malachoz visz.
+        - text: A madár eljut a malacig.
+          correct: true
+          feedback: Helyes!
+        - text: A madár beleszalad a TNT-be.
+          feedback: Nem jó! Ez a kód pontosan a malachoz visz.
+        - text: Nem tudom.
+          feedback: Ez a kód pontosan a malachoz visz.
         questions:
-        - {}
+        - text: Nézd végig a kódot nagyon alaposan! Mi történik, ha megnyomod a "Futtatás"
+            gombot?
       courseC_multi_starWars_predict1:
         answers:
         - text: BB-8 nem fog megmozdulni.
@@ -1504,10 +1586,11 @@ hu-HU:
           feedback: Nem jó válasz. Az ismétlés blokk miatt BB-8 előre fog lépni 5-ször.
         - text: BB-8 ötöt lép előre és felszedi az összes fémdarabot
           correct: true
+          feedback: Helyes!
         - text: Nem tudom
           feedback: Az ismétlés blokk miatt BB-8 ötöt lép előre.
         questions:
-        - {}
+        - text: Mit gondolsz, mi történik, ha ráklikkelsz a "Futtatás"-ra?
       courseC_multi_starWars_predict1_2018:
         answers:
         - text: BB-8 nem fog megmozdulni.
@@ -1516,10 +1599,11 @@ hu-HU:
           feedback: Nem jó válasz. Az ismétlés blokk miatt BB-8 előre fog lépni 5-ször.
         - text: BB-8 ötöt lép előre és felszedi az összes fémdarabot
           correct: true
+          feedback: Helyes!
         - text: Nem tudom
           feedback: Az ismétlés blokk miatt BB-8 ötöt lép előre.
         questions:
-        - {}
+        - text: Mit gondolsz, mi történik, ha ráklikkelsz a "Futtatás"-ra?
       courseC_multi_starWars_predict1_2018_2019:
         answers:
         - text: BB-8 nem fog megmozdulni.
@@ -1528,10 +1612,11 @@ hu-HU:
           feedback: Nem jó válasz. Az ismétlés blokk miatt BB-8 előre fog lépni 5-ször.
         - text: BB-8 ötöt lép előre és felszedi az összes fémdarabot
           correct: true
+          feedback: Helyes!
         - text: Nem tudom
           feedback: Az ismétlés blokk miatt BB-8 ötöt lép előre.
         questions:
-        - {}
+        - text: Mit gondolsz, mi történik, ha ráklikkelsz a "Futtatás"-ra?
       courseC_multi_starWars_predict1_2018_2019_2020:
         answers:
         - text: BB-8 nem fog megmozdulni.
@@ -1540,10 +1625,11 @@ hu-HU:
           feedback: Nem jó válasz. Az ismétlés blokk miatt BB-8 előre fog lépni 5-ször.
         - text: BB-8 ötöt lép előre és felszedi az összes fémdarabot
           correct: true
+          feedback: Helyes!
         - text: Nem tudom
           feedback: Az ismétlés blokk miatt BB-8 ötöt lép előre.
         questions:
-        - {}
+        - text: Mit gondolsz, mi történik, ha ráklikkelsz a "Futtatás"-ra?
       courseC_multi_starWars_predict2:
         answers:
         - text: BB-8 túl messzire megy az első ciklusban.
@@ -1552,10 +1638,12 @@ hu-HU:
         - text: BB-8 nem lép eleget előre az első ciklusban ahhoz, hogy az összes
             fémdarabot be tudja gyűjteni.
           correct: true
+          feedback: Helyes!
         - text: BB-8 gond nélkül összegyűjti az összes fémdarabot.
           feedback: Nem jó a válasz. Az első ciklussal BB-8 csak 2 lépést tesz előre,
             miközben hármat kellene előre haladnia.
-        - feedback: Az első ciklussal BB-8 csak 2 lépést tesz előre, miközben hármat
+        - text: Nem tudom.
+          feedback: Az első ciklussal BB-8 csak 2 lépést tesz előre, miközben hármat
             kellene.
         questions:
         - {}
@@ -1567,10 +1655,12 @@ hu-HU:
         - text: BB-8 nem lép eleget előre az első ciklusban ahhoz, hogy az összes
             fémdarabot be tudja gyűjteni.
           correct: true
+          feedback: Helyes!
         - text: BB-8 gond nélkül összegyűjti az összes fémdarabot.
           feedback: Nem jó a válasz. Az első ciklussal BB-8 csak 2 lépést tesz előre,
             miközben hármat kellene előre haladnia.
-        - feedback: Az első ciklussal BB-8 csak 2 lépést tesz előre, miközben hármat
+        - text: Nem tudom.
+          feedback: Az első ciklussal BB-8 csak 2 lépést tesz előre, miközben hármat
             kellene.
         questions:
         - {}
@@ -1582,10 +1672,12 @@ hu-HU:
         - text: BB-8 nem lép eleget előre az első ciklusban ahhoz, hogy az összes
             fémdarabot be tudja gyűjteni.
           correct: true
+          feedback: Helyes!
         - text: BB-8 gond nélkül összegyűjti az összes fémdarabot.
           feedback: Nem jó a válasz. Az első ciklussal BB-8 csak 2 lépést tesz előre,
             miközben hármat kellene előre haladnia.
-        - feedback: Az első ciklussal BB-8 csak 2 lépést tesz előre, miközben hármat
+        - text: Nem tudom.
+          feedback: Az első ciklussal BB-8 csak 2 lépést tesz előre, miközben hármat
             kellene.
         questions:
         - {}
@@ -1597,10 +1689,12 @@ hu-HU:
         - text: BB-8 nem lép eleget előre az első ciklusban ahhoz, hogy az összes
             fémdarabot be tudja gyűjteni.
           correct: true
+          feedback: Helyes!
         - text: BB-8 gond nélkül összegyűjti az összes fémdarabot.
           feedback: Nem jó a válasz. Az első ciklussal BB-8 csak 2 lépést tesz előre,
             miközben hármat kellene előre haladnia.
-        - feedback: Az első ciklussal BB-8 csak 2 lépést tesz előre, miközben hármat
+        - text: Nem tudom.
+          feedback: Az első ciklussal BB-8 csak 2 lépést tesz előre, miközben hármat
             kellene.
         questions:
         - {}
@@ -1611,6 +1705,7 @@ hu-HU:
         - text: C
         - text: D
           correct: true
+          feedback: Helyes!
         questions:
         - {}
       courseD_multi_artist_binary8_predict1_2018:
@@ -1620,6 +1715,7 @@ hu-HU:
         - text: C
         - text: D
           correct: true
+          feedback: Helyes!
         questions:
         - {}
       courseD_multi_artist_binary8_predict1_2018_2019:
@@ -1629,6 +1725,7 @@ hu-HU:
         - text: C
         - text: D
           correct: true
+          feedback: Helyes!
         questions:
         - {}
       courseD_multi_artist_binary8_predict1_2018_2019_2020:
@@ -1638,114 +1735,128 @@ hu-HU:
         - text: C
         - text: D
           correct: true
+          feedback: Helyes!
         questions:
         - {}
       courseD_multi_artist_nestedLoops9_predict1:
         answers:
         - text: A
           correct: true
+          feedback: Helyes!
         - text: B
         - text: C
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseD_multi_artist_nestedLoops9_predict1_2018:
         answers:
         - text: A
           correct: true
+          feedback: Helyes!
         - text: B
         - text: C
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseD_multi_artist_nestedLoops9_predict1_2018_2019:
         answers:
         - text: A
           correct: true
+          feedback: Helyes!
         - text: B
         - text: C
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseD_multi_artist_nestedLoops9_predict1_2018_2019_2020:
         answers:
         - text: A
           correct: true
+          feedback: Helyes!
         - text: B
         - text: C
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseD_multi_bee_conditionals1_predict1:
         answers:
         - {}
         - correct: true
+          feedback: Helyes!
         - {}
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseD_multi_bee_conditionals1_predict1_2018:
         answers:
         - {}
         - correct: true
+          feedback: Helyes!
         - {}
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseD_multi_bee_conditionals1_predict1_2018_2019:
         answers:
         - {}
         - correct: true
+          feedback: Helyes!
         - {}
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseD_multi_bee_conditionals1_predict1_2018_2019_2020:
         answers:
         - {}
         - correct: true
+          feedback: Helyes!
         - {}
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseD_multi_bee_conditionals1_predict1_copy:
         answers:
         - {}
         - correct: true
+          feedback: Helyes!
         - {}
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseD_multi_bee_conditionals7_predict2:
         answers:
         - correct: true
+          feedback: Helyes!
         - {}
         - {}
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseD_multi_bee_conditionals7_predict2_2018:
         answers:
         - correct: true
+          feedback: Helyes!
         - {}
         - {}
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseD_multi_bee_conditionals7_predict2_2018_2019:
         answers:
         - correct: true
+          feedback: Helyes!
         - {}
         - {}
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseD_multi_bee_conditionals7_predict2_2018_2019_2020:
         answers:
         - correct: true
+          feedback: Helyes!
         - {}
         - {}
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseD_multi_bee_nestedLoops2_predict1:
@@ -1753,7 +1864,8 @@ hu-HU:
         - {}
         - {}
         - correct: true
-        - {}
+          feedback: Helyes!
+        - text: Nem tudom.
         questions:
         - {}
       courseD_multi_bee_nestedLoops2_predict1_2018:
@@ -1761,7 +1873,8 @@ hu-HU:
         - {}
         - {}
         - correct: true
-        - {}
+          feedback: Helyes!
+        - text: Nem tudom.
         questions:
         - {}
       courseD_multi_bee_nestedLoops2_predict1_2018_2019:
@@ -1769,7 +1882,8 @@ hu-HU:
         - {}
         - {}
         - correct: true
-        - {}
+          feedback: Helyes!
+        - text: Nem tudom.
         questions:
         - {}
       courseD_multi_bee_nestedLoops2_predict1_2018_2019_2020:
@@ -1777,7 +1891,8 @@ hu-HU:
         - {}
         - {}
         - correct: true
-        - {}
+          feedback: Helyes!
+        - text: Nem tudom.
         questions:
         - {}
       courseD_multi_bee_nestedLoops9_predict2:
@@ -1785,8 +1900,9 @@ hu-HU:
         - text: '4'
         - text: '8'
           correct: true
+          feedback: Helyes!
         - text: '12'
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseD_multi_bee_nestedLoops9_predict2_2018:
@@ -1794,8 +1910,9 @@ hu-HU:
         - text: '4'
         - text: '8'
           correct: true
+          feedback: Helyes!
         - text: '12'
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseD_multi_bee_nestedLoops9_predict2_2018_2019:
@@ -1803,8 +1920,9 @@ hu-HU:
         - text: '4'
         - text: '8'
           correct: true
+          feedback: Helyes!
         - text: '12'
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseD_multi_bee_nestedLoops9_predict2_2018_2019_2020:
@@ -1812,8 +1930,9 @@ hu-HU:
         - text: '4'
         - text: '8'
           correct: true
+          feedback: Helyes!
         - text: '12'
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseD_multi_collector_debugging10_predict1:
@@ -1821,7 +1940,8 @@ hu-HU:
         - {}
         - {}
         - correct: true
-        - {}
+          feedback: Helyes!
+        - text: Nem tudom.
         questions:
         - {}
       courseD_multi_farmer_condLoops9_predict1:
@@ -1829,7 +1949,8 @@ hu-HU:
         - {}
         - {}
         - correct: true
-        - {}
+          feedback: Helyes!
+        - text: Nem tudom.
         questions:
         - {}
       courseD_multi_farmer_condLoops9_predict1_2018:
@@ -1837,7 +1958,8 @@ hu-HU:
         - {}
         - {}
         - correct: true
-        - {}
+          feedback: Helyes!
+        - text: Nem tudom.
         questions:
         - {}
       courseD_multi_farmer_condLoops9_predict1_2018_2019:
@@ -1845,7 +1967,8 @@ hu-HU:
         - {}
         - {}
         - correct: true
-        - {}
+          feedback: Helyes!
+        - text: Nem tudom.
         questions:
         - {}
       courseD_multi_farmer_condLoops9_predict1_2018_2019_2020:
@@ -1853,47 +1976,53 @@ hu-HU:
         - {}
         - {}
         - correct: true
-        - {}
+          feedback: Helyes!
+        - text: Nem tudom.
         questions:
         - {}
       courseD_multi_farmer_ramp13:
         answers:
         - {}
         - correct: true
+          feedback: Helyes!
         - {}
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseD_multi_farmer_while10_predict2:
         answers:
         - {}
         - correct: true
+          feedback: Helyes!
         - {}
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseD_multi_farmer_while10_predict2_2018:
         answers:
         - {}
         - correct: true
+          feedback: Helyes!
         - {}
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseD_multi_farmer_while10_predict2_2018_2019:
         answers:
         - {}
         - correct: true
+          feedback: Helyes!
         - {}
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseD_multi_farmer_while10_predict2_2018_2019_2020:
         answers:
         - {}
         - correct: true
+          feedback: Helyes!
         - {}
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseD_multi_farmer_while4_predict1:
@@ -1901,7 +2030,8 @@ hu-HU:
         - {}
         - {}
         - correct: true
-        - {}
+          feedback: Helyes!
+        - text: Nem tudom.
         questions:
         - {}
       courseD_multi_farmer_while4_predict1_2018:
@@ -1909,7 +2039,8 @@ hu-HU:
         - {}
         - {}
         - correct: true
-        - {}
+          feedback: Helyes!
+        - text: Nem tudom.
         questions:
         - {}
       courseD_multi_farmer_while4_predict1_2018_2019:
@@ -1917,7 +2048,8 @@ hu-HU:
         - {}
         - {}
         - correct: true
-        - {}
+          feedback: Helyes!
+        - text: Nem tudom.
         questions:
         - {}
       courseD_multi_farmer_while4_predict1_2018_2019_2020:
@@ -1925,71 +2057,84 @@ hu-HU:
         - {}
         - {}
         - correct: true
-        - {}
+          feedback: Helyes!
+        - text: Nem tudom.
         questions:
         - {}
       courseD_multi_maze_until10_predict2:
         answers:
         - correct: true
+          feedback: Helyes!
         - {}
         - {}
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseD_multi_maze_until10_predict2_2018:
         answers:
         - correct: true
+          feedback: Helyes!
         - {}
         - {}
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseD_multi_maze_until10_predict2_2018_2019:
         answers:
         - correct: true
+          feedback: Helyes!
         - {}
         - {}
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseD_multi_maze_until10_predict2_2018_2019_2020:
         answers:
         - correct: true
+          feedback: Helyes!
         - {}
         - {}
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseD_multi_maze_until2_predict1:
         answers:
         - {}
-        - correct: true
+        - text: A madár eljut a malacig.
+          correct: true
+          feedback: Helyes!
         - {}
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseD_multi_maze_until2_predict1_2018:
         answers:
         - {}
-        - correct: true
+        - text: A madár eljut a malacig.
+          correct: true
+          feedback: Helyes!
         - {}
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseD_multi_maze_until2_predict1_2018_2019:
         answers:
         - {}
-        - correct: true
+        - text: A madár eljut a malacig.
+          correct: true
+          feedback: Helyes!
         - {}
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseD_multi_maze_until2_predict1_2018_2019_2020:
         answers:
         - {}
-        - correct: true
+        - text: A madár eljut a malacig.
+          correct: true
+          feedback: Helyes!
         - {}
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseD_multi_scrat_predict1:
@@ -1998,8 +2143,10 @@ hu-HU:
         - text: A motkány előrelép hármat, fordul, aztán ismét előre lép hármat, és
             már ott is van a makknál!
           correct: true
+          feedback: Helyes!
         - text: A motkány előre fog lépni, aztán elfordul és jön a bumm.
-        - feedback: A "lépj előre" blokk az "ismételd" blokkon belül azt jelenti,
+        - text: Nem tudom.
+          feedback: A "lépj előre" blokk az "ismételd" blokkon belül azt jelenti,
             hogy a motkány hármat kép előre. Aztán fordul, és újabb három lépést tesz
             előre, így ér a makkhoz!
         questions:
@@ -2010,7 +2157,7 @@ hu-HU:
         - correct: true
         - {}
         - {}
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseE_multi_farmer_functions11_predict:
@@ -2019,6 +2166,7 @@ hu-HU:
         - {}
         - {}
         - correct: true
+          feedback: Helyes!
         questions:
         - {}
       courseE_multi_farmer_functions11_predict_2018:
@@ -2026,6 +2174,7 @@ hu-HU:
         - {}
         - {}
         - correct: true
+          feedback: Helyes!
         - {}
         questions:
         - {}
@@ -2034,6 +2183,7 @@ hu-HU:
         - {}
         - {}
         - correct: true
+          feedback: Helyes!
         - {}
         questions:
         - {}
@@ -2042,6 +2192,7 @@ hu-HU:
         - {}
         - {}
         - correct: true
+          feedback: Helyes!
         - {}
         questions:
         - {}
@@ -2089,24 +2240,27 @@ hu-HU:
         answers:
         - {}
         - correct: true
+          feedback: Helyes!
         - {}
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseF_bee_variables_8a_2018_2019:
         answers:
         - {}
         - correct: true
+          feedback: Helyes!
         - {}
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseF_bee_variables_8a_2018_2019_2020:
         answers:
         - {}
         - correct: true
+          feedback: Helyes!
         - {}
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseF_multi_artist_for10_predict1:
@@ -2114,7 +2268,8 @@ hu-HU:
         - {}
         - {}
         - correct: true
-        - {}
+          feedback: Helyes!
+        - text: Nem tudom.
         questions:
         - {}
       courseF_multi_artist_for10_predict1_2018:
@@ -2122,7 +2277,8 @@ hu-HU:
         - {}
         - {}
         - correct: true
-        - {}
+          feedback: Helyes!
+        - text: Nem tudom.
         questions:
         - {}
       courseF_multi_artist_for10_predict1_2018_2019:
@@ -2130,7 +2286,8 @@ hu-HU:
         - {}
         - {}
         - correct: true
-        - {}
+          feedback: Helyes!
+        - text: Nem tudom.
         questions:
         - {}
       courseF_multi_artist_for10_predict1_2018_2019_2020:
@@ -2138,69 +2295,78 @@ hu-HU:
         - {}
         - {}
         - correct: true
-        - {}
+          feedback: Helyes!
+        - text: Nem tudom.
         questions:
         - {}
       courseF_multi_artist_fwp2_predict1:
         answers:
         - correct: true
+          feedback: Helyes!
         - {}
         - {}
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseF_multi_artist_variables3a_predict1:
         answers:
         - correct: true
+          feedback: Helyes!
         - {}
         - {}
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseF_multi_artist_variables3a_predict1_2018:
         answers:
         - correct: true
+          feedback: Helyes!
         - {}
         - {}
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseF_multi_artist_variables3a_predict1_2018_2019:
         answers:
         - correct: true
+          feedback: Helyes!
         - {}
         - {}
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseF_multi_artist_variables3a_predict1_2018_2019_2020:
         answers:
         - correct: true
+          feedback: Helyes!
         - {}
         - {}
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseF_multi_bee_conditionals1_predict1:
         answers:
         - {}
         - correct: true
+          feedback: Helyes!
         - {}
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseF_multi_bee_conditionals7_predict2:
         answers:
         - correct: true
+          feedback: Helyes!
         - {}
         - {}
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseF_multi_bee_for3_predict1:
         answers:
         - {}
         - correct: true
+          feedback: Helyes!
         - {}
         - {}
         questions:
@@ -2209,6 +2375,7 @@ hu-HU:
         answers:
         - {}
         - correct: true
+          feedback: Helyes!
         - {}
         - {}
         questions:
@@ -2217,6 +2384,7 @@ hu-HU:
         answers:
         - {}
         - correct: true
+          feedback: Helyes!
         - {}
         - {}
         questions:
@@ -2225,6 +2393,7 @@ hu-HU:
         answers:
         - {}
         - correct: true
+          feedback: Helyes!
         - {}
         - {}
         questions:
@@ -2234,7 +2403,7 @@ hu-HU:
         - {}
         - correct: true
         - {}
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       courseF_multi_playlab_variables4c_predictive1:
@@ -2242,13 +2411,14 @@ hu-HU:
         - correct: true
         - {}
         - {}
-        - {}
+        - text: Nem tudom.
         questions:
         - {}
       coursee_prediction_artistfunction2:
         answers:
         - {}
         - correct: true
+          feedback: Helyes!
         - {}
         - {}
         questions:
@@ -2257,6 +2427,7 @@ hu-HU:
         answers:
         - {}
         - correct: true
+          feedback: Helyes!
         - {}
         - {}
         questions:
@@ -2265,6 +2436,7 @@ hu-HU:
         answers:
         - {}
         - correct: true
+          feedback: Helyes!
         - {}
         - {}
         questions:
@@ -2273,6 +2445,7 @@ hu-HU:
         answers:
         - {}
         - correct: true
+          feedback: Helyes!
         - {}
         - {}
         questions:
@@ -2312,43 +2485,81 @@ hu-HU:
           ![](https://images.code.org/f3e4987a130b27f7b589d7829b753aac-image-1584750971069.png)
       grade2_multi_collector_A_predict1:
         answers:
-        - {}
-        - correct: true
-        - {}
-        - {}
+        - text: Laurel 4 kincset gyűjt be ezzel a kóddal.
+          feedback: Ne jó! Laurel olyan helyről próbál meg kincset gyűjteni, ahol
+            nincs, és ez hibát okoz.
+        - text: Laurel olyan helyen próbál kincset gyűjteni, ahol nincs kincs, és
+            ez hibát okoz.
+          correct: true
+          feedback: Helyes!
+        - text: Laurel összegyűjti az összes kincset.
+          feedback: Ne jó! Laurel olyan helyről próbál meg kincset gyűjteni, ahol
+            nincs, és ez hibát okoz.
+        - text: Nem tudom.
+          feedback: Laurel olyan helyről próbál meg kincset gyűjteni, ahol nincs,
+            és ez hibát okoz.
         questions:
-        - {}
+        - text: Nézd meg alaposan ezt a kódot! Ha a kódot lefuttatnánk (figyelmen
+            kívül hagyva az esetleges hibákat), hány kincset gyűjtene összesen Laurel?
       grade2_multi_collector_A_predict1_2018:
         answers:
-        - {}
-        - correct: true
-        - {}
-        - {}
+        - text: Laurel 4 kincset gyűjt be ezzel a kóddal.
+          feedback: Ne jó! Laurel olyan helyről próbál meg kincset gyűjteni, ahol
+            nincs, és ez hibát okoz.
+        - text: Laurel olyan helyen próbál kincset gyűjteni, ahol nincs kincs, és
+            ez hibát okoz.
+          correct: true
+          feedback: Helyes!
+        - text: Laurel összegyűjti az összes kincset.
+          feedback: Ne jó! Laurel olyan helyről próbál meg kincset gyűjteni, ahol
+            nincs, és ez hibát okoz.
+        - text: Nem tudom.
+          feedback: Laurel olyan helyről próbál meg kincset gyűjteni, ahol nincs,
+            és ez hibát okoz.
         questions:
-        - {}
+        - text: Nézd meg ezt a kódot figyelmesen! Mit gondolsz, mi történik, ha lefuttatod
+            a programot?
       grade2_multi_collector_A_predict1_2018_2019:
         answers:
-        - {}
-        - correct: true
-        - {}
-        - {}
+        - text: Laurel 4 kincset gyűjt be ezzel a kóddal.
+          feedback: Ne jó! Laurel olyan helyről próbál meg kincset gyűjteni, ahol
+            nincs, és ez hibát okoz.
+        - text: Laurel olyan helyen próbál kincset gyűjteni, ahol nincs kincs, és
+            ez hibát okoz.
+          correct: true
+          feedback: Helyes!
+        - text: Laurel összegyűjti az összes kincset.
+          feedback: Ne jó! Laurel olyan helyről próbál meg kincset gyűjteni, ahol
+            nincs, és ez hibát okoz.
+        - text: Nem tudom.
+          feedback: Laurel olyan helyről próbál meg kincset gyűjteni, ahol nincs,
+            és ez hibát okoz.
         questions:
-        - {}
+        - text: Nézd meg ezt a kódot figyelmesen! Mit gondolsz, mi történik, ha lefuttatod
+            a programot?
       grade2_multi_collector_A_predict1_2018_2019_2020:
         answers:
-        - {}
-        - correct: true
-        - {}
-        - {}
+        - text: Laurel 4 kincset gyűjt be ezzel a kóddal.
+          feedback: Ne jó! Laurel olyan helyről próbál meg kincset gyűjteni, ahol
+            nincs, és ez hibát okoz.
+        - text: Laurel olyan helyen próbál kincset gyűjteni, ahol nincs kincs, és
+            ez hibát okoz.
+          correct: true
+          feedback: Helyes!
+        - text: Laurel összegyűjti az összes kincset.
+          feedback: Ne jó! Laurel olyan helyről próbál meg kincset gyűjteni, ahol
+            nincs, és ez hibát okoz.
+        - text: Nem tudom.
+          feedback: Laurel olyan helyről próbál meg kincset gyűjteni, ahol nincs,
+            és ez hibát okoz.
         questions:
-        - {}
+        - text: Nézd meg ezt a kódot figyelmesen! Mit gondolsz, mi történik, ha lefuttatod
+            a programot?
       csf_safety_in_my_online_neighborhood:
         markdown: |-
           # Az Online Szomszédságom
 
           ## Hogyan juss el biztonságosan valahová online?
-      CSD U1 Test:
-        title: Számítógépek és problémamegoldás projektzáró teszt
       outbreak_story:
         content1: a leírás itt található
       outbreak_story2:
@@ -2452,3 +2663,412 @@ hu-HU:
           # Kövesda digitális nyomot
 
           ## Milyen információk azok, amiket biztonságosan megoszthatsz, amik részei lehetnek a digitális lábnyomodnak?
+      ScreenOutTheMean-Unplugged:
+        markdown: |-
+          # Gonoszkodás a képernyőn
+
+          Ma arról fogunk tanulni, hogy mit kell tenned, ha valaki gonosz veled az interneten
+      MoveItMoveIt-Unplugged:
+        markdown: |
+          # Mozdulj, mozdulj!
+
+          Használj térképet, és adj parancsokat, hogy elérd a célt.
+      BigEvent-Unplugged_2021:
+        markdown: |
+          # A nagy esemény
+
+          A számítástechnikában az események olyan akciók, amiket a számítógép kijelez. Ebben a leckében a gép mindenre másképp reagál, attól függően, hogy melyik gombot nyomod meg.
+      CourseF_outbreak_story:
+        content1: a leírás itt található
+      CourseF_outbreak_story2:
+        content1: a leírás itt található
+      HappyMaps-Unplugged_2021:
+        markdown: |
+          # Boldog térképek
+
+          Készíts algoritmust, hogy a karaktert kivezesd az útvesztőből.
+      MoveItMoveIt-Unplugged_2021:
+        markdown: |
+          # Mozdulj, mozdulj!
+
+          Használj térképet, és adj parancsokat, hogy elérd a célt.
+      OPD-K5 Stage3aGo_dani:
+        content1: a leírás itt található
+      PowerOfWords-Unplugged_2021:
+        markdown: |
+          # A szavak ereje
+
+          ## Mit tegyél, ha valaki szemétkedik, vagy bántó kifejezéseket használ az interneten?
+      PrivatePersonalInformation-Unplugged_2021:
+        markdown: |
+          # Privát és személyes információk
+          ## Milyen információk azok, amik online megosztása rendben van?
+      courseC_multi_artist_prog6_predict1_2021:
+        answers:
+        - text: A művész olyan háromszöget rajzol, amelyiknek mindhárom oldala egyenlő
+            hosszúságú.
+          feedback: Hibás! A művés egy négyzetet rajzol.
+        - text: A művész egy egyszerű vonalat rajzol.
+          feedback: Hibás! A művés egy négyzetet rajzol.
+        - text: A művész egy négyzetet fog rajzolni.
+          correct: true
+          feedback: Helyes!
+        - {}
+        questions:
+        - text: Nézd meg figyelmesen az alábbi kódot! Mi történik, ha megnyomod a
+            "Futtatás" gombot?
+      courseC_multi_harvester_loops11_predict1_2021:
+        answers:
+        - text: '4'
+        - text: '12'
+          correct: true
+          feedback: Helyes!
+        - text: '15'
+        - text: '20'
+        questions:
+        - {}
+      courseC_multi_maze_debugging8_predict1_2021:
+        answers:
+        - text: A motkány eléri a makkot. Nincsenek hibák a kódban.
+          feedback: Helytelen. A motkány mindjárt rossz irányba fordul, aztán nem
+            lép eleget ahhoz, hogy elérjen a makkig.
+        - text: A motkány nem ér el a makkig, mivel rossz irányba fordul.
+          correct: true
+          feedback: Helyes! A motkány mindjárt az elején rossz irányba fordul, aztán
+            nem lép eleget ahhoz, hogy a makkig elérjen.
+        - text: A motkány nem ér el a makkig, mert nincs elég 'előrelépni' blokk a
+            kódban.
+          correct: true
+          feedback: Helyes! A motkány mindjárt az elején rossz irányba fordul, aztán
+            nem lép eleget ahhoz, hogy a makkig elérjen.
+        - feedback: Két hiba is van a kódban. Először is, a motkány rossz irányba
+            fordul, aztán nem lép eleget előre, hogy elérjen a makkig.
+        questions:
+        - text: Keress hibákat a kódban! Elér a motkány a makkig, vagy van valami
+            gond a kóddal?
+      courseC_multi_maze_programming8_predict1_2021:
+        answers:
+        - text: 'A madár egy lépéssel a malac előtt megáll. '
+          feedback: Nem jó! Ez a kód pontosan a malachoz visz.
+        - text: A madár eljut a malacig.
+          correct: true
+          feedback: Helyes!
+        - text: A madár beleszalad a TNT-be.
+          feedback: Nem jó! Ez a kód pontosan a malachoz visz.
+        - feedback: Nem jó! Ez a kód pontosan a malachoz visz.
+        questions:
+        - text: Nézd végig a kódot nagyon alaposan! Mi történik, ha megnyomod a "Futtatás"
+            gombot?
+      courseC_multi_starWars_predict1_2021:
+        answers:
+        - text: BB-8 nem fog megmozdulni.
+          feedback: Nem jó válasz. Az ismétlés blokk miatt BB-8 előre fog lépni 5-ször.
+        - text: BB-8 csak egyet lép előre
+          feedback: Nem jó válasz. Az ismétlés blokk miatt BB-8 előre fog lépni 5-ször.
+        - text: BB-8 ötöt lép előre és felszedi az összes fémdarabot
+          correct: true
+          feedback: Helyes!
+        - feedback: Nem jó válasz. Az ismétlés blokk miatt BB-8 előre fog lépni 5-ször.
+        questions:
+        - text: Mit gondolsz, mi történik, ha ráklikkelsz a "Futtatás"-ra?
+      courseC_multi_starWars_predict2_2021:
+        answers:
+        - text: BB-8 túl messzire megy az első ciklusban.
+          feedback: Nem jó a válasz. Az első ciklussal BB-8 csak 2 lépést tesz előre,
+            miközben hármat kellene előre haladnia.
+        - text: BB-8 nem lép eleget előre az első ciklusban ahhoz, hogy az összes
+            fémdarabot be tudja gyűjteni.
+          correct: true
+          feedback: Helyes!
+        - text: BB-8 gond nélkül összegyűjti az összes fémdarabot.
+          feedback: Nem jó a válasz. Az első ciklussal BB-8 csak 2 lépést tesz előre,
+            miközben hármat kellene előre haladnia.
+        - feedback: Nem jó a válasz. Az első ciklussal BB-8 csak 2 lépést tesz előre,
+            miközben hármat kellene előre haladnia.
+        questions:
+        - {}
+      courseD_EOC_2021:
+        description: Elértél a D tanfolyam utolsó leckéjéhez! Válassz egy projektet,
+          amit elkészítesz.
+      courseD_multi_artist_nestedLoops9_predict1_2021:
+        answers:
+        - text: A
+          correct: true
+          feedback: Helyes!
+        - text: B
+        - text: C
+        - {}
+        questions:
+        - {}
+      courseD_multi_bee_conditionals1_predict1_2021:
+        answers:
+        - {}
+        - correct: true
+          feedback: Helyes!
+        - {}
+        - {}
+        questions:
+        - {}
+      courseD_multi_bee_conditionals1_predict1_dani:
+        answers:
+        - {}
+        - correct: true
+          feedback: Helyes!
+        - {}
+        - text: Nem tudom.
+        questions:
+        - {}
+      courseD_multi_bee_conditionals7_predict2_2021:
+        answers:
+        - correct: true
+          feedback: Helyes!
+        - {}
+        - {}
+        - {}
+        questions:
+        - {}
+      courseD_multi_bee_nestedLoops2_predict1_2021:
+        answers:
+        - {}
+        - {}
+        - correct: true
+          feedback: Helyes!
+        - {}
+        questions:
+        - {}
+      courseD_multi_bee_nestedLoops9_predict2_2021:
+        answers:
+        - text: '4'
+        - text: '8'
+          correct: true
+          feedback: Helyes!
+        - text: '10'
+        - text: '12'
+        questions:
+        - {}
+      courseD_multi_farmer_condLoops9_predict1_2021:
+        answers:
+        - {}
+        - {}
+        - correct: true
+          feedback: Helyes!
+        - {}
+        questions:
+        - {}
+      courseD_multi_farmer_while10_predict2_2021:
+        answers:
+        - {}
+        - correct: true
+          feedback: Helyes!
+        - {}
+        - {}
+        questions:
+        - {}
+      courseD_multi_farmer_while4_predict1_2021:
+        answers:
+        - {}
+        - {}
+        - correct: true
+          feedback: Helyes!
+        - {}
+        questions:
+        - {}
+      courseD_multi_maze_until10_predict2_2021:
+        answers:
+        - correct: true
+          feedback: Helyes!
+        - {}
+        - {}
+        - {}
+        questions:
+        - {}
+      courseD_multi_maze_until2_predict1_2021:
+        answers:
+        - {}
+        - text: A madár eljut a malacig.
+          correct: true
+          feedback: Helyes!
+        - {}
+        - {}
+        questions:
+        - {}
+      courseE_EOC_2021:
+        description: Elértél az E tanfolyam utolsó leckéjéhez! Válassz egy projektet,
+          amit elkészítesz.
+      courseE_EOC_examples_2021:
+        description: Elértél az E tanfolyam utolsó leckéjéhez! Válassz egy projektet,
+          amit elkészítesz.
+      courseE_multi_dance_events_predict1_2021:
+        answers:
+        - {}
+        - {}
+        - correct: true
+          feedback: Helyes!
+        - {}
+        questions:
+        - {}
+      courseE_multi_farmer_functions11_predict_2021:
+        answers:
+        - {}
+        - {}
+        - correct: true
+          feedback: Helyes!
+        - {}
+        questions:
+        - {}
+      courseE_prediction_artistFunction1_2021:
+        answers:
+        - {}
+        - {}
+        - {}
+        - correct: true
+        questions:
+        - {}
+      courseE_prediction_artistFunction1_dani:
+        answers:
+        - {}
+        - {}
+        - {}
+        - correct: true
+        questions:
+        - {}
+      courseE_swim_fish_behavior_predict1_2021:
+        answers:
+        - {}
+        - {}
+        - correct: true
+          feedback: Helyes!
+        - {}
+        questions:
+        - {}
+      courseF_EOC_2021:
+        description: Elértél az F tanfolyam utolsó leckéjéhez! Válassz egy projektet,
+          amit elkészítesz.
+      courseF_EOC_examples_2021:
+        description: Elértél az F tanfolyam utolsó leckéjéhez! Válassz egy projektet,
+          amit elkészítesz.
+      courseF_events_predict_multi:
+        answers:
+        - {}
+        - {}
+        - correct: true
+        - {}
+        questions:
+        - {}
+      courseF_labels_predict_multi:
+        answers:
+        - {}
+        - {}
+        - {}
+        - correct: true
+        - {}
+        questions:
+        - {}
+      courseF_multi_artist_variables3a_predict1_2021:
+        answers:
+        - correct: true
+          feedback: Helyes!
+        - {}
+        - {}
+        - {}
+        questions:
+        - {}
+      courseF_multi_bee_for3_predict1_2021:
+        answers:
+        - {}
+        - correct: true
+          feedback: Helyes!
+        - {}
+        - {}
+        questions:
+        - {}
+      courseF_sprites_predict_multi:
+        answers:
+        - {}
+        - correct: true
+        - {}
+        - {}
+        questions:
+        - {}
+      courseF_variables_predict_multi:
+        answers:
+        - {}
+        - correct: true
+        - {}
+        - {}
+        questions:
+        - {}
+      courseF_variables_stop:
+        content1: a leírás itt található
+      coursee_prediction_artistfunction2_2021:
+        answers:
+        - {}
+        - correct: true
+          feedback: Helyes!
+        - {}
+        - {}
+        questions:
+        - {}
+      csf_be_a_super_digital_citizen_2021:
+        content1: a leírás itt található
+        markdown: |
+          # Szuper Digitális Állampolgár
+
+          ## Hogyan szólaljunk fel, ha internetes zaklatást tapasztalunk?
+      csf_digital_trails_2021:
+        markdown: |-
+          # Kövesda digitális nyomot
+
+          ## Milyen információk azok, amiket biztonságosan megoszthatsz, amik részei lehetnek a digitális lábnyomodnak?
+      csf_password_power-up_2021:
+        content1: a leírás itt található
+        markdown: |
+          #  Javítsd fel a jelszavadat
+
+          ## Tippek, amikkel emlékezni tudsz a jelszavadra
+
+          * Kezdd egy **mondattal**, amire emlékezni fogsz.
+          * Csak a **szüleid** ismerjék a jelszvadat.
+          * Soha ne használj **személyes** adatot a jelszavadban.
+          * Legalább **nyolc** karakterből álló jelszót alkoss.
+          * Használj betűket, számokat és **szimbólumokat** a jelszavadban.
+
+          ![](https://images.code.org/bfa69295fbf33c77ecdeb79b5498d8f7-image-1584751340896.png)
+      csf_putting_a_stop_to_online_meanness_2021:
+        content1: a leírás itt található
+        markdown: |
+          # STOP szemétkedés
+
+          ## Mit tehetsz, ha valaki az interneten zaklat, szemétkedik veled?
+
+          * **S**arkon fordulni
+          * **T**alálni valakit, akiben megbízol
+          * **O**ldalak rendbetétele
+          * **P**illanatnyi szünet és online gondolkodás.
+
+          ![](https://images.code.org/f3e4987a130b27f7b589d7829b753aac-image-1584750971069.png)
+      csf_safety_in_my_online_neighborhood_2021:
+        markdown: |-
+          # Az Online Szomszédságom
+
+          ## Hogyan juss el biztonságosan valahová online?
+      express_EOC_2021:
+        description: Elértél az E tanfolyam utolsó leckéjéhez! Válassz egy projektet,
+          amit elkészítesz.
+      grade2_multi_collector_A_predict1_2021:
+        answers:
+        - text: Laurel 4 kincset gyűjt be ezzel a kóddal.
+          feedback: Ne jó! Laurel olyan helyről próbál meg kincset gyűjteni, ahol
+            nincs, és ez hibát okoz.
+        - text: Laurel olyan helyen próbál kincset gyűjteni, ahol nincs kincs, és
+            ez hibát okoz.
+          correct: true
+          feedback: Helyes!
+        - text: Laurel összegyűjti az összes kincset.
+          feedback: Ne jó! Laurel olyan helyről próbál meg kincset gyűjteni, ahol
+            nincs, és ez hibát okoz.
+        - feedback: Ne jó! Laurel olyan helyről próbál meg kincset gyűjteni, ahol
+            nincs, és ez hibát okoz.
+        questions:
+        - text: Nézd meg ezt a kódot figyelmesen! Mit gondolsz, mi történik, ha lefuttatod
+            a programot?

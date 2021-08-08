@@ -19,6 +19,8 @@ const NUM_ERRORS_BEFORE_WARNING = 3;
 var ABUSE_THRESHOLD = AbuseConstants.ABUSE_THRESHOLD;
 
 var hasProjectChanged = false;
+let projectSaveInProgress = false;
+let projectChangedWhileSaveInProgress = false;
 
 var assets = require('./clientApi').create('/v3/assets');
 var files = require('./clientApi').create('/v3/files');
@@ -275,6 +277,21 @@ var projects = (module.exports = {
     } else {
       return location.origin + this.getPathName();
     }
+  },
+
+  /**
+   * Returns the project URL for the current project.
+   *
+   * This URL accesses the dashboard API for the sources S3 bucket where
+   * the main.json is generally stored.
+   *
+   * This function depends on the document location to determine the current
+   * application environment.
+   *
+   * @returns {string} Fully-qualified sources URL for the current project.
+   */
+  getProjectSourcesUrl() {
+    return `${this.getLocation().origin}/v3/sources/${this.getCurrentId()}`;
   },
 
   getCurrentTimestamp() {
@@ -762,6 +779,9 @@ var projects = (module.exports = {
   },
   projectChanged() {
     hasProjectChanged = true;
+    if (projectSaveInProgress) {
+      projectChangedWhileSaveInProgress = true;
+    }
   },
   hasOwnerChangedProject() {
     return this.isOwner() && hasProjectChanged;
@@ -840,6 +860,7 @@ var projects = (module.exports = {
       case 'weblab':
       case 'gamelab':
       case 'spritelab':
+      case 'javalab':
         return appOptions.app; // Pass through type exactly
       case 'turtle':
         if (appOptions.skinId === 'elsa' || appOptions.skinId === 'anna') {
@@ -1227,22 +1248,25 @@ var projects = (module.exports = {
    */
   getUpdatedSourceAndHtml_(callback) {
     this.sourceHandler.getAnimationList(animations =>
-      this.sourceHandler.getLevelSource().then(source => {
-        const html = this.sourceHandler.getLevelHtml();
-        const makerAPIsEnabled = this.sourceHandler.getMakerAPIsEnabled();
-        const selectedSong = this.sourceHandler.getSelectedSong();
-        const generatedProperties = this.sourceHandler.getGeneratedProperties();
-        const libraries = this.sourceHandler.getLibrariesList();
-        callback({
-          source,
-          html,
-          animations,
-          makerAPIsEnabled,
-          selectedSong,
-          generatedProperties,
-          libraries
-        });
-      })
+      this.sourceHandler
+        .getLevelSource()
+        .then(source => {
+          const html = this.sourceHandler.getLevelHtml();
+          const makerAPIsEnabled = this.sourceHandler.getMakerAPIsEnabled();
+          const selectedSong = this.sourceHandler.getSelectedSong();
+          const generatedProperties = this.sourceHandler.getGeneratedProperties();
+          const libraries = this.sourceHandler.getLibrariesList();
+          callback({
+            source,
+            html,
+            animations,
+            makerAPIsEnabled,
+            selectedSong,
+            generatedProperties,
+            libraries
+          });
+        })
+        .catch(error => callback({error}))
     );
   },
 
@@ -1435,15 +1459,33 @@ var projects = (module.exports = {
       return;
     }
 
+    // set project save in progress flag before fetching sources.
+    // If we get a change while the save is in progress, we don't
+    // want to mark hasProjectChanged to false.
+    projectSaveInProgress = true;
     this.getUpdatedSourceAndHtml_(newSources => {
+      if (newSources.error) {
+        header.showProjectSaveError();
+        callCallback();
+        return;
+      }
+
       if (JSON.stringify(currentSources) === JSON.stringify(newSources)) {
-        hasProjectChanged = false;
+        if (!projectChangedWhileSaveInProgress) {
+          hasProjectChanged = false;
+        }
+        projectSaveInProgress = false;
+        projectChangedWhileSaveInProgress = false;
         callCallback();
         return;
       }
 
       this.saveSourceAndHtml_(newSources, () => {
-        hasProjectChanged = false;
+        if (!projectChangedWhileSaveInProgress) {
+          hasProjectChanged = false;
+        }
+        projectSaveInProgress = false;
+        projectChangedWhileSaveInProgress = false;
         callCallback();
       });
     });

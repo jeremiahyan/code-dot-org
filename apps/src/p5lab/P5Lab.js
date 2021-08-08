@@ -38,7 +38,7 @@ import {
   setInitialAnimationList,
   saveAnimations,
   withAbsoluteSourceUrls
-} from './animationListModule';
+} from './redux/animationList';
 import {getSerializedAnimationList} from './shapes';
 import {add as addWatcher} from '@cdo/apps/redux/watchedExpressions';
 var reducers = require('./reducers');
@@ -52,7 +52,7 @@ import {
 } from '@cdo/apps/containedLevels';
 import {hasValidContainedLevelResult} from '@cdo/apps/code-studio/levels/codeStudioLevels';
 import {actions as jsDebugger} from '@cdo/apps/lib/tools/jsdebugger/redux';
-import {addConsoleMessage, clearConsole} from './spritelab/textConsoleModule';
+import {addConsoleMessage, clearConsole} from './redux/textConsole';
 import {captureThumbnailFromCanvas} from '@cdo/apps/util/thumbnail';
 import Sounds from '@cdo/apps/Sounds';
 import {TestResults, ResultType} from '@cdo/apps/constants';
@@ -77,6 +77,8 @@ import {
 import project from '@cdo/apps/code-studio/initApp/project';
 import {setExportGeneratedProperties} from '@cdo/apps/code-studio/components/exportDialogRedux';
 import {hasInstructions} from '@cdo/apps/templates/instructions/utils';
+import {setLocaleCode} from '@cdo/apps/redux/localesRedux';
+import createLibrary from './spritelab/libraries/libraryFactory';
 
 const defaultMobileControlsConfig = {
   spaceButtonVisible: true,
@@ -211,11 +213,12 @@ P5Lab.prototype.init = function(config) {
 
   this.skin = config.skin;
   if (this.isSpritelab) {
-    const MEDIA_URL = '/blockly/media/spritelab/';
-    this.skin.smallStaticAvatar = MEDIA_URL + 'avatar.png';
-    this.skin.staticAvatar = MEDIA_URL + 'avatar.png';
-    this.skin.winAvatar = MEDIA_URL + 'avatar.png';
-    this.skin.failureAvatar = MEDIA_URL + 'avatar.png';
+    const mediaUrl = `/blockly/media/spritelab/${config.level
+      .instructionsIcon || 'avatar'}.png`;
+    this.skin.smallStaticAvatar = mediaUrl;
+    this.skin.staticAvatar = mediaUrl;
+    this.skin.winAvatar = mediaUrl;
+    this.skin.failureAvatar = mediaUrl;
 
     injectErrorHandler(
       new BlocklyModeErrorHandler(() => this.JSInterpreter, null)
@@ -296,7 +299,9 @@ P5Lab.prototype.init = function(config) {
 
   config.shareWarningInfo = {
     hasDataAPIs: function() {
-      return this.hasDataStoreAPIs(this.studioApp_.getCode());
+      return this.hasDataStoreAPIs(
+        this.studioApp_.getCode(true /* opt_showHidden */)
+      );
     }.bind(this),
     onWarningsComplete: function() {
       if (config.share) {
@@ -322,6 +327,17 @@ P5Lab.prototype.init = function(config) {
   config.enableShowLinesCount = false;
 
   const onMount = () => {
+    try {
+      const localeCode = window.appOptions.locale;
+      getStore().dispatch(setLocaleCode(localeCode));
+    } catch (exception) {
+      console.warn(
+        'Unable to retrieve locale code, defaulting to en_us',
+        exception
+      );
+      getStore().dispatch(setLocaleCode('en_us'));
+    }
+
     this.setupReduxSubscribers(getStore());
     if (config.level.watchersPrepopulated) {
       try {
@@ -377,10 +393,15 @@ P5Lab.prototype.init = function(config) {
     this.setCrosshairCursorForPlaySpace();
 
     if (this.isSpritelab) {
+      this.currentCode = Blockly.getWorkspaceCode();
       this.studioApp_.addChangeHandler(() => {
-        if (!getStore().getState().runState.isRunning) {
-          this.reset();
-          this.preview.apply(this);
+        const newCode = Blockly.getWorkspaceCode();
+        if (newCode !== this.currentCode) {
+          this.currentCode = newCode;
+          if (!getStore().getState().runState.isRunning) {
+            this.reset();
+            this.preview.apply(this);
+          }
         }
       });
     }
@@ -496,6 +517,7 @@ P5Lab.prototype.init = function(config) {
             onMount={onMount}
             pauseHandler={this.onPause}
             hidePauseButton={!!this.level.hidePauseButton}
+            onPromptAnswer={this.onPromptAnswer?.bind(this)}
           />
         </Provider>,
         document.getElementById(config.containerId)
@@ -739,7 +761,13 @@ P5Lab.prototype.afterInject_ = function(config) {
     Blockly.JavaScript.addReservedWords(SpritelabReservedWords.join(','));
 
     // Don't add infinite loop protection
-    Blockly.JavaScript.INFINITE_LOOP_TRAP = '';
+    Blockly.clearInfiniteLoopTrap();
+  }
+
+  if (this.level.blocklyVariables) {
+    Blockly.mainBlockSpace.registerGlobalVariables(
+      this.level.blocklyVariables.split(',').map(varName => varName.trim())
+    );
   }
 
   // Update p5Wrapper's scale and keep it updated with future resizes:
@@ -1059,11 +1087,15 @@ P5Lab.prototype.initInterpreter = function(attachDebugger = true) {
     }
 
     if (this.isSpritelab) {
-      const spritelabCommands = this.commands;
+      this.spritelabLibrary = createLibrary(this.level, {
+        p5: this.p5Wrapper.p5
+      });
+
+      const spritelabCommands = this.spritelabLibrary.commands;
       for (const command in spritelabCommands) {
         this.JSInterpreter.createGlobalProperty(
           command,
-          spritelabCommands[command].bind(this.p5Wrapper.p5),
+          spritelabCommands[command].bind(this.spritelabLibrary),
           null
         );
       }
@@ -1115,7 +1147,7 @@ P5Lab.prototype.initInterpreter = function(attachDebugger = true) {
     code += this.level.customHelperLibrary + '\n';
   }
   const userCodeStartOffset = code.length;
-  code += this.studioApp_.getCode();
+  code += this.studioApp_.getCode(true /* opt_showHidden */);
   this.JSInterpreter.parse({
     code,
     projectLibraries: this.level.projectLibraries,

@@ -14,27 +14,24 @@ hr:
   campaign_date_full_year: 7.-13. prosinca, 2020.
   latam_campaign_date_start_short: Oct. 1
   latam_campaign_date_start_long: October 1
-  latam_campaign_date_short: Oct. 1 - Dec. 18
-  latam_campaign_date_full: October 1 - December 18
+  latam_campaign_date_short: Oct. 1 - Dec. 12
+  latam_campaign_date_full: October 1 - December 12
   latam_campaign_date_year: '2016.'
-  latam_campaign_date_full_year: October 1, 2020 - December 18, 2020
-  europe_campaign_date_start_short: Oct. 10
-  europe_campaign_date_start_long: October 10
-  europe_campaign_date_short: Oct. 10-25
-  europe_campaign_date_full: October 10-25
+  latam_campaign_date_full_year: October 1, 2021 - December 12, 2021
+  europe_campaign_date_start_short: Oct. 9
+  europe_campaign_date_start_long: October 9
+  europe_campaign_date_short: Oct. 9-24
+  europe_campaign_date_full: October 9-24
   europe_campaign_date_year: '2016.'
-  europe_campaign_date_full_year: October 10-25, 2020
+  europe_campaign_date_full_year: October 9-24, 2021
   africa_campaign_date_start_short: Oct. 1
   africa_campaign_date_start_long: October 1
   africa_campaign_date_short: Oct. 1-31
   africa_campaign_date_full: October 1-31
   africa_campaign_date_year: '2016.'
-  africa_campaign_date_full_year: October 1-31, 2020
-  hoc2020_header: Learn today, build a brighter tomorrow.
-  hoc2020_header_with_line_break_markdown: |-
-    Learn today,
-
-    build a brighter tomorrow.
+  africa_campaign_date_full_year: October 1-31, 2021
+  hoc2020_header: Učite danas, gradite svjetlije sutra.
+  hoc2020_header_with_line_break_markdown: Učite danas, gradite svjetlije sutra.
   social_hoc2020_cs_important: 'CS is more important than ever. Let''s build the future
     we want. #CSforGood'
   social_hoc2020_hoc_is_about_csforgood: 'The #HourOfCode is about #CSforGood. Learn
@@ -56,15 +53,16 @@ hr:
     Help them get started. #CSforGood'
   social_hoc2019_learn_computer_science: 'Learn computer science. Change the world.
     #CSforGood #HourOfCode'
-  social_hoc_is_coming: The Hour of Code is coming!
+  social_hoc_is_coming: Sat kodiranja se približava!
   social_hoc2019_hoc_is_about_csforgood: 'The #HourOfCode is about #CSforGood. Learn
     computer science. Change the world.'
   social_hoc2019_coming_dates: The Hour of Code is coming December 9-15, 2019. Computer
     science is foundational for every student to learn.
   social_hoc2019_dance: Featuring Katy Perry, Shawn Mendes, Panic! At The Disco, Lil
     Nas X, Jonas Brothers, Nicki Minaj, and 34 more!
-  oceans_landing_title: AI for Oceans
-  oceans_landing_description: Learn about machine learning and ethical use of AI.
+  oceans_landing_title: AI za Oceane
+  oceans_landing_description: Saznajte o strojnom učenju i etičkoj upotrebi umjetne
+    inteligencije.
   cs_for_good_hashtag: "#CSforGood"
   oceans_landing_specs: Available in 25+ languages | Grades 3+
   oceans_landing_explanation: Computer science is about so much more than coding!
@@ -82,7 +80,7 @@ hr:
   oceans_landing_teacher_resources: Teacher Resources
   oceans_landing_teacher_resources_desc: Lesson plans and activities to help you teach
     AI, machine learning, training data, and bias, while exploring ethical issues.
-  oceans_landing_resource_button: View Resources
+  oceans_landing_resource_button: Prikaži resurse
   oceans_landing_cs_for_good: CS for Good
   oceans_landing_cs_for_good_desc: Resources to help students understand the role
     computer science could play in creating a more equitable world.
@@ -133,18 +131,24 @@ hr:
     bias, while exploring ethical issues and how AI can be used to address world problems.
     Computer science is about so much more than coding! Enjoy Code.org's first step
     in a new journey to teach more about AI throughout our curriculum.
-  hoc_live: Hour of Code Live
+  hoc_live: Sat kodiranja uživo
   hoc_live_sign_up_title: Sign up for Hour of Code Live
+  hoc_live_learn_title: Learn with Hour of Code Live
   hoc_live_sign_up_message: Learn in real time alongside special guests! Students
     of all ages and abilities, including those without computers, are welcome. Join
     our mailing list to receive recordings of the episodes and resources to continue
     learning at home. See past episodes [here](%{episodes_url}).
+  hoc_live_learn_message: Learn basic concepts of computer science alongside special
+    guests! Students of all ages and abilities, including those without computers,
+    are welcome to our virtual workshop. Continue learning at home through our Hour
+    of Code Live episodes.
   hoc_live_join_us: Pridružite nam se
-  hoc_overview_oceans_tutorial_header: AI for Oceans
+  hoc_live_learn_more: Learn more
+  hoc_overview_oceans_tutorial_header: AI za Oceane
   hoc_overview_oceans_tutorial_desc: Learn about artificial intelligence (AI), machine
     learning, training data, and bias, while exploring ethical issues and how AI can
     be used to address world problems.
-  ai_video_title_what_is_ai: What is AI?
+  ai_video_title_what_is_ai: Što je AI?
   ai_video_title_algorithm_bias: Fighting bias in algorithms
   ai_video_title_phone_knows_dog: How does your phone know this is a dog?
   ai_video_title_what_is_ml: What is Machine Learning?
@@ -197,7 +201,7 @@ hr:
   codeorg_homepage_hoc2018_curriculum: Go further with <a href="%{studio_url}/courses"
     class="hoc2018-curriculum-link">Code.org courses</a>
   codeorg_homepage_hoc2018_dance_heading: Create your own <span class="highlight-word">Dance&nbsp;Party</span>
-  codeorg_homepage_hoc2018_header_line1: The Hour of Code is coming...
+  codeorg_homepage_hoc2018_header_line1: Sat kodiranja se približava...
   codeorg_homepage_hoc2018_header_line2_desktop: What will you <span class="hoc2018-highlight-word">create?</span>
   codeorg_homepage_hoc2018_header_line2_mobile: What will you create?
   codeorg_homepage_hoc2018_header_line3: Give flight to imagination and birth to innovation.
@@ -205,8 +209,9 @@ hr:
   codeorg_homepage_hoc2018_musician_before: Featuring
   codeorg_homepage_hoc2018_musician_after: and more!
   codeorg_homepage_hoc2018_video: Watch our video
-  hourofcode_homepage_hoc2018_header_line1: Anyone, anywhere can organize an Hour
-    of Code event. One-hour tutorials in over 45 languages. No experience needed.
+  hourofcode_homepage_hoc2018_header_line1: Svatko i bilo gdje može organizirati Sat
+    kodiranja. Jednosatne lekcije su dostupne na više od 45 jezika. Iskustvo nije
+    potrebno.
   hourofcode_homepage_hoc2018_header_line2: Ages 4 to 104.
   hoc2018_tutorial_mchoc_description: S pomoću blokova koda povedi Alexa ili Stevea
     na avanturu kroz Mincraft svijet.
@@ -229,17 +234,17 @@ hr:
   cookie_banner_accept: I agree
   front_header_banner: Pridružite se najvećem edukativnom događaju u povijesti, od
     8. do 14. prosinca 2015
-  front_intro_default: Sat Kodiranja globalni je pokret kojeg čine deseci milijuna
+  front_intro_default: Sat kodiranja globalni je pokret kojeg čine deseci milijuna
     učenika u preko 180 zemalja. Bilo tko, bilo gdje može organizirati događanje Sat
-    Kodiranja. Jednosatni vodiči dostupni su na preko 40 jezika. Nikakvo iskustvo
+    kodiranja. Jednosatni vodiči dostupni su na preko 40 jezika. Nikakvo iskustvo
     nije potrebno. <strong>Od 4 do 104 godine.</strong>
-  front_intro_default_2: A global movement in 180+ countries.
+  front_intro_default_2: Globalni pokret u više od 180 država.
   front_watch_video: Pogledajte novi video
   front_watch_regular_video: Pogledajte video
   front_volunteers: Traže se tehnički volonteri
   front_start_learning: Počnite učiti
   header_menu_resources: Resursi
-  header_menu_faq: Učestalo postavljana pitanja
+  header_menu_faq: Pitanja
   header_menu_how_to: Upute
   header_menu_promote: Promocija
   header_menu_activities: Aktivnosti
@@ -391,12 +396,12 @@ hr:
     Novi tutorijali uskoro su tu za bilo koji preglednik, smartphone – ili čak i bez
     računala! <a href='http://code.org/learn'> Isprobajte trenutne tutorijale</a>
   whats_next_how_to: "<a href='/how-to'> Kako pokrenuti Sat kodiranja</a>"
-  whats_next_promote: "<a href='/promote'> Reklamiraj Sata kodiranja</a>"
-  whats_next_how_to_promote: "<a href='/promote/resources'> Kako promovirati Sat kodiranja</a>"
-  whats_next_how_to_promote_link: "<a href='/promote'> Kako promovirati Sat kodiranja</a>"
+  whats_next_promote: "<a href='/promote'>Promoviraj Sat kodiranja</a>"
+  whats_next_how_to_promote: "<a href='/promote/resources'>Kako promovirati Sat kodiranja</a>"
+  whats_next_how_to_promote_link: "<a href='/promote'>Kako promovirati Sat kodiranja</a>"
   whats_next_try: "<a href='http://code.org/learn'> Isprobajte tutorijale</a>"
   whats_next_try_button: Isprobajte tutorijale
-  n_have_learned_an_hoc: "<h1>Pokušaj</h1> <h2>Sata koda</h2> <h3># organiziran</h3>"
+  n_have_learned_an_hoc: "<h1>Iskušaj</h1> <h2>Sata kodiranja</h2> <h3># sudionika</h3>"
   anybody_can_learn: Svatko može naučiti.
   get_started: Početak
   beyond_an_hour: Nakon Sata kodiranja
@@ -404,14 +409,14 @@ hr:
   share_on_facebook: Podijeli na Facebooku
   share_on_twitter: Podijeli na Twitteru
   promote_additional_resources: Additional resources coming soon!
-  front_join_us_heading: Sat Kodiranja za svakog učenika.
+  front_join_us_heading: Sat kodiranja za svakog učenika.
   front_join_us_announcements: Obavijesti
   front_join_us_anybody_can_learn: Svatko može naučiti
   front_join_us_description: Informatika je temelj za svakog učenika. Pomozite nam
     predstaviti je stotinama milijuna.
   front_join_us_description_short: Računarstvo je temelj za svakog učenika.
   front_join_us_button: Pridružite nam se
-  front_what_is_hoc: Što je Sat Kodiranja?
+  front_what_is_hoc: Što je Sat kodiranja?
   front_join_us_header: Svatko može naučiti osnove, i zabaviti  se dok to radi!
   front_join_us_volunteer_header: Volonteri za Sat kodiranja
   front_join_us_tutorials: Isprobajte ovogodišnje vodiče!
@@ -424,14 +429,14 @@ hr:
     biste pronašli popis djelatnosti vezanih uz robote!
   front_join_us_teacher: Jeste li učitelj?
   front_join_us_inspire: Potaknuti studente s
-  front_join_us_inspire_link: Sat Kodiranja u učionici.
+  front_join_us_inspire_link: Sat kodiranja u učionici.
   front_join_us_teacher_link: Inspiriraj učenike sa Satom kodiranja na nastavi
   front_join_us_teacher_volunteer: Potraga za volonterima koji mogu posjetiti učionicu
     ili inspirirati vaše učenike na daljinu
   front_join_us_parent: Jeste li roditelj?
   front_join_us_ask_link: Pitajte svoju mjesnu školu
   front_join_us_ask: da bude domaćin Sata Kodiranja.
-  front_join_us_parent_link: Pitajte lokalne škole da li bi željele ugostiti Sat kodiranja
+  front_join_us_parent_link: Zamolite školu u svojoj blizini da organizira Sat kodiranja
   front_join_us_computer_science: Samo volite informatiku?
   front_join_us_cs_volunteer: Osjećate strast prema računarskoj znanosti i podučavanju?
   front_join_us_spread: Proširite vijest.
@@ -439,9 +444,9 @@ hr:
   front_join_us_spread_word_work: Recite svima u zajednici i na radnom mjestu
   front_join_us_sign_up_volunteer: Prijavite se za volontera u lokalnoj učionici putem
     video chata
-  front_join_us_organize: Ili organizirajte Sat Kodiranja sami.
-  front_join_us_how_to_run: Evo kako izvesti Sat Kodiranja
-  front_join_us_help_promote: Pomozite u promicanju Sata Kodiranja
+  front_join_us_organize: Ili organizirajte Sat kodiranja sami.
+  front_join_us_how_to_run: Evo kako održati Sat kodiranja
+  front_join_us_help_promote: Pomozite u promicanju Sata kodiranja
   front_join_us_students: Učenici
   front_join_us_teachers: Učitelji
   front_join_us_everyone: Svi
@@ -452,21 +457,22 @@ hr:
   front_join_us_more_info: Za više informacija, molimo posjetite <a href='https://code.org'>
     code.org</a>.
   front_join_us_code_info: Za više informacija, molimo posjetite code.org
-  front_join_us_n_students_served: "# posluženo"
+  front_join_us_n_students_served: "# sudionika"
   front_join_us_challenge: Win a video chat for your classroom with a celebrity!
   front_join_us_learn_more: Learn more
   signup_closed: Registration for the Hour of Code is now closed. Please check again
     in October to sign up for the next Hour of Code.
-  signup_registration_not_required: You don't need to register to participate! The
-    Hour of Code activities are available year-round. <a href='%{hoc_activities_url}'>Try
-    an activity</a> or read our <a href='%{howto_guide_url}'>How-to guide</a> to plan
-    an event for your class.
-  signup_registration_not_required_markdown: You don't need to register to participate!
-    The Hour of Code activities are available year-round. [Try an activity](%{hoc_activities_url})
-    or read our [How-to guide](%{howto_guide_url}) to plan an event for your class.
-  signup_registration_closed: And every year in December, your class can join millions
-    of students around the world celebrating Computer Science Education Week with
-    the Hour of Code. We'll open registration for the annual celebration in October.
+  signup_registration_not_required: Za sudjelovanje se ne morate registrirati! Aktivnosti
+    Sata kodiranja dostupne su tijekom cijele godine. <a href='%{hoc_activities_url}'>
+    Isprobajte aktivnost</a> ili pročitajte naš <a href='%{howto_guide_url}'>Vodič
+    s uputama</a> kako biste planirali događaj za svoj razred.
+  signup_registration_not_required_markdown: Za sudjelovanje se ne morate registrirati!
+    Aktivnosti Sata kodiranja dostupne su tijekom cijele godine. [Isprobajte aktivnost](%{hoc_activities_url})
+    ili pročitajte naš [Vodič s uputama](%{howto_guide_url}) kako biste planirali
+    događaj za svoj razred.
+  signup_registration_closed: I svake se godine u prosincu vaš razred može pridružiti
+    milijunima učenika širom svijeta koji obilježavaju Tjedan obrazovanja za informatiku
+    uz Sat kodiranja. Registraciju za godišnju proslavu otvoriti ćemo u listopadu.
   signup_header: Organizirajte Sat kodiranja tijekom %{campaign_date} i prijavite
     ga ovdje.
   signup_name_label: Ime
@@ -493,8 +499,8 @@ hr:
   signup_email_preference_opt_in: Can we email you about updates to Code.org courses,
     local opportunities, or other computer science news?
   signup_email_preference_privacy: "(See our privacy policy)"
-  signup_email_preference_yes: 'Yes'
-  signup_email_preference_no: 'No'
+  signup_email_preference_yes: Da
+  signup_email_preference_no: Ne
   signup_email_preference_error: Email preference is required
   signup_multiple_event_warning: Ako ste domaćih više događanja, molimo vas da pošaljete
     jedinstveni naziv ili adresu e-pošte za svaki od njih. Računamo samo jedan događaj
@@ -512,15 +518,15 @@ hr:
     karti
   signup_event_type_in_school: U školi
   signup_event_type_out_of_school: Izvan škole
-  signup_event_type_at_home: Home
-  signup_submit_census_label: Submit
+  signup_event_type_at_home: Početna
+  signup_submit_census_label: Pošalji
   signup_submit_census_error_message: We're sorry. An error occurred. Please try submitting
     the form again.
   signup_submit_label: Registrirajte se
   signup_submit_error_message: Došlo je do greške. Molimo provjerite jesu li sva obvezna
     polja popunjena ispravno.
-  signup_submit_and_continue_label: Submit and Continue
-  signup_continue_label: Continue
+  signup_submit_and_continue_label: Pošalji i nastavi
+  signup_continue_label: Nastavi
   signup_thank_you_header: Hvala vam za registriranje da budete domaćin Sata Koridanja.
   signup_thank_you_message: Poslali smo vam e-poštu potvrde sa informacijama da vam
     pomognemo započeti.
@@ -547,8 +553,8 @@ hr:
     of millions of students. One-hour tutorials are available in 45+ languages for
     all ages.
   map_title: Mapa sata koda
-  map_header: "# Sat Kodiranja događanja diljem svijeta"
-  map_header_count_year: "%{event_count} events registered in %{year}"
+  map_header: "# događaja registriranih za Sat kodiranja 2017"
+  map_header_count_year: "%{event_count} događaja registriranih u %{year}"
   see_all_events: Prikaži sva događanja
   map_header_company: "# Organizirano od strane firme"
   map_header_country: "# u %{country}"
@@ -558,90 +564,92 @@ hr:
   map_legend_title: Legenda
   map_legend_hoc_events: Događanje Sat kodiranja
   map_legend_cs_tech_jam: Poseban događaj
-  map_warning: A full list of the events can be viewed on the <a href='%{events_url}'>events
-    page.</a>
-  map_warning_markdown: A full list of the events can be viewed on the [events page.](%{events_url})
+  map_warning: Cjelovit popis događaja možete pogledati na stranici <a href='%{events_url}'>
+    događaja.</a>
+  map_warning_markdown: Cjelovit popis događaja možete pogledati na [stranici događaja.](%{events_url})
   meta_tag_og_title: Sat kodiranja se približava
-  meta_tag_og_description: Sat Kodiranja je globalni pokret koji doseže milijune učenika
+  meta_tag_og_description: Sat kodiranja je globalni pokret koji doseže milijune učenika
     u 180+ zemalja i na preko 30 jezika. Od 4 do 104 godine.
   meta_tag_twitter_title: Sat kodiranja se približava
-  meta_tag_twitter_description: Sat Kodiranja je globalni pokret koji doseže milijune
+  meta_tag_twitter_description: Sat kodiranja je globalni pokret koji doseže milijune
     učenika u 180+ zemalja i na preko 30 jezika. Od 4 do 104 godine.
-  twitter_default_text: 'Ja sudjelujem u ovogodišnjem Satu Kodiranja #HourOfCode,
+  twitter_default_text: 'Ja sudjelujem u ovogodišnjem Satu kodiranja #HourOfCode,
     a vi? @codeorg'
   twitter_donor_text: 'This year''s #HourOfCode is about creativity. I’m in! Are you?
     (Thanks %{random_donor} for supporting @codeorg)'
   twitter_donor_text_2019: 'This year''s #HourOfCode is about #CSforGood. I’m in!
     Are you? (Thanks %{random_donor} for supporting @codeorg)'
   hoc_faq_title: Učestalo postavljana pitanja
-  hoc_faq_what_is_hoc_q: Što je Sat Kodiranja?
-  hoc_faq_what_is_hoc_a: Sat kodiranja jednosatni je uvod u računarstvo, osmišljen
-    za demistifikaciju kodiranja i kao dokaz da svatko može naučiti osnove. <a href='%{codeorg_url}'>
-    Pogledajte tutorijale</a>.
-  hoc_faq_what_is_hoc_a_markdown: The Hour of Code started as a one-hour introduction
-    to computer science, designed to demystify "code", to show that anybody can learn
-    the basics, and to broaden participation in the field of computer science. It
-    has since become a worldwide effort to celebrate computer science, starting with
-    1-hour coding activities but expanding to all sorts of community efforts. Check
-    out the [tutorials and activities](%{tutorials}). This grassroots campaign is
-    supported by over [400 partners](%{partners}) and 200,000 educators worldwide.
+  hoc_faq_what_is_hoc_q: Što je Sat kodiranja?
+  hoc_faq_what_is_hoc_a: Sat kodiranja započeo je kao jednosatni uvod u računalnu
+    znanost, osmišljen kako bi demistificirao "kôd", pokazao da svatko može naučiti
+    osnove i proširio sudjelovanje na polju računalnih znanosti. Otada je postao svjetski
+    pokušaj promoviranja računalne znanosti, počevši od jednosatnih kodiranja, ali
+    proširivši se i na različite vrste aktivnosti u zajednici. Pogledajte <a href='%{tutorials}'>
+    vodiče i aktivnosti </a>. Ovu osnovnu kampanju podržava preko <a href='%{partners}'>
+    400 partnera </a> i 200.000 edukatora širom svijeta.
+  hoc_faq_what_is_hoc_a_markdown: Sat kodiranja započeo je kao jednosatni uvod u računalnu
+    znanost, osmišljen kako bi demistificirao "kôd", pokazao da svatko može naučiti
+    osnove i proširio sudjelovanje na polju računalnih znanosti. Otada je postalo
+    svjetski pokušaj proslave informatike, počevši od jednosatnih kodiranja, ali proširivši
+    se na sve vrste napora u zajednici. Pogledajte [vodiče i aktivnosti](%{tutorials}).
+    Ovu osnovnu kampanju podržava preko [400 partnera](%{partners}) i 200 000 nastavnika
+    širom svijeta.
   hoc_faq_last_year: Isprobajte tutorijale
-  hoc_faq_when_is_hoc_q: Kada je Sat Kodiranja?
-  hoc_faq_when_is_hoc_a: Bilo tko može ugostiti Sat kodiranja bilo kada, ali cilj
-    masovnih kampanji je da deseci milijuna učenika isprobaju Sat kodiranja tokom
-    %{campaign_date}, u svrhu proslave <a href='http://csedweek.org'> tjedna podučavanja
-    informatike</a>. Je li to jedan specifičan <i>sat</i>? Ne. Sata kodiranja možete
-    organizirati bilo kada tijekom ovog tjedna. Možete razdvojiti Sat kodiranja i
-    u više sesija dokle god vaši učenici završe tutorijal Sata kodiranja. Učinite
-    ono što je najbolje za vas i vaše učenike. (I ako to ne možete učiniti tijekom
-    tog tjedna, učinite tjedan prije ili poslije).
-  hoc_faq_when_is_hoc_a_markdown: The Hour of Code takes place each year during [Computer
-    Science Education Week](%{csedweek_url}). The %{campaign_date_year} Computer Science
-    Education Week will be %{campaign_date_full}, but you can host an Hour of Code
-    all year-round. Computer Science Education Week is held annually in recognition
-    of the birthday of computing pioneer [Admiral Grace Murray Hopper](%{grace_hopper})
-    (December 9, 1906).
+  hoc_faq_when_is_hoc_q: Kada je Sat kodiranja?
+  hoc_faq_when_is_hoc_a: Sat koda održava se svake godine tijekom <a href='%{csedweek_url}'>Tjedna
+    obrazovanja za računalne znanosti</a>. %{campaign_date_year} Tjedan obrazovanja
+    za računalne znanosti bit će%{campaign_date_full}, ali možete biti domaćin Sat
+    kodiranja tijekom cijele godine. Tjedan obrazovanja za računalne znanosti održava
+    se svake godine u znak priznanja rođendana pionira računalstva, <a href='%{grace_hopper}'>admirala
+    Grace Murray Hoppera</a> (9. prosinca 1906).
+  hoc_faq_when_is_hoc_a_markdown: Sat kodiranja održava se svake godine tijekom [Tjedna
+    obrazovanja za računalne znanosti](%{csedweek_url}). %{campaign_date_year} Tjedan
+    obrazovanja za računalne znanosti bit će %{campaign_date_full}, ali Sat kodiranja
+    možete organizirati tijekom cijele godine. Tjedan obrazovanja za računalne znanosti
+    održava se svake godine u znak priznanja za rođendan pionira računarstva [admirala
+    Grace Murray Hoppera](%{grace_hopper}) (9. prosinca 1906.).
   hoc_faq_why_cs_q: Zašto informatika?
   hoc_faq_why_cs_a: "<i>Svaki</i> učenik trebao bi imati priliku naučiti informatiku.
     To pomaže njegovanju vještine rješavanja problema, logike i kreativnosti. Počevši
     rano, učenici će imati temelj za uspjeh u karijeri u 21-om stoljeću. Pogledajte
     dodatne statistike na <a href='http://code.org'> Code.org</a>."
-  hoc_faq_why_cs_a_markdown: _Every_ student should have the opportunity to learn
-    computer science. It helps nurture problem-solving skills, logic and creativity.
-    By starting early, students will have a foundation for success in any 21st-century
-    career path. See more stats [here](%{stats_url}).
+  hoc_faq_why_cs_a_markdown: _Svaki_ student trebao bi imati priliku učiti informatiku.
+    Ona pomaže u njegovanju vještina rješavanja problema, logike i kreativnosti. Početkom
+    ranog studija studenti će imati temelje za uspjeh na bilo kojem putu karijere
+    21. stoljeća. Pogledajte više statistike [ovdje](%{stats_url}).
   hoc_faq_how_participate_q: Kako mogu sudjelovati u Satu kodiranja?
   hoc_faq_how_participate_a: "<a href='/how-to'> Planiranje započnite ovdje</a> pregledom
     naših vodiča. Sat kodiranja možete organizirati u svojoj školi ili u svojoj zajednici
-    &mdash; kao primjerice u izvannastavnim udrugama, neprofitnim organizacijama ili
-    na poslu, a možete pokušati i samostalno %{campaign_date}."
-  hoc_faq_how_participate_a_markdown: "[Start planning here](%{howto}) by reviewing
-    our how-to guide. You can organize an Hour of Code event at your school or in
-    your community — like in an extracurricular club, non-profit or at work. Or, just
-    try it yourself when %{campaign_date} arrives."
-  hoc_faq_behind_hoc_q: Tko stoji iza sata Kodiranja?
-  hoc_faq_behind_hoc_a: Sat kodiranja organiziran je od strane <a href='http://code.org'>
-    Code.org</a>, javne 501 c 3 neprofitne organizacije posvećene širenju informatike
-    tako što omogućuju dostupnost u sve više škola, i povećano sudjelovanje žena i
-    manje zastupljenih učenika pripadnika manjina. <a href='http://code.org/about/partners'>
-    Besprimjerna koalicija partnera</a>ujedinjeno podržava Sat Kodiranja&mdash; uključujući
-    Microsoft, Apple, Amazon, Boys and Girls Clubs of America i Uprave Sveučilišta.
-  hoc_faq_behind_hoc_a_markdown: The Hour of Code is driven by the Hour of Code and
-    Computer Science Education Week [Advisory and Review Committees](%{partner_url})
-    as well as an unprecedented coalition of partners that have come together to support
-    the Hour of Code — including Microsoft, Apple, Amazon, Boys and Girls Clubs of
-    America and the College Board.
+    &mdash; kao primjerice u izvannastavnom klubu, neprofitnoj udruzi ili na poslu,
+    a možete pokušati i samostalno %{campaign_date}."
+  hoc_faq_how_participate_a_markdown: "[Započnite planirati ovdje](%{howto}) pregledavanjem
+    našeg vodiča s uputama. Možete organizirati događaj Sata kodiranja u svojoj školi
+    ili u svojoj zajednici - na primjer u izvannastavnom klubu, neprofitnoj udruzi
+    ili na poslu. Ili jednostavno probajte sami %{campaign_date}."
+  hoc_faq_behind_hoc_q: Tko stoji iza Sata kodiranja?
+  hoc_faq_behind_hoc_a: Sat kodiranja organizira Tjedan Sata kodiranja i obrazovanja
+    za računalne znanosti <a href='%{partner_url}'> Savjetodavni i revizijski odbori
+    </a>, kao i široka koalicija partnera koja se okupila kako bi podržala Sat kodiranja
+    &mdash; uključujući Microsoft, Apple, Amazon, Boys and Girls Clubs of America
+    i College Board.
+  hoc_faq_behind_hoc_a_markdown: Sat kodiranja organizira Tjedan Sata kodiranja i
+    obrazovanja za računalne znanosti [savjetodavni i revizijski odbori](%{partner_url}),
+    kao i iroka koalicija partnera koja se okupila kako bi podržala Sat kodiranja
+    - uključujući Microsoft, Apple, Amazon, Boys and Girls Clubs of America i College
+    Board.
   hoc_faq_host_q: Ne znam ništa o kodiranju. Mogu li ipak biti domaćin događaja?
-  hoc_faq_host_a: Naravno. Aktivnosti Sata Kodiranja imaju smjernice. Sve što morate
-    učiniti je <a href='%{codeorg_url}/learn'>probati naš aktuelni vodič</a>, odabrati
-    lekciju koju želite i sat svoga vremena &mdash; mi ćemo se pobrinuti za ostalo.
-    Također imamo opcije za svaku dob i nivo iskustva, od vrtića na gore. Počnite
-    planirati svoj događaj čitajući naše <a href='/resources/how-to'> vodiče sa smjernicama</a>.
-  hoc_faq_host_a_markdown: Of course. Hour of Code activities are self-guided. All
-    you have to do is [try our current tutorials](%{codeorg_url}/learn), pick the
-    tutorial you want, and pick an hour — we take care of the rest. We also have options
-    for every age and experience-level, from kindergarten and up. Start planning your
-    event by reading our [how to guide](%{howto}).
+  hoc_faq_host_a: Naravno. Aktivnosti Sata kodiranja imaju smjernice. Sve što trebate
+    učiniti je <a href='%{codeorg_url}/learn'>isprobati naše aktualne vodiče</a>,
+    odabrati vodič koji želite i odvojiti sat svoga vremena &mdash; mi ćemo se pobrinuti
+    za ostalo. Imamo vodiče za različite uzraste i razinu iskustva, počevši od vrtića.
+    Počnite planirati svoj događaj čitajući naše <a href='/resources/how-to'>vodiče
+    sa smjernicama</a>.
+  hoc_faq_host_a_markdown: Naravno. Aktivnosti Sata kodiranja možete samostalno provesti.
+    Sve što trebate učiniti je [isprobati naše trenutne vodiče](%{codeorg_url}/learn),
+    odabrati vodič koji želite i odvojiti sat vremena - mi ćemo se pobrinuti za ostalo.
+    Imamo vodiče za različite uzraste i razinu iskustva, od vrtića pa nadalje. Počnite
+    planirati svoj događaj čitajući naš [vodič](%{howto}).
   hoc_faq_devices_q: Koji bih uređaj trebao/trebala koristiti sa svojim učenicima?
   hoc_faq_devices_a: Code.org tutorijali rade na svim uređajima i preglednicima. Više
     informacija o tehničkim zahtjevima za Code.org-ove tutorijale <a href='%{codeorg_url}/educate/it'>
@@ -649,23 +657,25 @@ hr:
     na <a href='%{codeorg_url}/learn'>%{partner_url}/learn</a> u opisu svakog tutorijala.
     Ne zaboravite da također nudimo aktivnosti za koje nije potrebna veza na internet
     ako vaša škola ne može ugostiti tutorijale!
-  hoc_faq_devices_a_markdown: Code.org tutorials work on all devices and browsers.
-    You can see more information about Code.org's tutorial tech needs [here](%{codeorg_url}/educate/it).
-    Tech needs for non-Code.org tutorials can be found on [%{partner_url}/learn](%{codeorg_url}/learn)
-    in the tutorial specific description. Don't forget we also offer [unplugged activities](%{unplugged_url})
-    if your school can't accommodate the tutorials!
+  hoc_faq_devices_a_markdown: Vodiči za Code.org rade na svim uređajima i preglednicima.
+    Možete vidjeti više informacija o tehnološkim potrebama za tutorijale Code.org
+    [ovdje](%{codeorg_url}/educate/it). Tehničke potrebe za vodiče koji nisu za Code.org
+    mogu se pronaći na [%{partner_url}/learn] (%{codeorg_url}/learn) u opisu specifičnom
+    za tutorial. Ne zaboravite da nudimo i [offline aktivnosti](%{unplugged_url})
+    ako vaša škola ne može odvijati lekcije!
   hoc_faq_need_computers_q: Trebam li računalo za svakog sudionika?
-  hoc_faq_need_computers_a: Ne. Mi imamo vodiče Sata Kodiranja koji rade na računalima,
-    pametnim telefonima, tabletima, kao i neke za koje uopće ne trebate računalo!
-    Možete pristupiti gdje god se nalazili, uz bilo što što imate. <p><i>Evo nekoliko
-    mogućnosti:</i> <br><ul><li><b>Rad u parovima.</b> Istraživanja pokazuju da učenici
-    najbolje uče <a href='http://www.ncwit.org/resources/pair-programming-box-power-collaborative-learning'>programiranjem
-    u parovima</a> dijeljenjem računala i zajedničkim radom. Potaknite svoje učenike
-    da  dijele. <li><b>Koristite projektor.</b> Ako imate projektor i zaslon za računalo
-    povezano na internet, cijela grupa mođe učiti Sat Kodiranja zajedno. Pogledajte
-    video zapise zajedno i naizmjence rješavajte zagonetke i odgovarajte na pitanja.
-    <li><b>Učite bez upotrebe elektronike.</b> Nudimo vodiče za koje uopće ne trebate
-    računalo. </ul>
+  hoc_faq_need_computers_a: 'Ne. Imamo vodiče za Sat kodiranja koje možete koristiti
+    za primjenu na osobnim računalima, pametnim telefonima, tabletima, dok za neke
+    računalo uopće nije potrebno! Možete se pridružiti gdje god bili, sa svime što
+    imate. <p> <i> Evo nekoliko opcija: </i> <br> <ul> <li> <b> Rad u parovima. </b>
+    <a href=''%{pair_programming_research}''> Istraživanje pokazuje </a> studenti
+    najbolje uče s <a href=''%{pair_programming_video}''>programiranjem u paru</a>,
+    dijeljenjem računala i zajedničkim radom. Potaknite svoje učenike da se organiziraju
+    u timove.<li> <b>Koristite projekciju zaslona.</b> Ako imate projektor i zaslon
+    za računalo povezano s mrežom, cijela vaša grupa može zajedno odraditi Sat kodiranja.
+    Zajedno gledajte dijelove videozapisa i naizmjence rješavajte zagonetke ili odgovarajte
+    na pitanja. <li> <b>Budite "unplugged".</b> Nudimo <a href=''%{unplugged_url}''>
+    vodiče za koje uopće nije potrebno računalo </a>. </ul>'
   hoc_faq_need_computers_a_markdown: |-
     No. We have Hour of Code tutorials that work on PCs, smartphones, tablets, and some that require no computer at all! You can join wherever you are, with whatever you have.
 
@@ -675,12 +685,12 @@ hr:
     - **Use a projected screen.** If you have a projector and screen for a Web-connected computer, your entire group can do an Hour of Code together. Watch video portions together and take turns solving puzzles or answering questions.
     - **Go unplugged.** We offer [tutorials that require no computer](%{unplugged_url}) at all.
   hoc_faq_international_q: Ja sam u <country>. Kako međunarodno sudjelovati?
-  hoc_faq_international_a: Sat Kodiranja može organizirati svatko, bilo gdje u svijetu.
-    Prošle godine, studenti diljem svijeta pridružili su se Satu Kodiranja. Saznajte
-    više <a href='target-resources'>ovdje</a>.
-  hoc_faq_international_a_markdown: Anyone can organize an Hour of Code event, anywhere
-    in the world. Last year, students worldwide joined together for the Hour of Code.
-    Find out more [here](%{promote}).
+  hoc_faq_international_a: Svatko može organizirati događaj Sat kodiranja, bilo gdje
+    u svijetu. Prošle godine su se studenti širom svijeta udružili na Satu kodiranja.
+    Saznajte više <a href='/promote'> ovdje </a>.
+  hoc_faq_international_a_markdown: Svatko može organizirati događaj Sat kodiranja,
+    bilo gdje u svijetu. Prošle godine su se studenti širom svijeta udružili na Satu
+    kodiranja. Saznajte više [ovdje](%{promote}).
   hoc_faq_tutorial_q: Kako napraviti vodič za Sat Kodiranja?
   hoc_faq_tutorial_a: Ako ste zainteresirani da postanete suradnik u izradi vodiča,
     <a href='/tutorial-guidelines'> pogledajte naše smjernice i upute</a>. Htjeli
@@ -808,17 +818,18 @@ hr:
   hoc_faq_logo_a_markdown: Hour of Code is trademarked. We don't want to prevent its
     usage, but we want to make sure its usage fits within a few limits. Please see
     [these guidelines for usage](%{logo_url}).
-  stats_hoc_2013_image_alt: Statistika Sata Kodiranja 2013
+  stats_hoc_2013_image_alt: Statistika Sata kodiranja 2013
   stats_growth: Najbrže je dostignut broj od 15 milijuna korisnika.
-  stats_i18n: Učenici uče na 40 jezika
+  stats_i18n: Učenici uče na više od 45 jezika
   stats_tumblr: 'Tumblr: 3,5 godine'
   stats_facebook: 'Facebook: 3 godine'
   stats_twitter: 'Twitter: 2.5 godine'
   stats_pinterest: 'Pinterest: 2 godine'
   stats_instagram: 'Instagram: 14 mjeseci'
-  stats_hoc: 'Sat Kodiranja: 5 dana'
+  stats_hoc: 'Sat kodiranja: 5 dana'
   stats_global: Preko 100 milijuna učenika isprobalo je Sat kodiranja
-  stats_girls_more: Informatiku je isprobalo više djevojaka no u posljednjih 70 godina
+  stats_girls_more: Više se djevojaka iskušalo u informatici nego u posljednjih 70
+    godina
   stats_females: Participation of female students in computer science is only 20-25%
     of high school courses, university courses, and the workforce.
   stats_females_more: During the Hour of Code, female students make up <b>50% of all
@@ -865,7 +876,7 @@ hr:
   handouts_participationguide: Planirajte svoj Sat kodiranja s ovim vodičem za sudjelovanje
   videos_title: Pokažite učenicima ovaj video za inspiraciju
   videos_what_most_schools_dont_teach: Ono što većina škola ne uči (5 min)
-  videos_hoc_2014: Sat kodiranja je ovdje- svatko može naučiti
+  videos_hoc_2014: Sat kodiranja je ovdje - svatko može naučiti
   videos_obama_cs: Predsjednik Obama o informatici
   videos_anybody_can_learn: Svatko može naučiti (1 min)
   videos_creativity: What is Creativity?
@@ -893,10 +904,10 @@ hr:
   title_partners: Partneri
   title_resources: Resursi
   title_past_posters: Past Hour of Code Posters
-  title_signup_thanks: Hvala na prijavi za domaćina Sata Kodiranja!
+  title_signup_thanks: Hvala na prijavi za domaćina Sata kodiranja!
   title_tutorial_guidelines: Smjernice za tutorijale
   title_whole_school: Sudjelovanje cijele škole
-  events_nav_title: Događanja Sat kodiranja
+  events_nav_title: Događaji Sat kodiranja
   events_nav_all: Svi događaji
   events_nav_whole_schools: Škole
   events_nav_special: Posebni događaji
@@ -904,8 +915,8 @@ hr:
   events_all_old_title: Događanja Sat kodiranja u @year.-oj
   events_all_title: Svi događaji Sata Kodiranja
   events_whole_school_title: Sat kodiranja u školama
-  events_special_title: Posebni Satovi Kodiranja
-  events_orgs_title: Sva događanja Sata Kodiranja organizirana uz pomoć partnera
+  events_special_title: Posebni Satovi kodiranja
+  events_orgs_title: Sva događanja Sata kodiranja organizirana uz pomoć partnera
   event: događaj
   events: događaji
   highlights_title: Izdvajamo
@@ -935,8 +946,11 @@ hr:
   highlights_constant_athletes_heading: Champions and gold medalists Serena Williams,
     Neymar Jr, Carmelo Anthony and more inspire students to push themselves.
   highlights_constant_athletes_short_heading: Push yourself
-  footer_copyright_message: Copyright 2015 Code.org. Sva prava pridržana.
-  footer_trademark_message: Sata Kodiranja ™ je zaštitni znak tvrtke Code.org.
+  footer_copyright_message: Copyright %{current_year} Code.org. Sva prava pridržana.
+  footer_trademark_message: Hour of Code ™ i Hora del Código® zaštitni su znakovi
+    tvrtke Code.org. Amazon Web Services i logotip "Powered by AWS" zaštitni su znakovi
+    tvrtke Amazon.com, Inc. ili njenih podružnica u Sjedinjenim Državama i/ili drugim
+    zemljama.
   footer_built_on_github: Built on GitHub from Microsoft
   footer_menu_partners: Partneri
   footer_menu_contact: Kontakt
@@ -5724,37 +5738,37 @@ hr:
     Danish, Dutch, Finnish, French, German, Indonesian, Italian, Japanese, Korean,
     Norwegian, Polish, Polynesian (Samoan), Portuguese, Russian, Spanish, Swedish,
     Turkish, Ukrainian, Vietnamese
-  tutorial_star-wars_language: English, Arabic, Bulgarian, Chinese, Croatian, Danish,
-    Dutch, Finnish, French, German, Greek, Icelandic, Indonesian, Italian, Japanese,
-    Korean, Norwegian, Persian, Polish, Portuguese, Romanian, Russian, Spanish, Swedish,
-    Turkish, Ukrainian and 19 more
+  tutorial_star-wars_language: Engleski, arapski, bugarski, kineski, hrvatski, danski,
+    nizozemski, finski, francuski, njemački, grčki, islandski, indonezijski, talijanski,
+    japanski, korejski, norveški, perzijski, poljski, portugalski, rumunjski, ruski,
+    španjolski, švedski, turski, ukrajinski i 19 drugih
   tutorial_gumadventure_language: English only
-  tutorial_mchoc_language: English, Arabic, Bulgarian, Chinese, Croatian, Danish,
-    Dutch, Finnish, French, German, Greek, Icelandic, Indonesian, Italian, Japanese,
-    Korean, Norwegian, Persian, Polish, Portuguese, Romanian, Russian, Spanish, Swedish,
-    Turkish, Ukrainian and 19 more
+  tutorial_mchoc_language: Engleski, arapski, bugarski, kineski, hrvatski, danski,
+    nizozemski, finski, francuski, njemački, grčki, islandski, indonezijski, talijanski,
+    japanski, korejski, norveški, perzijski, poljski, portugalski, rumunjski, ruski,
+    španjolski, švedski, turski, ukrajinski i 19 drugih
   tutorial_vidnews_language: English only
   tutorial_kodable-pre_language: English, Arabic, Azerbaijani, German, Greek, Spanish,
     Persian, French, Indonesian, Icelandic, Italian, Korean, Dutch, Norwegian, Polish,
     Portuguese, Romanian, Russian, Serbian, Swedish, Turkish, Ukrainian, Chinese
   tutorial_highseas_language: English only
   tutorial_capython_language: English, Dutch, Spanish
-  tutorial_frzn_language: English, Arabic, Bulgarian, Chinese, Croatian, Danish, Dutch,
-    Finnish, French, German, Greek, Icelandic, Indonesian, Italian, Japanese, Korean,
-    Norwegian, Persian, Polish, Portuguese, Romanian, Russian, Spanish, Swedish, Turkish,
-    Ukrainian and 19 more
+  tutorial_frzn_language: Engleski, arapski, bugarski, kineski, hrvatski, danski,
+    nizozemski, finski, francuski, njemački, grčki, islandski, indonezijski, talijanski,
+    japanski, korejski, norveški, perzijski, poljski, portugalski, rumunjski, ruski,
+    španjolski, švedski, turski, ukrajinski i 19 drugih
   tutorial_cocom_language: English, Arabic, Bulgarian, Chinese, Czech, Danish, Dutch,
     French, German, Greek, Hebrew, Hungarian, Indonesian, Italian, Japanese, Korean,
     Norwegian, Persian, Polish, Portuguese, Russian, Spanish, Swedish, Turkish, Ukrainian,
     Vietnamese and 9 more
-  tutorial_play-lab_language: English, Arabic, Bulgarian, Chinese, Croatian, Danish,
-    Dutch, Finnish, French, German, Greek, Icelandic, Indonesian, Italian, Japanese,
-    Korean, Norwegian, Persian, Polish, Portuguese, Romanian, Russian, Spanish, Swedish,
-    Turkish, Ukrainian and 19 more
-  tutorial_boxisland_language: English, Chinese, Croatian, Czech, Danish, Dutch, Finnish,
-    French, German, Greek, Hungarian, Icelandic, Indonesian, Italian, Japanese, Korean,
-    Norwegian, Polish, Portuguese, Romanian, Russian, Spanish, Swedish, Turkish, Ukrainian,
-    Vietnamese
+  tutorial_play-lab_language: Engleski, arapski, bugarski, kineski, hrvatski, danski,
+    nizozemski, finski, francuski, njemački, grčki, islandski, indonezijski, talijanski,
+    japanski, korejski, norveški, perzijski, poljski, portugalski, rumunjski, ruski,
+    španjolski, švedski, turski, ukrajinski i 19 drugih
+  tutorial_boxisland_language: Engleski, kineski, hrvatski, češki, danski, nizozemski,
+    finski, francuski, njemački, grčki, mađarski, islandski, indonezijski, talijanski,
+    japanski, korejski, norveški, poljski, portugalski, rumunjski, ruski, španjolski,
+    švedski, turski, ukrajinski, vijetnamski
   tutorial_textcomp_language: English only
   tutorial_encryption_language: English only
   tutorial_kanopixel_language: English only
@@ -5765,34 +5779,34 @@ hr:
   tutorial_vidcard_language: English only
   tutorial_spritebox_language: English, Brazilian Portuguese
   tutorial_tynkerch_language: English only
-  tutorial_lightbot_language: English, Chinese, Croatian, Czech, Danish, Dutch, Finnish,
-    French, German, Greek, Hindi, Hungarian, Indonesian, Italian, Japanese, Korean,
-    Malaysia, Norwegian, Polish, Portuguese, Romanian, Russian, Slovak, Slovenian,
-    Spanish, Swedish, Thai
-  tutorial_hoc_language: English, Arabic, Bulgarian, Chinese, Croatian, Danish, Dutch,
-    Finnish, French, German, Greek, Icelandic, Indonesian, Italian, Japanese, Korean,
-    Norwegian, Persian, Polish, Portuguese, Romanian, Russian, Spanish, Swedish, Turkish,
-    Ukrainian and 19 more
-  tutorial_code_language: English, Arabic, Bulgarian, Chinese, Croatian, Danish, Dutch,
-    Finnish, French, German, Greek, Icelandic, Indonesian, Italian, Japanese, Korean,
-    Norwegian, Persian, Polish, Portuguese, Romanian, Russian, Spanish, Swedish, Turkish,
-    Ukrainian and 19 more
+  tutorial_lightbot_language: Engleski, kineski, hrvatski, češki, danski, nizozemski,
+    finski, francuski, njemački, grčki, hindski, mađarski, indonezijski, talijanski,
+    japanski, korejski, malezijski, norveški, poljski, portugalski, rumunjski, ruski,
+    slovački, slovenski, španjolski, švedski, tajlandski
+  tutorial_hoc_language: Engleski, arapski, bugarski, kineski, hrvatski, danski, nizozemski,
+    finski, francuski, njemački, grčki, islandski, indonezijski, talijanski, japanski,
+    korejski, norveški, perzijski, poljski, portugalski, rumunjski, ruski, španjolski,
+    švedski, turski, ukrajinski i 19 drugih
+  tutorial_code_language: Engleski, arapski, bugarski, kineski, hrvatski, danski,
+    nizozemski, finski, francuski, njemački, grčki, islandski, indonezijski, talijanski,
+    japanski, korejski, norveški, perzijski, poljski, portugalski, rumunjski, ruski,
+    španjolski, švedski, turski, ukrajinski i 19 drugih
   tutorial_tinspire_language: English only
   tutorial_itchbounceball_language: English only
   tutorial_vidclim_language: English only
   tutorial_matlab_language: English only
-  tutorial_flap_language: English, Arabic, Bulgarian, Chinese, Croatian, Danish, Dutch,
-    Finnish, French, German, Greek, Icelandic, Indonesian, Italian, Japanese, Korean,
-    Norwegian, Persian, Polish, Portuguese, Romanian, Russian, Spanish, Swedish, Turkish,
-    Ukrainian and 19 more
-  tutorial_galaxy_language: English, Albanian, Arabic, Bosnian, Chinese, Croatian,
-    Czech, Danish, Dutch, French, German, Hebrew, Indonesian, Italian, Japanese, Korean,
-    Persian, Polish, Portuguese, Romanian, Russian, Slovenian, Spanish, Swedish, Turkish,
-    Vietnamese
-  tutorial_inf_language: English, Arabic, Bulgarian, Chinese, Croatian, Danish, Dutch,
-    Finnish, French, German, Greek, Icelandic, Indonesian, Italian, Japanese, Korean,
-    Norwegian, Persian, Polish, Portuguese, Romanian, Russian, Spanish, Swedish, Turkish,
-    Ukrainian and 19 more
+  tutorial_flap_language: Engleski, arapski, bugarski, kineski, hrvatski, danski,
+    nizozemski, finski, francuski, njemački, grčki, islandski, indonezijski, talijanski,
+    japanski, korejski, norveški, perzijski, poljski, portugalski, rumunjski, ruski,
+    španjolski, švedski, turski, ukrajinski i 19 drugih
+  tutorial_galaxy_language: Engleski, albanski, arapski, bosanski, kineski, hrvatski,
+    češki, danski, nizozemski, francuski, njemački, hebrejski, indonezijski, talijanski,
+    japanski, korejski, perzijski, poljski, portugalski, rumunjski, ruski, slovenski,
+    španjolski, švedski, turski, vijetnamski
+  tutorial_inf_language: Engleski, arapski, bugarski, kineski, hrvatski, danski, nizozemski,
+    finski, francuski, njemački, grčki, islandski, indonezijski, talijanski, japanski,
+    korejski, norveški, perzijski, poljski, portugalski, rumunjski, ruski, španjolski,
+    švedski, turski, ukrajinski i 19 drugih
   tutorial_tynkersol_language: English only
   tutorial_itchg_language: English only
   tutorial_como_language: English, Arabic, Chinese, Czech, French, German, Greek,
@@ -5800,10 +5814,10 @@ hr:
     Turkish, Ukrainian
   tutorial_processfound_language: English only
   tutorial_tynkerhomo_language: English only
-  tutorial_art_language: English, Arabic, Bulgarian, Chinese, Croatian, Danish, Dutch,
-    Finnish, French, German, Greek, Icelandic, Indonesian, Italian, Japanese, Korean,
-    Norwegian, Persian, Polish, Portuguese, Romanian, Russian, Spanish, Swedish, Turkish,
-    Ukrainian and 19 more
+  tutorial_art_language: Engleski, arapski, bugarski, kineski, hrvatski, danski, nizozemski,
+    finski, francuski, njemački, grčki, islandski, indonezijski, talijanski, japanski,
+    korejski, norveški, perzijski, poljski, portugalski, rumunjski, ruski, španjolski,
+    švedski, turski, ukrajinski i 19 drugih
   tutorial_tynkerbrick_language: English only
   tutorial_itchbio_language: English only
   tutorial_itchj_language: English only
@@ -5815,10 +5829,10 @@ hr:
   tutorial_tynkerapp_language: English only
   tutorial_tynkerpup_language: English only
   tutorial_livecode_language: English only
-  tutorial_cocomgame_language: English, Arabic, Bulgarian, Chinese, Croatian, Czech,
-    Danish, Dutch, Finnish, French, German, Greek, Hebrew, Italian, Japanese, Korean,
-    Norwegian, Persian, Polish, Portuguese, Romanian, Russian, Spanish, Swedish, Turkish,
-    Ukrainian, Vietnamese and 8 more
+  tutorial_cocomgame_language: Engleski, arapski, bugarski, kineski, hrvatski, češki,
+    danski, nizozemski, finski, francuski, njemački, grčki, hebrejski, talijanski,
+    japanski, korejski, norveški, perzijski, poljski, portugalski, rumunjski, ruski,
+    španjolski, švedski, turski, ukrajinski, vijetnamski i 8 drugih
   tutorial_tynkerspin_language: English only
   tutorial_code-avengers_language: English, Spanish, Dutch, Russian, Portuguese
   tutorial_tynkercq_language: English only
@@ -5995,15 +6009,15 @@ hr:
   tutorial_kodable-unplugged_language: English only
   tutorial_scratch_language: English only
   tutorial_bayes_language: Spanish
-  tutorial_gumball_language: English, Arabic, Bulgarian, Chinese, Croatian, Danish,
-    Dutch, Finnish, French, German, Greek, Icelandic, Indonesian, Italian, Japanese,
-    Korean, Norwegian, Persian, Polish, Portuguese, Romanian, Russian, Spanish, Swedish,
-    Turkish, Ukrainian and 19 more
+  tutorial_gumball_language: Engleski, arapski, bugarski, kineski, hrvatski, danski,
+    nizozemski, finski, francuski, njemački, grčki, islandski, indonezijski, talijanski,
+    japanski, korejski, norveški, perzijski, poljski, portugalski, rumunjski, ruski,
+    španjolski, švedski, turski, ukrajinski i 19 drugih
   tutorial_hrm_language: Multiple
-  tutorial_ice-age_language: English, Arabic, Bulgarian, Chinese, Croatian, Danish,
-    Dutch, Finnish, French, German, Greek, Icelandic, Indonesian, Italian, Japanese,
-    Korean, Norwegian, Persian, Polish, Portuguese, Romanian, Russian, Spanish, Swedish,
-    Turkish, Ukrainian and 19 more
+  tutorial_ice-age_language: Engleski, arapski, bugarski, kineski, hrvatski, danski,
+    nizozemski, finski, francuski, njemački, grčki, islandski, indonezijski, talijanski,
+    japanski, korejski, norveški, perzijski, poljski, portugalski, rumunjski, ruski,
+    španjolski, švedski, turski, ukrajinski i 19 drugih
   tutorial_koapp_language: Multiple
   tutorial_lightbot-intl_language: French, Russian, Brazilian Portuguese
   tutorial_rmc_language: Russian
@@ -6011,22 +6025,22 @@ hr:
   tutorial_minecraft-2016_language: Multiple
   tutorial_thinkersmith-es_language: Spanish
   tutorial_pixie_language: Spanish
-  tutorial_play_language: English, Arabic, Bulgarian, Chinese, Croatian, Danish, Dutch,
-    Finnish, French, German, Greek, Icelandic, Indonesian, Italian, Japanese, Korean,
-    Norwegian, Persian, Polish, Portuguese, Romanian, Russian, Spanish, Swedish, Turkish,
-    Ukrainian and 19 more
+  tutorial_play_language: Engleski, arapski, bugarski, kineski, hrvatski, danski,
+    nizozemski, finski, francuski, njemački, grčki, islandski, indonezijski, talijanski,
+    japanski, korejski, norveški, perzijski, poljski, portugalski, rumunjski, ruski,
+    španjolski, švedski, turski, ukrajinski i 19 drugih
   tutorial_robomind-nl_language: Dutch
   tutorial_spheroi_language: English only
   tutorial_spherol_language: English only
   tutorial_spherov_language: English only
-  tutorial_swb_language: English, Arabic, Bulgarian, Chinese, Croatian, Danish, Dutch,
-    Finnish, French, German, Greek, Icelandic, Indonesian, Italian, Japanese, Korean,
-    Norwegian, Persian, Polish, Portuguese, Romanian, Russian, Spanish, Swedish, Turkish,
-    Ukrainian and 19 more
-  tutorial_build-a-galaxy_language: English, Arabic, Bulgarian, Chinese, Croatian,
-    Danish, Dutch, Finnish, French, German, Greek, Icelandic, Indonesian, Italian,
-    Japanese, Korean, Norwegian, Persian, Polish, Portuguese, Romanian, Russian, Spanish,
-    Swedish, Turkish, Ukrainian and 19 more
+  tutorial_swb_language: Engleski, arapski, bugarski, kineski, hrvatski, danski, nizozemski,
+    finski, francuski, njemački, grčki, islandski, indonezijski, talijanski, japanski,
+    korejski, norveški, perzijski, poljski, portugalski, rumunjski, ruski, španjolski,
+    švedski, turski, ukrajinski i 19 drugih
+  tutorial_build-a-galaxy_language: Engleski, arapski, bugarski, kineski, hrvatski,
+    danski, nizozemski, finski, francuski, njemački, grčki, islandski, indonezijski,
+    talijanski, japanski, korejski, norveški, perzijski, poljski, portugalski, rumunjski,
+    ruski, španjolski, švedski, turski, ukrajinski i 19 drugih
   tutorial_alicesims_language: English only
   tutorial_tchr_language: English only
   tutorial_robogame_language: English only
@@ -6513,12 +6527,9 @@ hr:
   tutorial_kcjplastic_language: English, French
   tutorial_legojourney_language: Hrvatski
   tutorial_legohopper_language: Hrvatski
-  tutorial_catrobatembroidery_language: Arapski, bengalski, bosanski, pojednostavljeni
-    kineski, hrvatski, češki, engleski, engleski (UK), francuski, njemački, hindski,
-    indonezijski, talijanski, japanski, korejski, norveški (nynorsk), drugi, poljski,
-    portugalski (Brazil), portugalski ( Portugal), ruski, srpski (ćirilica), srpski
-    (latinica), slovački, španjolski (Španjolska, Meksiko), svahili, švedski, tamilski,
-    tajlandski, turski, urdu (Pakistan), vijetnamski
+  tutorial_catrobatembroidery_language: Arapski, bengalski, bosanski, kineski (pojednostavljeni),
+    hrvatski, češki, engleski, francuski, njemački, hindski, indonezijski, talijanski,
+    japanski, korejski, norveški (Nynorsk), poljski, portugalski i još mnogi drugi!
   tutorial_irobotphone_language: English, English (UK)
   tutorial_codeguppydraw_language: English, English (UK)
   tutorial_codejumper_language: Hrvatski
@@ -7865,13 +7876,13 @@ hr:
   tutorial_mbbuttons_string_platforms: Windows, Mac OS, Linux, or Chromebook
   tutorial_meteor_string_platforms: Windows, Mac OS, Linux, or Chromebook
   tutorial_ballbounce_string_platforms: Chrome, Firefox, Safari, Android tablet, Android
-    phone
+    phone, iPad, iPhone
   tutorial_mitcodi_string_platforms: Chrome, Firefox, Safari, Android tablet, Android
-    phone
+    phone, iPad, iPhone
   tutorial_mitdoodle_string_platforms: Chrome, Firefox, Safari, Android tablet, Android
-    phone
+    phone, iPad, iPhone
   tutorial_talktome_string_platforms: Chrome, Firefox, Safari, Android tablet, Android
-    phone
+    phone, iPad, iPhone
   tutorial_mobilecspmap_string_platforms: Chrome, Firefox, Android tablet, Android
     phone
   tutorial_ozorandom_string_platforms: ''
@@ -9631,7 +9642,7 @@ hr:
   tutorial_modtraits_name: Character Traits with GoPiGo
   tutorial_mee_name: 'Minecraft Hour of Code: AI for Good'
   tutorial_kuborobo_name: KUBO Robotics Coding Routes
-  tutorial_ai-oceans_name: AI for Oceans
+  tutorial_ai-oceans_name: AI za Oceane
   tutorial_scratchimagine_longdescription: Imagine a world where anything is possible,
     then bring it to life with Scratch!
   tutorial_codesterspsa_longdescription: Learn the basics of coding in Python while

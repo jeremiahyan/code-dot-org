@@ -3,8 +3,13 @@ import {shallow, mount} from 'enzyme';
 import {expect} from '../../../../util/reconfiguredChai';
 import AddVocabularyDialog from '@cdo/apps/lib/levelbuilder/lesson-editor/AddVocabularyDialog';
 import sinon from 'sinon';
+import {allowConsoleWarnings} from '../../../../util/throwOnConsole';
 
 describe('AddVocabularyDialog', () => {
+  // Warnings allowed due to usage of deprecated componentWillMount
+  // lifecycle method.
+  allowConsoleWarnings();
+
   let defaultProps, afterSaveSpy, handleCloseSpy;
   beforeEach(() => {
     afterSaveSpy = sinon.spy();
@@ -13,7 +18,8 @@ describe('AddVocabularyDialog', () => {
       isOpen: true,
       afterSave: afterSaveSpy,
       handleClose: handleCloseSpy,
-      courseVersionId: 1
+      courseVersionId: 1,
+      commonSenseMedia: false
     };
   });
 
@@ -41,7 +47,8 @@ describe('AddVocabularyDialog', () => {
       id: 1,
       key: 'my vocabulary word',
       word: 'my vocabulary word',
-      definition: 'my vocabulary definition'
+      definition: 'my vocabulary definition',
+      commonSenseMedia: false
     };
     let server = sinon.fakeServer.create();
     server.respondWith('POST', `/vocabularies`, [
@@ -65,7 +72,8 @@ describe('AddVocabularyDialog', () => {
       id: 200,
       key: 'key',
       word: 'existing vocab',
-      definition: 'existing definition'
+      definition: 'existing definition',
+      commonSenseMedia: false
     };
     const wrapper = mount(
       <AddVocabularyDialog
@@ -122,6 +130,7 @@ describe('AddVocabularyDialog', () => {
       key: 'key',
       word: 'existing vocab',
       definition: 'existing definition',
+      commonSenseMedia: false,
       lessons: [{id: 1, name: 'lesson1'}]
     };
     const wrapper = mount(
@@ -136,5 +145,28 @@ describe('AddVocabularyDialog', () => {
     expect(wrapper.find('Select').props().value).to.deep.equal([
       {id: 1, name: 'lesson1'}
     ]);
+  });
+
+  it('cannot edit common sense media vocabulary', () => {
+    const existingVocabulary = {
+      id: 200,
+      key: 'key',
+      word: 'existing vocab',
+      definition: 'existing definition',
+      commonSenseMedia: true
+    };
+    const wrapper = mount(
+      <AddVocabularyDialog
+        {...defaultProps}
+        editingVocabulary={existingVocabulary}
+      />
+    );
+
+    expect(
+      wrapper
+        .find('input')
+        .at(1)
+        .props().disabled
+    ).to.be.true;
   });
 });

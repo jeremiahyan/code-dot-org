@@ -2,14 +2,18 @@ import {BlocklyVersion} from '@cdo/apps/constants';
 import styleConstants from '@cdo/apps/styleConstants';
 import CdoBlockDragger from '@cdo/apps/blocklyAddons/cdoBlockDragger';
 import CdoBlockSvg from '@cdo/apps/blocklyAddons/cdoBlockSvg';
+import initializeCdoConstants from '@cdo/apps/blocklyAddons/cdoConstants';
 import CdoFieldDropdown from '@cdo/apps/blocklyAddons/cdoFieldDropdown';
 import {CdoFieldImageDropdown} from '@cdo/apps/blocklyAddons/cdoFieldImageDropdown';
+import FunctionEditor from '@cdo/apps/blocklyAddons/functionEditor';
 import CdoInput from '@cdo/apps/blocklyAddons/cdoInput';
+import CdoMetricsManager from '@cdo/apps/blocklyAddons/cdoMetricsManager';
 import CdoPathObject from '@cdo/apps/blocklyAddons/cdoPathObject';
-import CdoScrollbar from '@cdo/apps/blocklyAddons/cdoScrollbar';
 import CdoTheme from '@cdo/apps/blocklyAddons/cdoTheme';
 import initializeTouch from '@cdo/apps/blocklyAddons/cdoTouch';
 import CdoTrashcan from '@cdo/apps/blocklyAddons/cdoTrashcan';
+import initializeVariables from '@cdo/apps/blocklyAddons/cdoVariables';
+import CdoVariableMap from '@cdo/apps/blocklyAddons/cdoVariableMap';
 import CdoWorkspaceSvg from '@cdo/apps/blocklyAddons/cdoWorkspaceSvg';
 import initializeBlocklyXml from '@cdo/apps/blocklyAddons/cdoXml';
 
@@ -55,6 +59,14 @@ const BlocklyWrapper = function(blocklyInstance) {
 function initializeBlocklyWrapper(blocklyInstance) {
   const blocklyWrapper = new BlocklyWrapper(blocklyInstance);
 
+  blocklyWrapper.setInfiniteLoopTrap = function() {}; // TODO
+  blocklyWrapper.clearInfiniteLoopTrap = function() {}; // TODO
+  blocklyWrapper.getInfiniteLoopTrap = function() {}; // TODO
+  blocklyWrapper.loopHighlight = function() {}; // TODO
+  blocklyWrapper.getWorkspaceCode = function() {
+    return Blockly.JavaScript.workspaceToCode(Blockly.mainBlockSpace);
+  };
+
   blocklyWrapper.wrapReadOnlyProperty('ALIGN_CENTRE');
   blocklyWrapper.wrapReadOnlyProperty('ALIGN_LEFT');
   blocklyWrapper.wrapReadOnlyProperty('ALIGN_RIGHT');
@@ -65,7 +77,6 @@ function initializeBlocklyWrapper(blocklyInstance) {
   blocklyWrapper.wrapReadOnlyProperty('BlockFieldHelper');
   blocklyWrapper.wrapReadOnlyProperty('Blocks');
   blocklyWrapper.wrapReadOnlyProperty('BlockSvg');
-  blocklyWrapper.wrapReadOnlyProperty('BlockValueType');
   blocklyWrapper.wrapReadOnlyProperty('common_locale');
   blocklyWrapper.wrapReadOnlyProperty('Connection');
   blocklyWrapper.wrapReadOnlyProperty('ContextMenu');
@@ -106,11 +117,14 @@ function initializeBlocklyWrapper(blocklyInstance) {
   blocklyWrapper.wrapReadOnlyProperty('Input');
   blocklyWrapper.wrapReadOnlyProperty('INPUT_VALUE');
   blocklyWrapper.wrapReadOnlyProperty('js');
+  blocklyWrapper.wrapReadOnlyProperty('MetricsManager');
   blocklyWrapper.wrapReadOnlyProperty('modalBlockSpace');
   blocklyWrapper.wrapReadOnlyProperty('Msg');
   blocklyWrapper.wrapReadOnlyProperty('Names');
   blocklyWrapper.wrapReadOnlyProperty('netsim_locale');
+  blocklyWrapper.wrapReadOnlyProperty('PluginManager');
   blocklyWrapper.wrapReadOnlyProperty('Procedures');
+  blocklyWrapper.wrapReadOnlyProperty('registry');
   blocklyWrapper.wrapReadOnlyProperty('removeChangeListener');
   blocklyWrapper.wrapReadOnlyProperty('RTL');
   blocklyWrapper.wrapReadOnlyProperty('Scrollbar');
@@ -123,7 +137,9 @@ function initializeBlocklyWrapper(blocklyInstance) {
   blocklyWrapper.wrapReadOnlyProperty('Touch');
   blocklyWrapper.wrapReadOnlyProperty('Trashcan');
   blocklyWrapper.wrapReadOnlyProperty('Variables');
+  blocklyWrapper.wrapReadOnlyProperty('VariableMap');
   blocklyWrapper.wrapReadOnlyProperty('weblab_locale');
+  blocklyWrapper.wrapReadOnlyProperty('WidgetDiv');
   blocklyWrapper.wrapReadOnlyProperty('Workspace');
   blocklyWrapper.wrapReadOnlyProperty('WorkspaceSvg');
   blocklyWrapper.wrapReadOnlyProperty('Xml');
@@ -132,11 +148,20 @@ function initializeBlocklyWrapper(blocklyInstance) {
   blocklyWrapper.blockly_.BlockSvg = CdoBlockSvg;
   blocklyWrapper.blockly_.FieldDropdown = CdoFieldDropdown;
   blocklyWrapper.blockly_.FieldImageDropdown = CdoFieldImageDropdown;
+  blocklyWrapper.blockly_.FunctionEditor = FunctionEditor;
   blocklyWrapper.blockly_.Input = CdoInput;
+  blocklyWrapper.blockly_.MetricsManager = CdoMetricsManager;
   blocklyWrapper.geras.PathObject = CdoPathObject;
-  blocklyWrapper.blockly_.Scrollbar = CdoScrollbar;
   blocklyWrapper.blockly_.Trashcan = CdoTrashcan;
+  blocklyWrapper.blockly_.VariableMap = CdoVariableMap;
   blocklyWrapper.blockly_.WorkspaceSvg = CdoWorkspaceSvg;
+
+  blocklyWrapper.blockly_.registry.register(
+    blocklyWrapper.blockly_.registry.Type.METRICS_MANAGER,
+    blocklyWrapper.blockly_.registry.DEFAULT,
+    CdoMetricsManager,
+    true /* opt_allowOverrides */
+  );
 
   // These are also wrapping read only properties, but can't use wrapReadOnlyProperty
   // because the alias name is not the same as the underlying property name.
@@ -178,14 +203,27 @@ function initializeBlocklyWrapper(blocklyInstance) {
       this.blockly_.CONNECTING_SNAP_RADIUS = snapRadius;
     }
   });
-  // Google Blockly defaults to 28, but Cdo Blockly defaults to 15. Some labs set the snap radius
-  // by multiplying a scale factor, so it's important that the default value matches what it was on our fork
-  blocklyWrapper.SNAP_RADIUS = 15;
+
+  blocklyWrapper.addChangeListener = function(blockspace, handler) {
+    blockspace.addChangeListener(handler);
+  };
+
+  blocklyWrapper.getWorkspaceCode = function() {
+    return Blockly.JavaScript.workspaceToCode(Blockly.mainBlockSpace);
+  };
+
+  // TODO - used for spritelab behavior blocks
+  blocklyWrapper.Block.createProcedureDefinitionBlock = function(config) {};
+
+  // TODO - used to add "create a behavior" button to the toolbox
+  blocklyWrapper.Flyout.configure = function(type, config) {};
 
   blocklyWrapper.getGenerator = function() {
     return this.JavaScript;
   };
-  blocklyWrapper.findEmptyContainerBlock = function() {}; // TODO
+
+  // TODO - used for validation in CS in Algebra.
+  blocklyWrapper.findEmptyContainerBlock = function() {};
   blocklyWrapper.BlockSpace = {
     EVENTS: {
       MAIN_BLOCK_SPACE_CREATED: 'mainBlockSpaceCreated',
@@ -227,9 +265,7 @@ function initializeBlocklyWrapper(blocklyInstance) {
   // so that our code generation logic still works with Google Blockly
   blocklyWrapper.Generator.blockSpaceToCode = function(name, opt_typeFilter) {
     const generator = blocklyWrapper.getGenerator();
-    if (!generator.isInitialized) {
-      generator.init(blocklyWrapper.mainBlockSpace);
-    }
+    generator.init(blocklyWrapper.mainBlockSpace);
     let blocksToGenerate = blocklyWrapper.mainBlockSpace.getTopBlocks(
       true /* ordered */
     );
@@ -245,7 +281,13 @@ function initializeBlocklyWrapper(blocklyInstance) {
     blocksToGenerate.forEach(block => {
       code.push(blocklyWrapper.JavaScript.blockToCode(block));
     });
-    return code.join('\n');
+    code = code.join('\n');
+    code = generator.finish(code);
+    return code;
+  };
+
+  blocklyWrapper.Generator.prefixLines = function(text, prefix) {
+    return blocklyWrapper.JavaScript.prefixLines(text, prefix);
   };
 
   blocklyWrapper.inject = function(container, opt_options, opt_audioPlayer) {
@@ -256,9 +298,17 @@ function initializeBlocklyWrapper(blocklyInstance) {
       move: {
         wheel: true,
         drag: true,
-        scrollbars: true
+        scrollbars: {
+          vertical: true,
+          horizontal: false
+        }
       }
     };
+
+    // CDO Blockly takes assetUrl as an inject option, and it's used throughout
+    // apps, so we should also set it here.
+    blocklyWrapper.assetUrl = opt_options.assetUrl || (path => `./${path}`);
+
     // Shrink container to make room for the workspace header
     container.style.height = `calc(100% - ${
       styleConstants['workspace-headers-height']
@@ -276,6 +326,8 @@ function initializeBlocklyWrapper(blocklyInstance) {
 
   initializeBlocklyXml(blocklyWrapper);
   initializeTouch(blocklyWrapper);
+  initializeVariables(blocklyWrapper);
+  initializeCdoConstants(blocklyWrapper);
 
   return blocklyWrapper;
 }

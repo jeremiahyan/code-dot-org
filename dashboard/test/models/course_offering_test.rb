@@ -6,7 +6,7 @@ class CourseOfferingTest < ActiveSupport::TestCase
     version1 = create :course_version, course_offering: course_offering
     version2 = create :course_version, course_offering: course_offering
 
-    assert_equal [version1, version2], course_offering.course_versions
+    assert_equal [version1, version2].sort_by(&:key), course_offering.course_versions.sort_by(&:key)
     assert_equal course_offering, version1.course_offering
     assert_equal course_offering, version2.course_offering
   end
@@ -139,6 +139,13 @@ class CourseOfferingTest < ActiveSupport::TestCase
       assert_equal num_course_offerings, CourseOffering.count
       assert_equal num_course_versions, CourseVersion.count
     end
+  end
+
+  test "enforces key format" do
+    course_offering = build :course_offering, key: 'invalid key'
+    refute course_offering.valid?
+    course_offering.key = '0123456789abcdefghijklmnopqrstuvwxyz-'
+    assert course_offering.valid?
   end
 
   def course_offering_with_versions(num_versions, content_root_trait=:with_unit_group)

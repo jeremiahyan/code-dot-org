@@ -1,6 +1,7 @@
 hideable_lessons true
 student_detail_progress_view true
 teacher_resources [["lessonPlans", "https://curriculum.code.org/csd-20/"], ["teacherForum", "https://forum.code.org/"], ["curriculumGuide", "https://docs.google.com/document/d/1-O6o5yQ4I1dk0n4Qzh86quXGBtzDDtyJ3Skr6RpcpO4/preview"], ["professionalLearning", "https://studio.code.org/my-professional-learning"]]
+published_state 'beta'
 
 lesson 'Module 1', display_name: 'Module 1', has_lesson_plan: false
 level 'OPL - CSD-PL AYWS1 Debugging Intro', progression: 'Module 1 Overview'
@@ -8,11 +9,11 @@ level 'VPL - CSD - Module 1 Summer Review Overview', progression: 'Summer Worksh
 level 'VPL-CSD 2020 Summer Review', progression: 'Summer Workshop Review (~ 10 - 20 mins)'
 level 'VPL - CSD - Variables Overview', progression: 'New Content (~ 35 mins)'
 level 'VPL - CSD Module Variable Video with Reflection', progression: 'New Content (~ 35 mins)'
-level 'VPL-CSD U3 Variables Predict Where XY_2020', progression: 'New Content (~ 35 mins)'
+level 'VPL-CSD-U3 Variables Predict Where XY_2021', progression: 'New Content (~ 35 mins)'
 level 'VPL - CSD - Variable Resources', progression: 'New Content (~ 35 mins)'
-level 'VPL-CSD U3 Variables naming rules v2_2018_2020', progression: 'New Content (~ 35 mins)'
+level 'VPL-CSD U3 Variables naming rules v2_2018_21', progression: 'New Content (~ 35 mins)'
 level 'VPL - CSD - Random Numbers Overview', progression: 'New Content (~ 35 mins)'
-level 'VPL-CSD U3 Random random ellipse2_2018_2020', progression: 'New Content (~ 35 mins)'
+level 'VPL-CSD U3 Random random ellipse2_2018_21', progression: 'New Content (~ 35 mins)'
 level 'VPL - CSD Module 1 New Content Reflection', progression: 'New Content (~ 35 mins)'
 level 'VPL- CSD - Module 1 Debugging OverviewOPD-K5 Pair_copy', progression: 'Debugging (~ 25 mins)'
 level 'VPL - CSD Module 1 Debugging Reflection 1', progression: 'Debugging (~ 25 mins)'
@@ -24,7 +25,7 @@ lesson 'Module 2', display_name: 'Module 2', has_lesson_plan: false
 level 'VPL - CSD Module 2 Overview', progression: 'Module 2 Overview'
 level 'VPL - CSD - Module 1 - CI', progression: 'Lesson Investigation (~ 60 min)'
 level 'VPL - CSD: Introduction to the Draw Loop_2020', progression: 'Lesson Investigation (~ 60 min)'
-level 'VPL-CSD 2020 - Module 2 CI - Draw Loop', progression: 'Lesson Investigation (~ 60 min)'
+level 'VPL-CSD 2021 - Module 2 CI - Draw Loop', progression: 'Lesson Investigation (~ 60 min)'
 level 'VPL - CSD Module 2 CI The Draw Loop Reflection', progression: 'Lesson Investigation (~ 60 min)'
 level 'VPL - CSD: Animating Sprite Movement_2020', progression: 'Lesson Investigation (~ 60 min)'
 level 'VPL-CSD 2020 - Module 2 CI - Sprite Movement', progression: 'Lesson Investigation (~ 60 min)'
@@ -137,16 +138,7 @@ level 'VPL - CSD - Module 8 - U6L6', progression: 'Unit 6: Lesson 6 -  Getting P
 level 'VPL - CSD - Module 8 - U6L6 Lesson 2', progression: 'Unit 6: Lesson 6 -  Getting Properties (~20 - 25 mins)'
 level 'VPL - CSD - Module 8 - U6L6 Level 3', progression: 'Unit 6: Lesson 6 -  Getting Properties (~20 - 25 mins)'
 level 'VPL - CSD - Module 8 - U6L6 - Level 4', progression: 'Unit 6: Lesson 6 -  Getting Properties (~20 - 25 mins)'
-level 'VPL - CSD - M8 - U6L6 - Level 5', progression: 'Unit 6: Lesson 6 -  Getting Properties (~20 - 25 mins)'
-level 'VPL - CSD - M8 - U6L6 - Level 6', progression: 'Unit 6: Lesson 6 -  Getting Properties (~20 - 25 mins)'
 level 'VPL - CSD Module 8  U6L6 Reflection', progression: 'Unit 6: Lesson 6 -  Getting Properties (~20 - 25 mins)'
-level 'VPL - CSD - Module 8 - U6L7', progression: 'Unit 6: Lesson 7 - Analog Input (~20 - 25 mins)'
-level 'VPL - CSD - M8 - U6L7 - Level 1', progression: 'Unit 6: Lesson 7 - Analog Input (~20 - 25 mins)'
-level 'VPL - CSD - M8 - U6L7 - Level 2', progression: 'Unit 6: Lesson 7 - Analog Input (~20 - 25 mins)'
-level 'VPL - CSD M8 - U6L7 - Level 3', progression: 'Unit 6: Lesson 7 - Analog Input (~20 - 25 mins)'
-level 'VPL - CSD - M8 - U6L7 - Level 4', progression: 'Unit 6: Lesson 7 - Analog Input (~20 - 25 mins)'
-level 'VPL - CSD - M8 - U6L7 - Level 5', progression: 'Unit 6: Lesson 7 - Analog Input (~20 - 25 mins)'
-level 'VPL - CSD Module  U6L7 Reflection', progression: 'Unit 6: Lesson 7 - Analog Input (~20 - 25 mins)'
 level 'VPL - CSD - Module 8 - Conclusions and Connections2', progression: 'Conclusions and Connections (~20 - 25 mins)'
 level 'VPL - CSD U6 Chapter 1 Project', progression: 'Conclusions and Connections (~20 - 25 mins)'
 level 'VPL - CSD M8 Conclusions and Connections Reflection', progression: 'Conclusions and Connections (~20 - 25 mins)'

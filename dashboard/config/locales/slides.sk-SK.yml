@@ -249,7 +249,37 @@ sk:
         text: Čo ak chceme nakresliť niekoľko trojuholníkov s rôznymi dĺžkami strán?
       3:
         text: Môžeme napísať celý kód ručne alebo môžeme použiť funkcie s parametrami.
+      4:
+        text: Dá sa to dosiahnúť kliknutím na modrú hviezdičku v definícii funckie
+          "nakresli trojuholník". Potom presuň "názov vstupu" do bloku "vstupy".
+      5:
+        text: Potom, ak napíšeš "dĺžka" do políčka, kde je teraz "x" a stlačíš "Enter",
+          vytvoríš tvojej funkcii vstup pre dĺžku.
+      6:
+        text: Opäť klikni na hviezdičku. Teraz klikni na kategóriu blokov "Premenné"
+          a presuň blok "dĺžka" do bloku "posuň dopredu", ktorý je v definícii tvojej
+          funkcie. Pôvodný blok s číslom presuň preč.
+      7:
+        text: Pre použitie tvojej funkcie s parametrami, klikni na kategóriu blokov
+          "Funkcie" a vytiahni odtiaľ tvoju funkciu "nakresli trojuholník s dĺžkou".
+      8:
+        text: Teraz môžeš použiť blok z kategórie "Matematika" na vloženie rôznych
+          číselných hodnôt pre vykreslenie trojuholníkov rôznych veľkostí.
     hoc_wrapup:
+      1:
+        text: Gratulujem! Poslednou vyriešenou úlohou, sa ti podarilo napísať kód,
+          ktorý vie AKÉMUKOĽVEK robotovi povedať, ako nájsť cestu cez nerozvetvujúce
+          sa bludisko alebo tunel akejkoľvek dĺžky, či je to zombi, vtáčik, vozidlo
+          na Marse alebo dokonca aj autonómny automobil.
+      2:
+        text: Tieto základné použité koncepty sú jadrom každého programu alebo aplikácie,
+          ktorú kedy vyskúšaš. Učili sme sa o opakujúcich sa cykloch, "repeat until"
+          (opakuj pokiaľ neplatí) príkazoch, "if" (ak) a "if-else" (ak-potom) príkazoch.
+      3:
+        text: Ak sa ti tvoja prvá hodina programovania páčila, navštív code.org pre
+          pokračovanie tvojho štúdia informatiky! Po absolvovaní nášho 20-hodinového
+          kurzu si osvojíš základy programovania a môžeš začať s učením, ako písať
+          aplikácie pre telefóny, inštrukcie pre roboty, hry a povedz ty čo ešte.
       4:
         text: 'Technológie menia všetko čo robíme, nezáleží na tom, či si mladý, alebo
           starý: programovanie je zábava, používaš svoju kreativitu a programovať
@@ -351,10 +381,52 @@ sk:
           známy ako nová funkcia, takže budeš môcť vytvárať kružnice rôznych veľkostí.
           Vieš tento blok použiť a pomôcť nakresliť Else do snehu zložité a nádherné
           vzory?
+    playlab_intro:
+      1:
+        text: Použitím Play Labu  budeme vytvárať hry. Dobré hry majú príbeh a každý
+          príbeh má postavy. Naučíme sa ako na to, aby postavy ako čarodejníci, mimozemšťania
+          a zvieratká navzájom hovorili, hýbali sa a reagovali na seba. Po prejdení
+          tohto návodu dokážeš vytvoriť hru od základu a zdieľať ju so svojimi kamarátmi.
+      2:
+        text: Tvoja obrazovka je rozdelená do troch hlavných častí. Naľavo je herný
+          priestor, kde pobeží tvoj program. Pokyny pre každú úroveň sú napísané pod
+          ním.
+      3:
+        text: Stredná časť je panel nástrojov a každý z týchto blokov je časťou kódu.
+          Biely priestor napravo sa volá pracovný priestor a tu budeš vytvárať svoj
+          program.
+      4:
+        text: Na začiatok budeš musieť spojiť tvoje bloky s oranžovým blokom "pri
+          spustení". Môžeš spojiť dokopy viacero blokov tým, že ich vytiahneš a keď
+          uvidíš žltú čiaru, potom sa do seba zacvaknú.
+      5:
+        text: V tejto prvej úlohe je našou postavičkou tučniak a urobíme to, aby povedal
+          "Ahoj!" tak, že vytiahneme von blok "povedz", spojíme ho s blokom "pri spustení"
+          a napíšeme do ňho "Ahoj." Pomocou blokov "posuň postavu" vpravo a vľavo
+          môžeme dosiahnuť, aby sa tučniak hýbal. Akonáhle budú bloky na mieste, stlač
+          tlačidlo "Spustiť", aby sa zobrazilo, čo sa ti podarilo naprogramovať.
+      6:
+        text: Začni a na konci budeš vedieť  vytvoriť svoju vlastnú hru s rôznymi
+          hráčmi, ktorí budú reagovať na podnety, môžu byť šťastní, alebo zosmutnieť,
+          získavať body, alebo hádzať ohnivé gule, či dokonca jeden druhého vymazať.
+          Je to všetko na tebe akú hru chceš vytvoriť.
     playlab_events:
+      1:
+        text: 'Teraz sa naučíme o niečom, čo programátori hier používajú každý deň.
+          Sú to Udalosti. Udalosť hovorí tvojmu programu, aby čakal na to, keď sa
+          niečo stane. A potom, keď sa to stane, program vykoná nejakú aktivitu. '
       2:
         text: Niektoré príklady udalostí čakajú na kliknutie myškou, na stlačenie
           tlačidla šípky, alebo na dotyk na dotykovú obrazovku.
+      3:
+        text: Tu urobíme, aby vesmírny robot Spacebot pozdravil pozemšťanov, keď na
+          ňho klikneme. Použijeme blok "po kliknutí na postavu" a pripojíme k nemu
+          blok "povedz". Keď hráč klikne na robota, vykoná sa všetko, čo je pripojené
+          k udalosti "po kliknutí na postavu". Čo hovorí tvoj mimozemšťan?
+      4:
+        text: Sú tam aj bloky "keď šípka". Ak k nim pripojíš bloky "posuň", môžeš
+          začať s pohybom postavičiek hore, dole, vľavo či vpravo. Krok po kroku sa
+          tvoja hra stáva viac interaktívnou.
     playlab_repeat_forever:
       1:
         text: Toto je blok "opakuj donekonečna". Čokoľvek vložíme do tohoto bloku,
@@ -362,6 +434,11 @@ sk:
       2:
         text: Ak má postava niečo opakovane vykonávať bez zásahu hráča, budeme vkladať
           tieto bloky do vnútra bloku "opakuj donekonečna".
+      3:
+        text: V tejto úlohe je našim cieľom pomôcť čarodejníkovi strážiť hranice kráľovstva
+          nepretržite zľava doprava a naspäť. Tým, že sa naučíme ako fungujú príkazy
+          opakovania, si neskôr ušetríme množstvo času pri tvorení našej vlastnej
+          hry.
     C1_artist_intro:
       1:
         text: S týmito blokmi kreslíš. Použi ich, aby sa umelec dostal kam potrebuje
@@ -369,15 +446,62 @@ sk:
       2:
         text: "S týmito blokmi skáčeš. Keď ich použiješ, tvoj umelec sa pohne, ale
           nekreslí, takže pomocou nich preskočíš na ďalšiu šedú čiaru. \n"
+    C1_bee_level_intro:
+      1:
+        text: 'Nie sú včely super skvelé? V nasledujúcej sérii úloh je tvojim cieľom
+          pomôcť včele dostať sa ku kvetom, získať z nich nektár a preletieť k plástu,
+          aby vyrobila med. Na toto cvičenie potrebuješ použiť bloky "získaj nektár"
+          a "vyrob med". '
+      2:
+        text: 'Každý kvet má rozdielny počet nektáru: 1, 2, 3, alebo viac. Poznáme
+          to podľa malého čísielka v rohu pri červených kvetoch. Preto sa pred pokračovaním
+          ďalej uisti, že všetkok nektár z kvetu bol získaný. Rovnako môže aj každý
+          plást uchovať len nejaké množstvo medu: 1, 2, 3, alebo viac. Vyrob preto
+          len toľko medu, koľko dokáže uchovať plást.'
+      3:
+        text: Uspeješ a postúpiš na ďalšiu úroveň, ak zvládneš získať všetok nektár
+          a vyrobiť všetok med. Inak si budeš musieť túto úlohu zopakovať. Skús tomu
+          chvíľu "v-čeliť" a získaj pocit, čo znamená byť programátorom!
     C1_bee_loops:
       1:
         text: Cyklus znamená opakovanie činnosti. Keď kontrolujem úľ, vytiahnem a
           skontrolujem jeden rám a potom ho vrátim a túto činnosť opakujem viackrát.
           Toto je vlastne cyklus - vykonávanie rovnakej činnosti opakovane.
+      2:
+        text: Na tejto úrovni cheme, aby včela získala z kvetu tri nektáre. Namiesto
+          trojnásobného použitia "získaj nektár", použi opakovací blok na získanie
+          nektáru tri krát. Stlač "Spustiť" a zisti, či to máš správne. Výborne!
     C1_bigevent_unplugged:
+      1:
+        text: Táto lekcia sa volá veľká udalosť. Je to všetko o tom, ako dokážeme
+          ovládať náš program a dokonca meniť spôsob činnosťi programu počas jeho
+          behu použitím udalostí, akými sú napríklad stlačenie klávesy alebo kliknutie
+          myši.
       2:
         text: V tejto lekcii budeš ovládaný papierovým diaľkovým ovládačom. Je to
           niečo ako reálna-živá video hra.
+      3:
+        text: Udalosť je akcia, ktorá spôsobí, že sa niečo udeje. Je to ako keď klikneš
+          na tlačidlo myši a načíta sa webstránka. To je udalosť. Keď sa dotkneš obrazovky
+          na svojom tablete kvôli posúvaniu obrazu, to je tiež udalosť. Udalosti sú
+          skvelým spôsobom ako nechať užívateľa riadiť tvoj program, kedykoľvek to
+          potrebuje alebo chce.
+      4:
+        text: Často sa dejú veci, na ktoré všetci odpovedáme určitým spôsobom. Ak
+          sme hladní, ideme do chladničky. Ak počujeme, že prišiel poštár a vhodil
+          list do schránky, ideme si vybrať túto poštu. To sú rovnaké udalosti ako
+          stlačenie tlačidla alebo pohnutie joystickom. Udalosti, ktoré sú pre nás
+          spúšťačom pre vykonanie určitej aktivity.
+      5:
+        text: Vo videohrách sa nachádza udalosť nazývaná "Update" (obnov) a opakuje
+          sa 30 alebo 60 krát za sekundu. Pre programátorov videohier je možno dôležitejšia
+          ako udalosť gombíka či joysticku.
+    C1_building_foundation:
+      2:
+        text: Táto lekcia sa volá budovanie základov. V tejto lekcii budeme pracovať
+          na úlohe, ktorá má byť skutočne zložitá. Musíte prísť na to, ako postaviť
+          štruktúru vysokú aspoň ako jeden z týchto pohárov, a musí byť dosť silná
+          nato, aby udržala váhu knihy.
     C1_happy_maps_unplugged:
       1:
         text: Táto lekcia sa volá Veselé mapy. Dnes budeme pomáhať našej malej chlpatej
@@ -499,6 +623,11 @@ sk:
         text: Cyklus znamená opakovanie činnosti. Keď kontrolujem úľ, vytiahnem a
           skontrolujem jeden rám a potom ho vrátim a túto činnosť opakujem viackrát.
           Toto je vlastne cyklus - vykonávanie rovnakej činnosti opakovane.
+    C2_playlab_createstory:
+      1:
+        text: Doteraz sa ti podarilo vytvoriť animáciu alebo príbeh, ktorý keď je
+          spustený, vykoná stále to isté. Teraz môžeš vytvoriť interaktívnu hru, ktorá
+          sa dá v skutočnosti aj hrať.
     C2_relay_programming:
       1:
         text: Dnes budeme programovať v štafete. Bude to o programovaní pod tlakom
@@ -575,6 +704,11 @@ sk:
           by sme použiť 5 blokov "posun sa dopredu", alebo môžeme počítaču povedať,
           nech sa raz posunie dopredu a prikázať mu to zopakovať 5 krát použitím jedného
           opakovacieho bloku.
+    C3_playlab_create_game:
+      1:
+        text: Doteraz sa ti podarilo vytvoriť animáciu alebo príbeh, ktorý keď je
+          spustený, vykoná stále to isté. Teraz môžeš vytvoriť interaktívnu hru, ktorá
+          sa dá v skutočnosti aj hrať.
     C4_conditionals:
       1:
         text: Máme nový blok, ktorý sa volá blok ak / inak. Je to podmienka rovnako
@@ -592,6 +726,89 @@ sk:
           náš blok sa bude správať rovnako. To znamená, ak je vyhlásenie v hornej
           časti pravdivé, vykoná sa prvá sada akcií. Ale ak je vyhlásenie v hornej
           časti nepravdivé, vykoná sa druhá sada akcií.
+    C4_for_loops:
+      1:
+        text: Keď použijete blok opakuj na zacyklenie kódu, ako počítač zistí, kedy
+          sa kód zopakoval dostatočne veľakrát? Blok opakuj v skutočnosti skrýva sofistikovanejší
+          kúsok kódu nazývaný cyklus pre, ktorý počíta od počiatočnej hodnoty po koncovú
+          hodnotu o konkrétny prírastok.
+      2:
+        text: Napríklad, opakovanie 3 blokov počíta od 1 po 3, po jednej. Za každým,
+          keď ráta, spustí kód vo vnútri opakovania. Cyklus vie, koľkokrát už zbehol,
+          vďaka premennej "počítadlo", ktorá je nastavená na počiatočnej hodnote,
+          keď cyklus začína a pridáva si o jedno zakaždým, keď zbehne cyklus. Akonáhle
+          je premenná "počítadlo" väčšia ako konečná hodnota, cyklus sa zastaví.
+      3:
+        text: 'Výhodou použitia ozajstného rátajúceho cyklu, namiesto bloku opakuj
+          je, že vidíme premennú "počítadlo" a používame ju v cykle. Napríklad, keď
+          máme viacero kvetín a prvá z nich má jeden nektár, druhá má dva nektáre
+          a tretia má tri, môžeme použiť rátajúci cyklus, aby včela pozbierala zakaždým
+          "počítadlový počet" nektárov, jeden na prvom kvete, dva na druhom a tri
+          na treťom. '
+      4:
+        text: V rátajúcom cykle môžeme tiež zvyšovať "počítadlo" o iné číslo ako jeden.
+          Vieme napríklad počítať vždy o plus 2, 4 alebo aj hodnotu, ktorá sa zakaždým
+          mení.
+    C4_for_loops_bee:
+      1:
+        text: Keď použijete blok opakuj na zacyklenie kódu, ako počítač zistí, kedy
+          sa kód zopakoval dostatočne veľakrát? Blok opakuj v skutočnosti skrýva sofistikovanejší
+          kúsok kódu nazývaný cyklus pre, ktorý počíta od počiatočnej hodnoty po koncovú
+          hodnotu o konkrétny prírastok.
+      2:
+        text: Napríklad, opakovanie 3 blokov počíta od 1 po 3, po jednej. Za každým,
+          keď ráta, spustí kód vo vnútri opakovania. Cyklus vie, koľkokrát už zbehol,
+          vďaka premennej "počítadlo", ktorá je nastavená na počiatočnej hodnote,
+          keď cyklus začína a pridáva si o jedno zakaždým, keď zbehne cyklus. Akonáhle
+          je premenná "počítadlo" väčšia ako konečná hodnota, cyklus sa zastaví.
+      3:
+        text: 'Výhodou použitia ozajstného rátajúceho cyklu, namiesto bloku opakuj
+          je, že vidíme premennú "počítadlo" a používame ju v cykle. Napríklad, keď
+          máme viacero kvetín a prvá z nich má jeden nektár, druhá má dva nektáre
+          a tretia má tri, môžeme použiť rátajúci cyklus, aby včela pozbierala zakaždým
+          "počítadlový počet" nektárov, jeden na prvom kvete, dva na druhom a tri
+          na treťom. '
+      4:
+        text: V rátajúcom cykle môžeme tiež zvyšovať "počítadlo" o iné číslo ako jeden.
+          Vieme napríklad počítať vždy o plus 2, 4 alebo aj hodnotu, ktorá sa zakaždým
+          mení.
+    C4_for_loops_no_bee:
+      1:
+        text: Keď použijete blok opakuj na zacyklenie kódu, ako počítač zistí, kedy
+          sa kód zopakoval dostatočne veľakrát? Blok opakuj v skutočnosti skrýva sofistikovanejší
+          kúsok kódu nazývaný cyklus pre, ktorý počíta od počiatočnej hodnoty po koncovú
+          hodnotu o konkrétny prírastok.
+      2:
+        text: Napríklad opakovanie troch blokov sa počíta od 1 do 3 po 1. Zakaždým,
+          keď sa počíta, spustí sa kód vnútri cyklu. Cyklus pre vie, koľkokrát sa
+          má spustiť, vďaka premennej počítadlo, ktorá je nastavená na počiatočnú
+          hodnotu na začiatku cyklu, a má k nej pridaný prírastok pri každom spustení
+          cyklu. Akonáhle je premenná počítadla väčšia ako koncová hodnota, cyklus
+          sa zastaví. Výhodou použitia cyklu pre namiesto bloku opakovania je, že
+          skutočne vidíte premennú počítadlo a môžete ju použiť vo svojom cykle.
+    C4_variables_artist:
+      1:
+        text: Premenná je kontajner, do ktorého môžeš ukladať hodnotu. Keď ju použiješ
+          v algoritme, otvorí kontajner a pozrie na hodnotu vo vnútri. To ti dovolí
+          písať šikovnejšie algoritmy, ktoré sa správajú podľa hodnôt uložených v
+          premennej.
+      2:
+        text: Napríklad, ak by som chcela napísať algoritmus "Všetko najlepšie k 10.
+          narodeninám braček" o rok neskôr, spustením programu, by som chcela povedať
+          "Všetko najlepšie k 11. narodeninám"! Mohla by som vytvoriť premennú s názvom
+          vek, ktorou sa uloží bratov vek a napíšem k tomu môj algoritmus, aby som
+          miesto toho povedala "Všetko najlepšie k "vek". narodeninám ". A keďže premenná
+          sa rokom mení, môžem ju aktualizovať ako "vek" plus 1.
+      3:
+        text: V tejto úlohe použijeme premennú, ktorá nastaví dĺžku čiary, ktorú umelec
+          nakreslí. Neskôr v našom kóde bude blok "Posuň sa dopredu" overovať premennú,
+          aby zistil, aká hodnota dĺžky jej bola pridelená.
+    C4_variables_playlab:
+      1:
+        text: Premenná je kontajner, do ktorého môžeš ukladať hodnotu. Keď ju použiješ
+          v algoritme, otvorí kontajner a pozrie na hodnotu vo vnútri. To ti dovolí
+          písať šikovnejšie algoritmy, ktoré sa správajú podľa hodnôt uložených v
+          premennej.
     infinity_playlab_events:
       1:
         text: Teraz sa naučíme o niečom, čo programátori hier používajú každý deň.
@@ -660,6 +877,15 @@ sk:
           hráč, tak tie bloky umiestnime do vnútra bloku "opakuj donekonečna". V nasledujúcej
           úlohe je našim cieľom, aby Anna neustále chodila hore a dole. Ak sa naučíš
           používať opakovacie príkazy, ušetrí ti pri tvorbe vlastnej hry kopec času.
+    unplug1:
+      3:
+        text: Keď som sa konečne naučil trochu programovať, tá biela plocha sa premenila
+          na množstvo dverí a po ich otvorení sa za nimi nachádzala, samozrejme, ďalšia
+          chodba s množstvom dverí. Programovanie je jednoduché a zábavné. Môžeš urobiť
+          čokoľvek, čo chce tvoja myseľ. Nakoniec otvoríš dostatok dverí, aby vošlo
+          svetlo. Pre mňa je hotový program ako stavba naplnená svetlom. Všetky kúty
+          sú osvetlené. Počet ľudí, ktorých môžeš ovplyvniť a komunikovať s nimi,
+          je niečo, čo svet predtým nevidel.
     unplug3:
       1:
         text: V programovaní na štvorčekový papier sa snažíme vysvetliť, ako programovanie
@@ -689,6 +915,11 @@ sk:
         text: Ak potiahnem do nášho pracovného priestoru blok pohybVľavo(); a potom
           kliknem Spustiť, čo sa stane? BB=8 sa pohne doľava o jedno pole v mriežke.
     starwars_events:
+      2:
+        text: Gratulujem, zvládaš to! BB-8 je naprogramovaný. Myslím, že sme pripravení
+          na niečo zložitejšie. Poďme na to. Keďže sa ti práve podarilo naučiť základy
+          programovania, vráťme sa v čase a vytvorme tvoju vlastnú hru, v ktorej bude
+          účinkovať R2-D2 a C-3PO.
       3:
         text: 'Aby sme si mohli vytvoriť hru, potrebujeme sa naučiť niečo čo programátori
           hier používajú každý deň: sú to udalosti. Udalosti hovoria programu, aby
@@ -696,10 +927,28 @@ sk:
       4:
         text: Medzi príklady akcií patrí napríklad čakanie na kliknutie myšou, stlačenie
           klávesy so šípkou alebo ťuknutie na obrazovku.
+      5:
+        text: Tu urobíme to, aby sa R2-D2 pohyboval smerom hore a doručil správu pilotovi
+          rebelov, a potom smerom dole k inému pilotovi rebelov. K jeho pohybu použijeme
+          udalosti tak, že hráč použije šípky alebo tlačidlá hore/dole.
+      6:
+        text: Použijeme blok udalosti "whenUp()" (akHore()) a pripojíme k nemu blok
+          "goUp()" (choďHore()). Ak hráč stlačí šípku hore, spustí sa kód pripojený
+          k "whenUp()" bloku. Podobne sa to dá urobiť, aby sa R2-D2 hýbal smerom dole.
+      7:
+        text: Aby sme to dosiahli, použijeme príkaz, ktorý sa volá "whenUp()" (akHore).
+          Ak presunieš príkaz z panela nástrojov, uvidíš, že začína a končí zloženou
+          (kučeravou) zátvorkou, nie bodko-čiarkou. Toto nám dáva priestor, aby sme
+          dovnútra volžili ďalšie príkazy. Každý príkaz, ktorý vložíme dovnútra zátvoriek,
+          sa spustí, keď hráč stlačí šípku hore.
+      9:
+        text: Teraz namiesto toho, aby sme  písali celý kód na ovládanie droida vopred,
+          môžeme nechať R2-D2 reagovať na stlačenie kláves, aby sa pohyoval po obrazovke.
+          Krok po kroku sa tvoja hra stáva viac interaktívnou.
     starwars_congrats:
       1:
-        text: Ahoj, volám sa Alice. V Code.org vediem produktový a technický tím pracovala
-          som na tomto návode, ktorý si práve prechádzaš.
+        text: Ahoj, volám sa Alice. V Code.org vediem produktový a technický tím a
+          pracovala som na tomto návode, ktorý si práve prechádzaš.
       2:
         text: Podarilo sa ti dosiahnuť záverečnú úroveň. Blahoželám! Už vieš všetko
           potrebné na vytvorenie svojej vlastnej Star Wars hry. Už žiadne ďalšie pokyny,
@@ -736,6 +985,11 @@ sk:
         text: Ak niekedy budeš chcieť odstrániť blok, tak ho iba odstráň z pracovnej
           plochy a presuň ho späť do panela nástrojov.
     starwars_blocks_events:
+      2:
+        text: Gratulujem, zvládaš to! BB-8 je naprogramovaný. Myslím, že sme pripravení
+          na niečo zložitejšie. Poďme na to. Keďže sa ti práve podarilo naučiť základy
+          programovania, vráťme sa v čase a vytvorme tvoju vlastnú hru, v ktorej bude
+          účinkovať R2-D2 a C-3PO.
       3:
         text: 'Aby sme si mohli vytvoriť hru, potrebujeme sa naučiť niečo čo programátori
           hier používajú každý deň: sú to udalosti. Udalosti hovoria programu, aby
@@ -743,12 +997,16 @@ sk:
       4:
         text: Medzi príklady akcií patrí napríklad čakanie na kliknutie myšou, stlačenie
           klávesy so šípkou alebo ťuknutie na obrazovku.
+      5:
+        text: Tu urobíme to, aby sa R2-D2 pohyboval smerom hore a doručil správu pilotovi
+          rebelov, a potom smerom dole k inému pilotovi rebelov. K jeho pohybu použijeme
+          udalosti tak, že hráč použije šípky alebo tlačidlá hore/dole.
       7:
         text: Krok po kroku, sa tvoja hra stáva viac interaktívnou.
     starwars_blocks_congrats:
       1:
-        text: Ahoj, volám sa Alice. V Code.org vediem produktový a technický tím pracovala
-          som na tomto návode, ktorý si práve prechádzaš.
+        text: Ahoj, volám sa Alice. V Code.org vediem produktový a technický tím a
+          pracovala som na tomto návode, ktorý si práve prechádzaš.
       2:
         text: Podarilo sa ti dosiahnuť záverečnú úroveň. Blahoželám! Už vieš všetko
           potrebné na vytvorenie svojej vlastnej Star Wars hry. Už žiadne ďalšie pokyny,
@@ -902,6 +1160,13 @@ sk:
         text: Ak by si chcel vytvoriť svoju vlastnú hru, je to naozaj jednoduché.
           Potrebuješ poznať len zopár základov programovania a za chvíľu už môžeš
           hrať hru ktorú si si sám vytvoril.
+      2:
+        text: Máš obľúbenú videohru? Teraz urobíme krok bližšie k vytváraniu takých
+          hier, ako v Play Labe. Dobré hry majú príbeh a každý príbeh má postavy.
+          Postavy sa rozprávajú, pohybujú sa a navzájom na seba pôsobia. Možno na
+          základe pravidiel hry aj získavajú body. Dnes sa budeme učiť, ako spraviť
+          všetky tieto veci jednu za druhou so zábavnými postavičkami, a potom vytvoríme
+          hru od základu, ktorá sa dá zdieľať a hrať na mobile.
       6:
         text: Biela oblasť vpravo sa nazýva pracovný priestor a je to miesto, kde
           budeme budovať náš program.
@@ -914,6 +1179,13 @@ sk:
         text: Ak by si chcel vytvoriť svoju vlastnú hru, je to naozaj jednoduché.
           Potrebuješ poznať len zopár základov programovania a za chvíľu už môžeš
           hrať hru ktorú si si sám vytvoril.
+      2:
+        text: Máš obľúbenú videohru? Teraz urobíme krok bližšie k vytváraniu takých
+          hier, ako v Play Labe. Dobré hry majú príbeh a každý príbeh má postavy.
+          Postavy sa rozprávajú, pohybujú sa a navzájom na seba pôsobia. Možno na
+          základe pravidiel hry aj získavajú body. Dnes sa budeme učiť, ako spraviť
+          všetky tieto veci jednu za druhou so zábavnými postavičkami, a potom vytvoríme
+          hru od základu, ktorá sa dá zdieľať a hrať na mobile.
       6:
         text: Biela oblasť vpravo sa nazýva pracovný priestor a je to miesto, kde
           budeme budovať náš program.
@@ -1413,24 +1685,68 @@ sk:
     csd_concept_computer:
       1:
         image: notes/csd_concept_computer_1.png
+        text: Volám sa May-Li Khoe, som dizajnérka a vynálezkyňa. Niekoľko návrhov
+          dizajnu som robila pre Apple, teraz navrhujem produkty pre deti, ktoré im
+          uľahčia vyučovanie v škole. Som tiež DJka a venujem sa aj tancu.
       2:
         image: notes/csd_concept_computer_2.png
+        text: Počítače sú všade! Nájdeš ich v našich vreckách, autách, niektorí ich
+          nosia na ruke. Možno sa jeden taký nachádza práve teraz v tvojom ruksaku.
+          Čo však robí z počítača počítač? Čo vôbec robí z počítača počítač? A ako
+          funguje?
       3:
         image: notes/csd_concept_computer_3.png
+        text: "Ahoj, som Nat! Jeden z pôvodných dizajnérov Xboxu. S počítačmi pracujem
+          asi od svojich siedmich rokov a v súčasnosti sa venujem virtuálnej realite.
+          Vždy sme ako ľudia budovali nástroje, ktoré nám pomáhali riešiť problémy.
+          Nástroje ako napr. \nfúrik, kladivo, tlačiareň alebo príves traktora."
       4:
         image: notes/csd_concept_computer_4.png
+        text: Všetky tieto vynálezy nám pomohli pri manuálnej práci. Po čase začali
+          byť ľudia zvedaví, či by sa dalo navrhnúť a vyrobiť zariadenie, ktoré by
+          nám pomohlo pri premýšľaní, napr. pri riešení rovníc alebo sledovaní hviezd
+          na oblohe. Namiesto presunu alebo spracúvania fyzických predmetov, ako sú
+          hlina a kameň, by tieto zariadenia mali slúžiť na spracúvanie informácií.
+          Kým priekopníci informatiky skúmali, ako navrhnúť mysliaci stroj, uvedomili
+          si, že musí plniť štyri rôzne úlohy.
       5:
         image: notes/csd_concept_computer_5.png
+        text: Mal by vedieť vkladať vstupy, ukladať informácie, spracúvať ich a následne
+          odovzdávať výsledky. Teraz to možno znie jednoducho, ale tieto štyri veci
+          majú spoločné všetky počítače. Je to to, čo robí z počítača počítač.
       6:
         image: notes/csd_concept_computer_6.png
+        text: Počítače sa začali používať ako kalkulačka, čo bolo v tom čase naozaj
+          úžasné, a vtedy spracúvali len čísla. Teraz ich však môžeme použiť na komunikáciu,
+          hranie hier, ovládanie robotov a iné bláznivé veci, aké si viete predstaviť.
+          Moderné počítače už dávno nevyzerajú ako tie veľké staré stroje, stále však
+          vykonávajú tie isté 4 úlohy.
       7:
         image: notes/csd_concept_computer_7.png
+        text: "Najskôr sa porozprávame o vstupe. Moja obľúbená časť, pretože vstupy
+          sú všetko, čo robí svet alebo čo robíte vy, vďaka \nčomu počítač plní úlohy.
+          Počítaču môžete dávať príkazy pomocou klávesnice, myši, mikrofónu alebo
+          kamery. Všetky tieto rôzne vstupy poskytujú počítaču informácie, ktoré sa
+          potom uložia do pamäte."
       8:
         image: notes/csd_concept_computer_8.png
+        text: Procesor počítača prijíma informácie z jeho pamäte. Spracúva ich alebo
+          ich mení pomocou algoritmu, ktorý predstavuje sériu príkazov. A potom odošle
+          spracované informácie späť na uloženie do pamäte. Toto pokračuje, kým spracované
+          informácie nie sú pripravené na výstup.
       9:
         image: notes/csd_concept_computer_9.png
+        text: Spôsob, akým počítač odovzdáva informácie, závisí od toho, na čo bol
+          navrhnutý. Displej počítača zobrazuje text, fotografie, videá, interaktívne
+          hry -- aj virtuálnu realitu! Výstup môže dokonca obsahovať signály na riadenie
+          robota.
       10:
         image: notes/csd_concept_computer_10.png
+        text: A kto vie, ako budú počítače vyzerať v budúcnosti? Dúfam, že práve ty
+          budeš rozhodovať o tom, ako budú počítače v budúcnosti vyzerať. Bez ohľadu
+          na rôzne typy technológií, ktoré počítače používajú, vykonávajú stále rovnaké
+          4 úlohy. Prijímajú informácie, ukladajú ich ako dáta, spracovávajú ich a
+          nakoniec odovzdávajú výsledky.
     csd_concept_binary_data:
       1:
         image: notes/csd_concept_binary_data_1.png

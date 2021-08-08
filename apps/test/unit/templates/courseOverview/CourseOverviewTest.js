@@ -42,7 +42,8 @@ const defaultProps = {
   versions: [],
   sectionsForDropdown: [],
   announcements: [],
-  isSignedIn: true
+  isSignedIn: true,
+  useMigratedResources: false
 };
 
 const fakeTeacherAnnouncement = {
@@ -119,13 +120,6 @@ describe('CourseOverview', () => {
     assert.equal(wrapper.find('CourseOverviewTopRow').length, 1);
   });
 
-  it('renders no top row for students', () => {
-    const wrapper = shallow(
-      <CourseOverview {...defaultProps} isTeacher={false} />
-    );
-    assert.equal(wrapper.find('CourseOverviewTopRow').length, 0);
-  });
-
   it('renders a CourseScript for each script', () => {
     const wrapper = shallow(<CourseOverview {...defaultProps} />);
     assert.equal(wrapper.find('Connect(CourseScript)').length, 2);
@@ -182,7 +176,8 @@ describe('CourseOverview', () => {
           title: '2017',
           canViewVersion: true,
           isStable: true,
-          locales: []
+          locales: [],
+          localeCodes: []
         },
         {
           name: 'csp-2018',
@@ -190,7 +185,8 @@ describe('CourseOverview', () => {
           title: '2018',
           canViewVersion: true,
           isStable: true,
-          locales: []
+          locales: [],
+          localeCodes: []
         }
       ];
       const wrapper = shallow(
@@ -218,7 +214,8 @@ describe('CourseOverview', () => {
           title: '2017',
           canViewVersion: false,
           isStable: true,
-          locales: []
+          locales: [],
+          localeCodes: []
         },
         {
           name: 'csp-2018',
@@ -226,7 +223,8 @@ describe('CourseOverview', () => {
           title: '2018',
           canViewVersion: true,
           isStable: true,
-          locales: []
+          locales: [],
+          localeCodes: []
         }
       ];
       const wrapper = shallow(

@@ -19,18 +19,19 @@
 #
 # Indexes
 #
-#  index_levels_on_game_id  (game_id)
-#  index_levels_on_name     (name)
+#  index_levels_on_game_id    (game_id)
+#  index_levels_on_level_num  (level_num)
+#  index_levels_on_name       (name)
 #
 
 class Ailab < Level
   serialized_attrs %w(
-    project_template_level_name
     start_sources
     hide_share_and_remix
     is_project_level
     submittable
     mode
+    dynamic_instructions
   )
 
   def self.create_from_level_builder(params, level_params)
@@ -75,6 +76,7 @@ class Ailab < Level
   def self.json_object_attrs
     %w(
       mode
+      dynamic_instructions
     ).map {|x| x.camelize(:lower)}
   end
 end

@@ -27,26 +27,18 @@ import {
   selectLocation,
   updateLocation,
   isPickingLocation
-} from './spritelab/locationPickerModule';
+} from './redux/locationPicker';
 import {calculateOffsetCoordinates} from '@cdo/apps/utils';
 import {isMobileDevice} from '@cdo/apps/util/browser-detector';
 
 const MODAL_Z_INDEX = 1050;
-
-const styles = {
-  containedInstructions: {
-    marginTop: 10
-  },
-  selectStyle: {
-    width: APP_WIDTH
-  }
-};
 
 class P5LabVisualizationColumn extends React.Component {
   static propTypes = {
     finishButton: PropTypes.bool.isRequired,
     pauseHandler: PropTypes.func.isRequired,
     hidePauseButton: PropTypes.bool.isRequired,
+    onPromptAnswer: PropTypes.func,
 
     // From redux
     isResponsive: PropTypes.bool.isRequired,
@@ -60,12 +52,9 @@ class P5LabVisualizationColumn extends React.Component {
     cancelPicker: PropTypes.func.isRequired,
     selectPicker: PropTypes.func.isRequired,
     updatePicker: PropTypes.func.isRequired,
-    consoleMessages: PropTypes.array.isRequired
+    consoleMessages: PropTypes.array.isRequired,
+    isRtl: PropTypes.bool
   };
-
-  constructor(props) {
-    super(props);
-  }
 
   // Cache app-space mouse coordinates, which we get from the
   // VisualizationOverlay when they change.
@@ -160,7 +149,7 @@ class P5LabVisualizationColumn extends React.Component {
   }
 
   render() {
-    const {isResponsive, isShareView} = this.props;
+    const {isResponsive, isShareView, isRtl} = this.props;
     const divGameLabStyle = {
       touchAction: 'none',
       width: APP_WIDTH,
@@ -173,7 +162,7 @@ class P5LabVisualizationColumn extends React.Component {
     const showPauseButton = isSpritelab && !this.props.hidePauseButton;
 
     return (
-      <div style={{position: 'relative'}}>
+      <div>
         <div style={{position: 'relative'}}>
           <ProtectedVisualizationDiv>
             <Pointable
@@ -191,16 +180,23 @@ class P5LabVisualizationColumn extends React.Component {
             >
               <GridOverlay show={this.props.showGrid} showWhileRunning={true} />
               <CrosshairOverlay flip={isSpritelab} />
-              <TooltipOverlay providers={[coordinatesProvider(isSpritelab)]} />
+              <TooltipOverlay
+                providers={[coordinatesProvider(isSpritelab, isRtl)]}
+              />
             </VisualizationOverlay>
           </ProtectedVisualizationDiv>
           <TextConsole consoleMessages={this.props.consoleMessages} />
-          {isSpritelab && <SpritelabInput />}
+          {isSpritelab && (
+            <SpritelabInput onPromptAnswer={this.props.onPromptAnswer} />
+          )}
         </div>
 
         <GameButtons>
           {showPauseButton && (
-            <PauseButton pauseHandler={this.props.pauseHandler} />
+            <PauseButton
+              pauseHandler={this.props.pauseHandler}
+              marginRight={isShareView ? 10 : 0}
+            />
           )}
           <ArrowButtons />
 
@@ -230,6 +226,15 @@ class P5LabVisualizationColumn extends React.Component {
   }
 }
 
+const styles = {
+  containedInstructions: {
+    marginTop: 10
+  },
+  selectStyle: {
+    width: APP_WIDTH
+  }
+};
+
 export default connect(
   state => ({
     isResponsive: state.pageConstants.isResponsive,
@@ -239,7 +244,8 @@ export default connect(
     awaitingContainedResponse: state.runState.awaitingContainedResponse,
     showGrid: state.gridOverlay,
     pickingLocation: isPickingLocation(state.locationPicker),
-    consoleMessages: state.textConsole
+    consoleMessages: state.textConsole,
+    isRtl: state.isRtl
   }),
   dispatch => ({
     toggleShowGrid: mode => dispatch(toggleGridOverlay(mode)),

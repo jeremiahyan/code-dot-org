@@ -11,25 +11,25 @@ da:
   campaign_date_short: 7.-13. dec.
   campaign_date_full: 7.-13. december
   campaign_date_year: '2016'
-  campaign_date_full_year: 7.-13. december 2020
+  campaign_date_full_year: 5.-11. december 2016
   latam_campaign_date_start_short: Oct. 1
   latam_campaign_date_start_long: October 1
-  latam_campaign_date_short: Oct. 1 - Dec. 18
-  latam_campaign_date_full: October 1 - December 18
+  latam_campaign_date_short: Oct. 1 - Dec. 12
+  latam_campaign_date_full: October 1 - December 12
   latam_campaign_date_year: '2016'
-  latam_campaign_date_full_year: October 1, 2020 - December 18, 2020
-  europe_campaign_date_start_short: Oct. 10
-  europe_campaign_date_start_long: October 10
-  europe_campaign_date_short: Oct. 10-25
-  europe_campaign_date_full: October 10-25
+  latam_campaign_date_full_year: October 1, 2021 - December 12, 2021
+  europe_campaign_date_start_short: Oct. 9
+  europe_campaign_date_start_long: October 9
+  europe_campaign_date_short: Oct. 9-24
+  europe_campaign_date_full: October 9-24
   europe_campaign_date_year: '2016'
-  europe_campaign_date_full_year: October 10-25, 2020
+  europe_campaign_date_full_year: October 9-24, 2021
   africa_campaign_date_start_short: Oct. 1
   africa_campaign_date_start_long: October 1
   africa_campaign_date_short: Oct. 1-31
   africa_campaign_date_full: October 1-31
   africa_campaign_date_year: '2016'
-  africa_campaign_date_full_year: October 1-31, 2020
+  africa_campaign_date_full_year: October 1-31, 2021
   hoc2020_header: Lær i dag, byg en lysere fremtid.
   hoc2020_header_with_line_break_markdown: |-
     Lær i dag,
@@ -135,11 +135,17 @@ da:
     ny rejse for at lære mere om AI gennem hele vores læseplan.
   hoc_live: Hour of Code Live
   hoc_live_sign_up_title: Sign up for Hour of Code Live
+  hoc_live_learn_title: Learn with Hour of Code Live
   hoc_live_sign_up_message: Learn in real time alongside special guests! Students
     of all ages and abilities, including those without computers, are welcome. Join
     our mailing list to receive recordings of the episodes and resources to continue
     learning at home. See past episodes [here](%{episodes_url}).
+  hoc_live_learn_message: Learn basic concepts of computer science alongside special
+    guests! Students of all ages and abilities, including those without computers,
+    are welcome to our virtual workshop. Continue learning at home through our Hour
+    of Code Live episodes.
   hoc_live_join_us: Deltag
+  hoc_live_learn_more: Læs mere
   hoc_overview_oceans_tutorial_header: AI for Oceans
   hoc_overview_oceans_tutorial_desc: Lær om kunstig intelligens (AI), maskinlæring,
     træningsdata og bias, mens du udforsker etiske problemer, og om hvordan AI kan
@@ -7885,13 +7891,13 @@ da:
   tutorial_mbbuttons_string_platforms: Windows, Mac OS, Linux, or Chromebook
   tutorial_meteor_string_platforms: Windows, Mac OS, Linux, or Chromebook
   tutorial_ballbounce_string_platforms: Chrome, Firefox, Safari, Android tablet, Android
-    phone
+    phone, iPad, iPhone
   tutorial_mitcodi_string_platforms: Chrome, Firefox, Safari, Android tablet, Android
-    phone
+    phone, iPad, iPhone
   tutorial_mitdoodle_string_platforms: Chrome, Firefox, Safari, Android tablet, Android
-    phone
+    phone, iPad, iPhone
   tutorial_talktome_string_platforms: Chrome, Firefox, Safari, Android tablet, Android
-    phone
+    phone, iPad, iPhone
   tutorial_mobilecspmap_string_platforms: Chrome, Firefox, Android tablet, Android
     phone
   tutorial_ozorandom_string_platforms: ''

@@ -5,54 +5,13 @@ import Radium from 'radium';
 import FontAwesome from '@cdo/apps/templates/FontAwesome';
 import color from '@cdo/apps/util/color';
 import * as progressStyles from '@cdo/apps/templates/progress/progressStyles';
-
-const styles = {
-  container: {
-    ...progressStyles.flex,
-    ...progressStyles.font,
-    color: color.charcoal,
-    ':hover': {
-      cursor: 'pointer'
-    },
-    textAlign: 'center',
-    height: '100%',
-    padding: '0px 10px'
-  },
-  highlight: {
-    backgroundColor: color.teal,
-    color: color.white,
-    fontSize: 18
-  },
-  arrowContainer: {
-    width: '100%',
-    ...progressStyles.flex
-  },
-  line: {
-    ...progressStyles.inlineBlock,
-    width: '100%',
-    height: 0,
-    border: '1px solid ',
-    margin: '0px -7px 0px 4px'
-  },
-  arrow: {
-    ...progressStyles.inlineBlock,
-    borderStyle: 'solid',
-    borderWidth: '0px 2px 2px 0px',
-    width: 6,
-    height: 6,
-    transform: 'rotate(-45deg)',
-    WebkitTransform: 'rotate(-45deg)'
-  },
-  icon: {
-    paddingRight: 5
-  }
-};
+import './progressTableStyles.scss';
 
 const LessonArrow = () => {
   return (
-    <span style={styles.arrowContainer}>
-      <span style={styles.line} />
-      <span style={styles.arrow} />
+    <span className="lesson-arrow">
+      <span className="line" />
+      <span className="arrow" />
     </span>
   );
 };
@@ -109,6 +68,28 @@ class ProgressTableLessonNumber extends React.Component {
     );
   }
 }
+
+const styles = {
+  container: {
+    ...progressStyles.flex,
+    ...progressStyles.font,
+    color: color.charcoal,
+    ':hover': {
+      cursor: 'pointer'
+    },
+    textAlign: 'center',
+    height: '100%',
+    padding: '0px 10px'
+  },
+  highlight: {
+    backgroundColor: color.teal,
+    color: color.white,
+    fontSize: 18
+  },
+  icon: {
+    paddingRight: 5
+  }
+};
 
 export const unitTestExports = {
   LessonArrow

@@ -1,11 +1,11 @@
-family_name 'csd1'
+family_name 'csd-one'
 
 hideable_lessons true
 project_widget_visible true
 student_detail_progress_view true
 lesson_extras_available true
 has_verified_resources true
-is_stable true
+published_state 'pilot'
 tts true
 project_sharing true
 is_course true

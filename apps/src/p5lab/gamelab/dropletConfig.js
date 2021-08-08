@@ -3,6 +3,7 @@
 var api = require('./apiJavascript.js');
 import color from '@cdo/apps/util/color';
 var consoleApi = require('@cdo/apps/consoleApi');
+import {dropletStringBlocks, dropletArrayBlocks} from '../../dropletUtils';
 import * as audioApi from '@cdo/apps/lib/util/audioApi';
 import audioApiDropletConfig from '@cdo/apps/lib/util/audioApiDropletConfig';
 import * as timeoutApi from '@cdo/apps/lib/util/timeoutApi';
@@ -650,6 +651,14 @@ module.exports.blocks = [
     category: 'Sprites',
     tipPrefix: spriteMethodPrefix,
     modeOptionName: '*.tint',
+    type: 'property'
+  },
+  {
+    func: 'alpha',
+    blockPrefix: spriteBlockPrefix,
+    category: 'Sprites',
+    tipPrefix: spriteMethodPrefix,
+    modeOptionName: '*.alpha',
     type: 'property'
   },
   {
@@ -1913,6 +1922,8 @@ draw() - USEFUL?
     paletteParams: ['message'],
     params: ['"message"']
   },
+  ...dropletStringBlocks,
+  ...dropletArrayBlocks,
   {
     func: 'comment_Variables',
     block: '// Comment',
@@ -1968,7 +1979,7 @@ module.exports.categories = {
   Advanced: {
     id: 'advanced',
     color: 'blue',
-    rgb: color.droplet_blue,
+    rgb: color.droplet_bright_blue,
     blocks: []
   }
 };

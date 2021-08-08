@@ -11,8 +11,8 @@ You can do Code.org development using OSX, Ubuntu, or Windows (running Ubuntu in
 
      ```
      ruby --version  # --> ruby 2.5.0
-     node --version  # --> v8.15.0
-     yarn --version  # --> 1.16.0
+     node --version  # --> v14.17.1
+     yarn --version  # --> 1.22.5
      ```
 1. If using SSH (recommended): `git clone git@github.com:code-dot-org/code-dot-org.git` , if using HTTPS: `git clone https://github.com/code-dot-org/code-dot-org.git`, 
 1. `gem install bundler -v 1.17.3`
@@ -50,6 +50,7 @@ You can do Code.org development using OSX, Ubuntu, or Windows (running Ubuntu in
    1. Some functionality will not work on your local site without this, for example, some project-backed level types such as https://studio.code.org/projects/gamelab. This setup is only available to Code.org engineers for now, but it is recommended for Code.org engineers.
 1. Run the website `bin/dashboard-server`
 1. Visit http://localhost-studio.code.org:3000/ to verify it is running.
+1. Install necessary plugins described in the [Editor configuration](#editor-configuration) section below.
 
 After setup, read about our [code styleguide](./STYLEGUIDE.md), our [test suites](./TESTING.md), or find more docs on [the wiki](https://github.com/code-dot-org/code-dot-org/wiki/For-Developers).
 
@@ -137,8 +138,8 @@ After setup, read about our [code styleguide](./STYLEGUIDE.md), our [test suites
 
     1. Pick up those changes: `source ~/.bash_profile`
 1. Install Node and yarn
-    1. `nvm install 8.15.0 && nvm alias default 8.15.0` this command should make this version the default version and print something like: `Creating default alias: default -> 8.15.0 (-> v8.15.0)`
-    1. `npm install -g yarn@1.16.0`.
+    1. `nvm install 14.17.1 && nvm alias default 14.17.1` this command should make this version the default version and print something like: `Creating default alias: default -> 14.17.1 (-> v14.17.1)`
+    1. `npm install -g yarn@1.22.5`.
     1. (Note: You will have to come back to this step after you clone your repository) Reinstall node_modules `cd apps; yarn; cd ..`
 1. Install OpenSSL:
     1. `brew install openssl`
@@ -175,7 +176,7 @@ Note: Virtual Machine Users should check the [Alternative note](#alternative-use
 1. *(If working from an EC2 instance)* `sudo apt-get install -y libreadline-dev libffi-dev`
 1. Install Node and Nodejs
     1. Install the latest version of [Node Version Manager (nvm)](https://github.com/nvm-sh/nvm)
-    1. `nvm install v8.15.0 && nvm alias default 8.15.0` Install nodejs v8.15.0  
+    1. `nvm install v14.17.1 && nvm alias default 14.17.1` Install nodejs v14.17.1  
     1. `node --version` Double check the version of node you are using. If it is wrong, then try restarting your terminal.
 1. Ensure rbenv and ruby-build are properly installed
     1. Use the rbenv-doctor from the [`rbenv` installation instructions](https://github.com/rbenv/rbenv#basic-github-checkout) to verify rbenv is set up correctly:
@@ -191,7 +192,7 @@ Note: Virtual Machine Users should check the [Alternative note](#alternative-use
 1. Install yarn
     1. `curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -`
     1. `echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list`
-    1. `sudo apt-get update && sudo apt-get install yarn=1.16.0-1`
+    1. `sudo apt-get update && sudo apt-get install yarn=1.22.5-1`
     1. `yarn --version` Double check the version of yarn is correct.
 1. Make it so that you can run apps tests locally
     1. Add the following to `~/.bash_profile` or your desired shell configuration file:
@@ -223,6 +224,10 @@ It is worthwhile to make sure that you are using WSL 2. Attempting to use WSL 1 
 
 From here, you can follow the [Ubuntu procedure above](#ubuntu-1604-download-iso), _with the following observations_...
 * In step 2, you may run into the error `E: Unable to locate package openjdk-9-jre-headless`. This is because openjdk-9 has been superseded by openjdk-11. Replace `openjdk-9-jre-headless` with `openjdk-11-jre-headless`. If you want, you can first check to see if this replacement package is available on your distro using `sudo apt-cache search openjdk` as per [this StackOverflow thread](https://stackoverflow.com/questions/51141224/how-to-install-openjdk-9-jdk-on-ubuntu-18-04/51141421).
+* `chromium-browser` might not work with the error message `Command '/usr/bin/chromium-browser' requires the chromium snap to be installed.`. You can instead install chrome by running the following:
+   1. `wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb`
+   2. `sudo apt install ./google-chrome-stable_current_amd64.deb`
+   3. modify step 8 of the Ubuntu instructions to read `export CHROME_BIN=$(which google-chrome)`
 * Before step 9, you may have to restart MySQL using `sudo /etc/init.d/mysql restart`
 
 ...followed by the [overview instructions](#overview), _with the following observation_:
@@ -264,6 +269,24 @@ From here, you can follow the [Ubuntu procedure above](#ubuntu-1604-download-iso
      * run `ssh -L 3000:127.0.0.1:3000 yourname-ec2` and then `~/code-dot-org/bin/dashboard-server` on your local machine. This sets up SSH port forwarding from your local machine to your ec2 dev instance for as long as your ssh connection is open.
      * navigate to http://localhost-studio.code.org:3000/ on your local machine
 
+## Piskel
+### Local Development Between code-dot-org and forked piskel repo
+If you want the Code.org repo to point to the local version of the Piskel you are working on, your apps package must be linked to a local development copy of the Piskel repository with a complete dev build. 
+
+**[You can also find the steps below in apps/Gruntfile.js of the code-dot-org repo](https://github.com/code-dot-org/code-dot-org/blob/staging/apps/Gruntfile.js)**
+
+#### The Steps:
+1. `git clone https://github.com/code-dot-org/piskel.git <new-directory>`
+2. `cd <new-directory>`
+3. `npm install && grunt build-dev`
+4. `npm link`
+5. `cd <code-dot-org apps directory>`
+6. `npm link @code-dot-org/piskel`
+7. rerun `yarn start` in the `<code-dot-org apps directory>`
+
+#### Note: Using `grunt serve --force`
+- If you try grunt serve and it is aborted due to warnings do `grunt serve --force`
+
 ## Enabling JavaScript builds
 **Note:** the installation process now enables this by default, which is recommended. You can manually edit these values later if you want to disable local JS builds.
 
@@ -283,6 +306,13 @@ If you want to make JavaScript changes and have them take effect locally, you'll
 
 This configures dashboard to rebuild apps whenever you run `bundle exec rake build` and to use the version that you built yourself.  See the documentation in that directory for faster ways to build and iterate.
 
+## Enabling internationalization(i18n) / translations
+If you want to enable the ability to switch Code.org to display different languages:
+1. Edit `locals.yml` and enable the following options:
+   ```
+   # code-dot-org/locals.yml
+   load_locales: true
+   ```
 ## Editor configuration
 
 We enforce linting rules for all our code, and we recommend you set up your editor to integrate with that linting.
@@ -295,7 +325,7 @@ Our lint configuration uses formatting rules provided by [Prettier](https://pret
 
 ### Ruby
 
-We use [RuboCop](https://docs.rubocop.org/en/latest/) to lint our Ruby; see [the official integrations guide](https://docs.rubocop.org/en/latest/integration_with_other_tools/) for instructions for your editor of choice.
+We use [RuboCop](https://docs.rubocop.org/rubocop/index) to lint our Ruby; see [the official integrations guide](https://docs.rubocop.org/rubocop/integration_with_other_tools) for instructions for your editor of choice.
 
 ## More Information
 Please also see our other documentation, including our:
@@ -318,7 +348,7 @@ If rmagick doesn't install, check your version of imagemagick, and downgrade if 
 - `brew link imagemagick@6 --force`
 If you continue to have issues with rmagick, after changing your imagemagick version, you may need to uninstall/reinstall the gem
 - `gem uninstall rmagick`
-- `gem install rmagick -v 2.15.4`
+- `gem install rmagick -v 2.16.0`
 
 ### ImageMagick with Pango
 
@@ -421,6 +451,14 @@ If you run into error messages about `implicit declaration of function thin_xxx`
 - `gem install thin -v THIN_VERSION -- --with-cflags="-Wno-error=implicit-function-declaration"` where THIN_VERSION is the current version of thin in [Gemfile.lock](./Gemfile.lock)).
 
 (More info [here](https://github.com/macournoyer/thin/pull/364))
+
+#### mimemagic
+
+If you run into an error message about `Could not find MIME type database in the following locations...` while installing the `mimemagic` gem, try:
+
+- `brew install shared-mime-info`
+
+(More info on mimemagic dependencies [here](https://github.com/mimemagicrb/mimemagic#dependencies), including help for OSes that don't support Homebrew.)
 
 #### Xcode Set Up
 

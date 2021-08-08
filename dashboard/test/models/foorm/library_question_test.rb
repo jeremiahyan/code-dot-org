@@ -11,7 +11,7 @@ class Foorm::LibraryQuestionTest < ActiveSupport::TestCase
 
     library = create :foorm_library, :with_questions
     library_question = library.library_questions.first
-    library_question.question = JSON.generate({pages: [{elements: [{name: "test"}]}]})
+    library_question.question = JSON.generate({name: library_question.question_name})
     library_question.save
   end
 
@@ -20,7 +20,7 @@ class Foorm::LibraryQuestionTest < ActiveSupport::TestCase
 
     library = create :foorm_library, :with_questions
     library_question = library.library_questions.first
-    library_question.question = JSON.generate({pages: [{elements: [{name: "test"}]}]})
+    library_question.question = JSON.generate({name: library_question.question_name})
     library_question.save
   end
 
@@ -33,5 +33,65 @@ class Foorm::LibraryQuestionTest < ActiveSupport::TestCase
     # should not write to file, form did not change
     library_question = library.library_questions.first
     library_question.save
+  end
+
+  test 'published_forms_appeared_in returns form for library question in published form' do
+    library = create :foorm_library, :with_questions
+    library_question = library.library_questions.first
+
+    assert_empty library_question.published_forms_appeared_in
+    form = create :foorm_form, questions: "{
+       \"pages\":[
+          {
+            \"name\":\"page_1\",
+            \"elements\":[
+              {
+                \"type\": \"library_item\",
+                \"library_name\": \"#{library.name}\",
+                \"library_version\": #{library.version},
+                \"name\": \"#{library.library_questions.first.question_name}\"
+              }
+            ]
+          }
+        ]
+    }"
+    assert_equal Set[form], library_question.published_forms_appeared_in
+  end
+
+  test 'published_forms_appeared_in returns empty for library question in unpublished form' do
+    library = create :foorm_library, :with_questions
+    library_question = library.library_questions.first
+
+    create :foorm_form, published: false, questions: "{
+       \"pages\":[
+          {
+            \"name\":\"page_1\",
+            \"elements\":[
+              {
+                \"type\": \"library_item\",
+                \"library_name\": \"#{library.name}\",
+                \"library_version\": #{library.version},
+                \"name\": \"#{library.library_questions.first.question_name}\"
+              }
+            ]
+          }
+        ]
+    }"
+    assert_empty library_question.published_forms_appeared_in
+  end
+
+  test 'library question JSON cannot be updated with question name different than what is in database entry' do
+    library = create :foorm_library, :with_questions
+    library_question = library.library_questions.first
+
+    assert library_question.valid?
+    parsed_question_json = JSON.parse(library_question.question)
+    parsed_question_json['name'] = 'new name'
+
+    library_question.question = JSON.pretty_generate(parsed_question_json)
+    refute library_question.valid?
+
+    library_question.question_name = 'new name'
+    assert library_question.valid?
   end
 end

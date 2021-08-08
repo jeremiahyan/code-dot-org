@@ -4,7 +4,7 @@ import {createStoreWithReducers, registerReducers} from '@cdo/apps/redux';
 import reducers, {
   init
 } from '@cdo/apps/lib/levelbuilder/lesson-editor/activitiesEditorRedux';
-import resourcesEditor, {
+import createResourcesReducer, {
   initResources
 } from '@cdo/apps/lib/levelbuilder/lesson-editor/resourcesEditorRedux';
 import vocabulariesEditor, {
@@ -16,6 +16,9 @@ import {
   sampleActivityForLessonWithoutLessonPlan,
   searchOptions
 } from '../../../../test/unit/lib/levelbuilder/lesson-editor/activitiesTestData';
+import {allowConsoleWarnings} from '../../../../test/util/testUtils';
+
+const resourcesEditor = createResourcesReducer('lessonResource');
 
 const createStoreWithLessonPlan = () => {
   registerReducers({
@@ -24,8 +27,8 @@ const createStoreWithLessonPlan = () => {
     vocabularies: vocabulariesEditor
   });
   const store = createStoreWithReducers();
-  store.dispatch(init(sampleActivities, searchOptions));
-  store.dispatch(initResources([]));
+  store.dispatch(init(sampleActivities, searchOptions, [], false));
+  store.dispatch(initResources('lessonResource', []));
   store.dispatch(initVocabularies([]));
   return store;
 };
@@ -38,13 +41,18 @@ const createStoreWithoutLessonPlan = () => {
   });
   const store = createStoreWithReducers();
   store.dispatch(
-    init([sampleActivityForLessonWithoutLessonPlan], searchOptions)
+    init([sampleActivityForLessonWithoutLessonPlan], searchOptions, [], false)
   );
-  store.dispatch(initResources([]));
+  store.dispatch(initResources('lessonResource', []));
   store.dispatch(initVocabularies([]));
   return store;
 };
+
 export default storybook => {
+  if (IN_UNIT_TEST) {
+    allowConsoleWarnings();
+  }
+
   storybook.storiesOf('ActivitiesEditor', module).addStoryTable([
     {
       name: 'ActivitiesEditor For Lesson With Lesson Plan',

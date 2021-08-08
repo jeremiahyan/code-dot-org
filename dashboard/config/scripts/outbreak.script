@@ -1,3 +1,8 @@
+family_name 'outbreak'
+version_year 'unversioned'
+published_state 'preview'
+is_course true
+
 lesson_group 'outbreak', display_name: 'Outbreak Simulation'
 lesson 'Virus Simulation for Code Bytes', display_name: 'Coding a Simulation', has_lesson_plan: false
 level 'outbreak_story', progression: 'Welcome to Monster Town'

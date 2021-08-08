@@ -19,14 +19,16 @@
 #
 # Indexes
 #
-#  index_levels_on_game_id  (game_id)
-#  index_levels_on_name     (name)
+#  index_levels_on_game_id    (game_id)
+#  index_levels_on_level_num  (level_num)
+#  index_levels_on_name       (name)
 #
 
 require 'cdo/shared_constants'
 
 class Level < ApplicationRecord
   include SharedConstants
+  include Levels::LevelsWithinLevels
 
   belongs_to :game
   has_and_belongs_to_many :concepts
@@ -37,22 +39,14 @@ class Level < ApplicationRecord
   has_many :level_sources
   has_many :hint_view_requests
 
-  # We store parent-child relationships in a self-referential join table.
-  # In order to define a has_many / through relationship in both directions,
-  # we must define two separate associations to the same join table.
-
-  has_many :levels_parent_levels, class_name: 'ParentLevelsChildLevel', foreign_key: :child_level_id
-  has_many :parent_levels, through: :levels_parent_levels, inverse_of: :child_levels
-
-  has_many :levels_child_levels, -> {order('position ASC')}, class_name: 'ParentLevelsChildLevel', foreign_key: :parent_level_id
-  has_many :child_levels, through: :levels_child_levels, inverse_of: :parent_levels
-
   before_validation :strip_name
   before_destroy :remove_empty_script_levels
 
   validates_length_of :name, within: 1..70
   validate :reject_illegal_chars
   validates_uniqueness_of :name, case_sensitive: false, conditions: -> {where.not(user_id: nil)}
+  validates_uniqueness_of :name, case_sensitive: false, conditions: -> {where(level_num: ['custom', nil])}
+  validates_uniqueness_of :level_num, scope: :game, conditions: -> {where.not(level_num: ['custom', nil])}
   validate :validate_game, on: [:create, :update]
 
   after_save :write_custom_level_file
@@ -76,9 +70,12 @@ class Level < ApplicationRecord
     reference_links
     name_suffix
     parent_level_id
+    contained_level_names
+    project_template_level_name
     hint_prompt_attempts_threshold
     short_instructions
     long_instructions
+    dynamic_instructions
     rubric_key_concept
     rubric_performance_level_1
     rubric_performance_level_2
@@ -119,18 +116,7 @@ class Level < ApplicationRecord
           levels_by_key[key] || Level.find_by_key(key)
         end
 
-      if key.starts_with?('blockly')
-        # this level is defined in levels.js. find/create the reference to this level
-        level = Level.
-          create_with(name: 'blockly').
-          find_or_create_by!(Level.key_to_params(key))
-        level = level.with_type(raw_level.delete(:type) || 'Blockly') if level.type.nil?
-        if level.video_key && !raw_level[:video_key]
-          raw_level[:video_key] = nil
-        end
-
-        level.update(raw_level)
-      elsif raw_level[:video_key]
+      if raw_level[:video_key] && !key.starts_with?('blockly')
         level.update(video_key: raw_level[:video_key])
       end
 
@@ -199,10 +185,6 @@ class Level < ApplicationRecord
 
   def complete_toolbox(type)
     "<xml id='toolbox' style='display: none;'>#{toolbox(type)}</xml>"
-  end
-
-  def host_level
-    project_template_level || self
   end
 
   # Overriden by different level types.
@@ -389,7 +371,7 @@ class Level < ApplicationRecord
   end
 
   # Overriden in subclasses, provides a summary for rendering thumbnails on the
-  # stage extras page
+  # lesson extras page
   def summarize_as_bonus
     {}
   end
@@ -411,6 +393,7 @@ class Level < ApplicationRecord
     'Flappy', # no ideal solution
     'Gamelab', # freeplay
     'GoBeyond', # unknown
+    'Javalab', # no ideal solution
     'Level', # base class
     'LevelGroup', # dsl defined, covered in dsl
     'Map', # no user submitted content
@@ -494,14 +477,6 @@ class Level < ApplicationRecord
     else
       ["blockly", game.name, level_num].join(':')
     end
-  end
-
-  # Project template levels are used to persist use progress
-  # across multiple levels, using a single level name as the
-  # storage key for that user.
-  def project_template_level
-    return nil if try(:project_template_level_name).nil?
-    Level.find_by_key(project_template_level_name)
   end
 
   def strip_name
@@ -589,14 +564,9 @@ class Level < ApplicationRecord
     ["Applab", "Gamelab", "Weblab"].include?(type)
   end
 
-  # Returns an array of all the contained levels
-  # (based on the contained_level_names property)
-  def contained_levels
-    names = try('contained_level_names')
-    return [] unless names.present?
-    names.map do |contained_level_name|
-      Script.cache_find_level(contained_level_name)
-    end
+  # Currently only Javalab can have code review
+  def can_have_code_review?
+    ["Javalab"].include?(type)
   end
 
   def display_as_unplugged?
@@ -689,6 +659,7 @@ class Level < ApplicationRecord
     # specify :published to make should_write_custom_level_file? return true
     level_params = {name: new_name, parent_level_id: id, published: true}
     level_params[:editor_experiment] = editor_experiment if editor_experiment
+    level_params[:audit_log] = [{changed_at: Time.now, changed: ["cloned from #{name.dump}"], cloned_from: name}].to_json
     level.update!(level_params)
     level
   end
@@ -719,23 +690,26 @@ class Level < ApplicationRecord
     update_params = {name_suffix: new_suffix}
     update_params[:editor_experiment] = editor_experiment if editor_experiment
 
-    if project_template_level
-      new_template_level = project_template_level.clone_with_suffix(new_suffix, editor_experiment: editor_experiment)
-      update_params[:project_template_level_name] = new_template_level.name
-    end
-
-    unless contained_levels.empty?
-      update_params[:contained_level_names] = contained_levels.map do |contained_level|
-        contained_level.clone_with_suffix(new_suffix, editor_experiment: editor_experiment).name
-      end
-    end
+    child_params_to_update = Level.clone_child_levels(level, new_suffix, editor_experiment: editor_experiment)
+    update_params.merge!(child_params_to_update)
 
     level.update!(update_params)
+
+    # Copy the level_concept_difficulty of the parent level to the new level
+    new_lcd = level_concept_difficulty.dup
+    level.level_concept_difficulty = new_lcd
+    level.save! if level.changed?
+
     level
   end
 
   def age_13_required?
     false
+  end
+
+  def show_help_and_tips_in_level_editor?
+    (uses_droplet? || is_a?(Blockly) || is_a?(Weblab) || is_a?(Ailab) || is_a?(Javalab)) &&
+    !(is_a?(NetSim) || is_a?(GamelabJr) || is_a?(Dancelab) || is_a?(BubbleChoice))
   end
 
   def localized_teacher_markdown
@@ -749,21 +723,6 @@ class Level < ApplicationRecord
     else
       properties['teacher_markdown']
     end
-  end
-
-  # we must search recursively for child levels, because some bubble choice
-  # sublevels have project template levels.
-  def all_descendant_levels
-    my_child_levels = all_child_levels
-    child_descendant_levels = my_child_levels.map(&:all_descendant_levels).flatten
-    my_child_levels + child_descendant_levels
-  end
-
-  # Returns all child levels of this level, which could include contained levels,
-  # project template levels, BubbleChoice sublevels, or LevelGroup sublevels.
-  # This method may be overridden by subclasses.
-  def all_child_levels
-    (contained_levels + [project_template_level] - [self]).compact
   end
 
   # There's a bit of trickery here. We consider a level to be
@@ -791,6 +750,40 @@ class Level < ApplicationRecord
     }
   end
 
+  def get_level_for_progress(student, script)
+    if is_a?(BubbleChoice)
+      sublevel_for_progress = try(:get_sublevel_for_progress, student, script)
+      return sublevel_for_progress || self
+    elsif contained_levels.any?
+      # https://github.com/code-dot-org/code-dot-org/blob/staging/dashboard/app/views/levels/_contained_levels.html.haml#L1
+      # We only display our first contained level, display progress for that level.
+      return contained_levels.first
+    else
+      return self
+    end
+  end
+
+  def summarize_for_lesson_show(can_view_teacher_markdown)
+    teacher_markdown_for_display = localized_teacher_markdown if can_view_teacher_markdown
+    {
+      name: name,
+      id: id.to_s,
+      icon: icon,
+      type: type,
+      isConceptLevel: concept_level?,
+      longInstructions: long_instructions,
+      shortInstructions: short_instructions,
+      videos: related_videos.map(&:summarize),
+      mapReference: map_reference,
+      referenceLinks: reference_links,
+      teacherMarkdown: teacher_markdown_for_display,
+      videoOptions: specified_autoplay_video&.summarize(false),
+      containedLevels: contained_levels.map {|l| l.summarize_for_lesson_show(can_view_teacher_markdown)},
+      status: SharedConstants::LEVEL_STATUS.not_tried,
+      thumbnailUrl: thumbnail_url
+    }
+  end
+
   private
 
   # Returns the level name, removing the name_suffix first (if present), and
@@ -806,10 +799,10 @@ class Level < ApplicationRecord
     base_name
   end
 
-  # repeatedly strip any version year suffix of the form _NNNN ()e.g. _2017)
+  # repeatedly strip any version year suffix of the form _NNNN or -NNNN ()e.g. _2017 or -2017)
   # from the input string.
   def strip_version_year_suffixes(str)
-    year_suffix_regex = /^(.*)_[0-9]{4}$/
+    year_suffix_regex = /^(.*)[_-][0-9]{4}$/
     loop do
       matchdata = str.match(year_suffix_regex)
       break unless matchdata

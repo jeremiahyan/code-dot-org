@@ -10,13 +10,20 @@ import announcementsReducer, {
 } from '@cdo/apps/code-studio/announcementsRedux';
 import getScriptData from '@cdo/apps/util/getScriptData';
 import instructionsDialog from '@cdo/apps/redux/instructionsDialog';
+import isRtl from '@cdo/apps/code-studio/isRtlRedux';
 import {getStore} from '@cdo/apps/code-studio/redux';
 import {registerReducers} from '@cdo/apps/redux';
+import {
+  setVerified,
+  setVerifiedResources
+} from '@cdo/apps/code-studio/verifiedTeacherRedux';
 import {setViewType, ViewType} from '@cdo/apps/code-studio/viewAsRedux';
+import {tooltipifyVocabulary} from '@cdo/apps/utils';
 
 $(document).ready(function() {
   displayLessonOverview();
   prepareExpandableImageDialog();
+  tooltipifyVocabulary();
 });
 
 /**
@@ -45,6 +52,8 @@ function displayLessonOverview() {
       activitySection.displayName = activitySection.name || '';
       delete activitySection.name;
 
+      activitySection.duration = activitySection.duration || 0;
+
       activitySection.text = activitySection.description || '';
       delete activitySection.description;
 
@@ -63,9 +72,18 @@ function displayLessonOverview() {
   });
 
   const store = getStore();
+  registerReducers({isRtl});
+
+  if (lessonData.hasVerifiedResources) {
+    store.dispatch(setVerifiedResources());
+  }
 
   if (isTeacher) {
     store.dispatch(setViewType(ViewType.Teacher));
+
+    if (lessonData.isVerifiedTeacher) {
+      store.dispatch(setVerified());
+    }
   }
 
   if (lessonData.announcements) {

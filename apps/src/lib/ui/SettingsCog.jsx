@@ -13,35 +13,9 @@ import PopUpMenu from './PopUpMenu';
 import ConfirmEnableMakerDialog from './ConfirmEnableMakerDialog';
 import LibraryManagerDialog from '@cdo/apps/code-studio/components/libraries/LibraryManagerDialog';
 import {getStore} from '../../redux';
-import experiments from '@cdo/apps/util/experiments';
 import ModelManagerDialog from '@cdo/apps/code-studio/components/ModelManagerDialog';
 
-const style = {
-  iconContainer: {
-    float: 'right',
-    marginRight: 10,
-    marginLeft: 10,
-    height: '100%',
-    cursor: 'pointer',
-    color: color.lighter_purple,
-    ':hover': {
-      color: color.white
-    }
-  },
-  assetsIcon: {
-    fontSize: 18,
-    verticalAlign: 'middle'
-  }
-};
-
 class SettingsCog extends Component {
-  constructor(props) {
-    super(props);
-
-    // Default icon bounding rect for first render
-    this.targetPoint = {top: 0, left: 0};
-  }
-
   static propTypes = {
     isRunning: PropTypes.bool,
     runModeIndicators: PropTypes.bool,
@@ -49,27 +23,17 @@ class SettingsCog extends Component {
     autogenerateML: PropTypes.func
   };
 
-  // This ugly two-flag state is a workaround for an event-handling bug in
-  // react-portal that prevents closing the portal by clicking on the icon
-  // that opened it.  For now we're just disabling the cog when the menu is
-  // open, and re-enabling one tick after it closes.
-  // @see https://github.com/tajo/react-portal/issues/140
   state = {
     open: false,
-    canOpen: true,
     confirmingEnableMaker: false,
     managingLibraries: false,
     managingModels: false
   };
 
-  open = () => this.setState({open: true, canOpen: false});
-  close = () => this.setState({open: false});
+  targetPoint = {top: 0, left: 0};
 
-  beforeClose = (_, resetPortalState) => {
-    resetPortalState();
-    this.setState({open: false});
-    window.setTimeout(() => this.setState({canOpen: true}), 0);
-  };
+  open = () => this.setState({open: true});
+  close = () => this.setState({open: false});
 
   manageAssets = () => {
     this.close();
@@ -126,11 +90,26 @@ class SettingsCog extends Component {
     return pageConstants && pageConstants.librariesEnabled;
   }
 
+  areAIToolsEnabled() {
+    let pageConstants = getStore().getState().pageConstants;
+    return pageConstants && pageConstants.aiEnabled;
+  }
+
+  levelbuilderModel() {
+    let model = {};
+    let pageConstants = getStore().getState().pageConstants;
+    if (pageConstants?.aiModelId && pageConstants?.aiModelName) {
+      model.id = pageConstants.aiModelId;
+      model.name = pageConstants.aiModelName;
+    }
+    return model;
+  }
+
   render() {
     const {isRunning, runModeIndicators} = this.props;
 
     // Adjust icon color when running
-    const rootStyle = {...style.iconContainer};
+    const rootStyle = {...styles.iconContainer};
     if (runModeIndicators && isRunning) {
       rootStyle.color = color.dark_charcoal;
     }
@@ -140,33 +119,34 @@ class SettingsCog extends Component {
         <FontAwesome
           className="settings-cog"
           icon="cog"
-          style={style.assetsIcon}
+          style={styles.assetsIcon}
           title={msg.settings()}
-          onClick={this.state.canOpen ? this.open : undefined}
+          onClick={this.open}
         />
         <PopUpMenu
           className="settings-cog-menu"
           targetPoint={this.targetPoint}
           isOpen={this.state.open}
-          beforeClose={this.beforeClose}
+          onClose={this.close}
           showTail={true}
         >
           <ManageAssets onClick={this.manageAssets} />
           {this.areLibrariesEnabled() && (
             <ManageLibraries onClick={this.manageLibraries} />
           )}
-          {experiments.isEnabled(experiments.APPLAB_ML) && (
+          {this.areAIToolsEnabled() && (
             <ManageModels onClick={this.manageModels} />
           )}
           {this.props.showMakerToggle && (
             <ToggleMaker onClick={this.toggleMakerToolkit} />
           )}
         </PopUpMenu>
-        {experiments.isEnabled(experiments.APPLAB_ML) && (
+        {this.areAIToolsEnabled() && (
           <ModelManagerDialog
             isOpen={this.state.managingModels}
             onClose={this.closeModelManager}
             autogenerateML={this.props.autogenerateML}
+            levelbuilderModel={this.levelbuilderModel()}
           />
         )}
         <ConfirmEnableMakerDialog
@@ -194,7 +174,7 @@ ManageAssets.propTypes = {
 };
 
 export function ManageModels(props) {
-  return <PopUpMenu.Item {...props}>{'Manage Models'}</PopUpMenu.Item>;
+  return <PopUpMenu.Item {...props}>{msg.manageAIModels()}</PopUpMenu.Item>;
 }
 
 export function ManageLibraries(props) {
@@ -215,3 +195,21 @@ export function ToggleMaker(props) {
   );
 }
 ToggleMaker.propTypes = ManageAssets.propTypes;
+
+const styles = {
+  iconContainer: {
+    float: 'right',
+    marginRight: 10,
+    marginLeft: 10,
+    height: '100%',
+    cursor: 'pointer',
+    color: color.lighter_purple,
+    ':hover': {
+      color: color.white
+    }
+  },
+  assetsIcon: {
+    fontSize: 18,
+    verticalAlign: 'middle'
+  }
+};

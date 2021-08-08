@@ -3,10 +3,15 @@ import * as Table from 'reactabular-table';
 import * as Sticky from 'reactabular-sticky';
 import * as Virtualized from 'reactabular-virtualized';
 import PropTypes from 'prop-types';
-import {studentLevelProgressType} from '@cdo/apps/templates/progress/progressTypes';
-import {sectionDataPropType} from '@cdo/apps/redux/sectionDataRedux';
-import {scriptDataPropType, scrollbarWidth} from '../sectionProgressConstants';
-import {lessonIsAllAssessment} from '@cdo/apps/templates/progress/progressHelpers';
+import {
+  scriptDataPropType,
+  studentTableRowType,
+  scrollbarWidth
+} from '../sectionProgressConstants';
+import {
+  lessonIsAllAssessment,
+  lessonHasLevels
+} from '@cdo/apps/templates/progress/progressHelpers';
 import progressTableStyles from './progressTableStyles.scss';
 import ProgressTableLessonNumber from './ProgressTableLessonNumber';
 
@@ -15,26 +20,18 @@ const gutterHeader = {
   header: {props: {style: {width: scrollbarWidth, minWidth: scrollbarWidth}}}
 };
 
-const styles = {
-  headerContainer: {
-    height: '100%'
-  }
-};
-
 // This class contains contains code that is common between the summary view
 // and detail view of the progress table. Each view has different cell formatters
 // which are passed in through props.
 export default class ProgressTableContentView extends React.Component {
   static propTypes = {
-    section: sectionDataPropType.isRequired,
+    rows: PropTypes.arrayOf(studentTableRowType).isRequired,
+    onRow: PropTypes.func.isRequired,
     scriptData: scriptDataPropType.isRequired,
     lessonOfInterest: PropTypes.number.isRequired,
-    levelProgressByStudent: PropTypes.objectOf(
-      PropTypes.objectOf(studentLevelProgressType)
-    ).isRequired,
     onClickLesson: PropTypes.func.isRequired,
     columnWidths: PropTypes.arrayOf(PropTypes.number),
-    lessonCellFormatter: PropTypes.func.isRequired,
+    lessonCellFormatters: PropTypes.arrayOf(PropTypes.func).isRequired,
     extraHeaderFormatters: PropTypes.arrayOf(PropTypes.func),
     needsGutter: PropTypes.bool.isRequired,
     onScroll: PropTypes.func.isRequired,
@@ -57,8 +54,10 @@ export default class ProgressTableContentView extends React.Component {
     this.scrollToSelectedLesson();
   }
 
-  componentDidUpdate() {
-    this.scrollToSelectedLesson();
+  componentDidUpdate(prevProps) {
+    if (prevProps.lessonOfInterest !== this.props.lessonOfInterest) {
+      this.scrollToSelectedLesson();
+    }
   }
 
   scrollToSelectedLesson() {
@@ -69,10 +68,11 @@ export default class ProgressTableContentView extends React.Component {
   }
 
   lessonNumberFormatter(_, {columnIndex}) {
-    const lesson = this.props.scriptData.stages[columnIndex];
+    const lesson = this.props.scriptData.lessons[columnIndex];
     const includeArrow =
       this.props.includeHeaderArrows &&
-      (lesson.levels.length > 1 || lesson.levels[0].isUnplugged);
+      (lessonHasLevels(lesson) &&
+        (lesson.levels.length > 1 || lesson.levels[0].isUnplugged));
     return (
       <div
         style={styles.headerContainer}
@@ -93,11 +93,9 @@ export default class ProgressTableContentView extends React.Component {
   }
 
   contentCellFormatter(_, {rowData, columnIndex}) {
-    const {scriptData, levelProgressByStudent} = this.props;
-    return this.props.lessonCellFormatter(
-      scriptData.stages[columnIndex],
-      rowData,
-      levelProgressByStudent[rowData.id]
+    return this.props.lessonCellFormatters[rowData.expansionIndex](
+      this.props.scriptData.lessons[columnIndex],
+      rowData.student
     );
   }
 
@@ -106,19 +104,24 @@ export default class ProgressTableContentView extends React.Component {
    * constrain column widths to the provided values. When it's absent, the
    * columns will size themselves based on their content.
    *
-   * Note: Due to the nuances of reactabular's implementation, header cells
+   * One exception is that we provide a fixed width for empty columns when a
+   * lesson has no levels.
+   *
+   * Note: due to the nuances of reactabular's implementation, header cells
    * are unable to base their width on the content of body cells, nor
    * vice versa. Consequently, for headers to properly align with their body
    * columns when explicit column widths are not provided, the max content
    * width of header cells must match the max content width of body cells.
    */
   columnWidthStyle(index) {
-    const {columnWidths} = this.props;
-    return columnWidths
-      ? {
-          style: {minWidth: columnWidths[index], maxWidth: columnWidths[index]}
-        }
-      : {};
+    const {columnWidths, scriptData} = this.props;
+    let width = null;
+    if (columnWidths) {
+      width = columnWidths[index];
+    } else if (!lessonHasLevels(scriptData.lessons[index])) {
+      width = parseInt(progressTableStyles.MIN_COLUMN_WIDTH);
+    }
+    return width ? {style: {minWidth: width, maxWidth: width}} : {};
   }
 
   render() {
@@ -136,7 +139,7 @@ export default class ProgressTableContentView extends React.Component {
     // Each iteration renders a lesson column in the table.
     // For summary view, it's a single header and summary cell.
     // For detail view, it's 2 headers and detail cell (bubbles for each level)
-    this.props.scriptData.stages.forEach((_, index) => {
+    this.props.scriptData.lessons.forEach((_, index) => {
       const widthProps = this.columnWidthStyle(index);
       columns.push({
         props: widthProps,
@@ -156,7 +159,6 @@ export default class ProgressTableContentView extends React.Component {
     if (this.props.needsGutter) {
       headerRows.forEach(headerRow => headerRow.push(gutterHeader));
     }
-    const rows = [...this.props.section.students];
 
     return (
       <Table.Provider
@@ -175,7 +177,8 @@ export default class ProgressTableContentView extends React.Component {
           headerRows={headerRows}
         />
         <Virtualized.Body
-          rows={rows}
+          rows={this.props.rows}
+          onRow={this.props.onRow}
           rowKey={'id'}
           onScroll={this.props.onScroll}
           style={{
@@ -193,3 +196,9 @@ export default class ProgressTableContentView extends React.Component {
     );
   }
 }
+
+const styles = {
+  headerContainer: {
+    height: '100%'
+  }
+};

@@ -13,13 +13,13 @@ uk:
   campaign_date_full_year: 7-13 грудня 2020 року
   latam_campaign_date_start_short: Oct. 1
   latam_campaign_date_start_long: October 1
-  latam_campaign_date_short: Oct. 1 - Dec. 18
-  latam_campaign_date_full: October 1 - December 18
+  latam_campaign_date_short: Oct. 1 - Dec. 12
+  latam_campaign_date_full: October 1 - December 12
   latam_campaign_date_year: '2017'
-  latam_campaign_date_full_year: October 1, 2020 - December 18, 2020
-  europe_campaign_date_start_short: Oct. 10
-  europe_campaign_date_start_long: October 10
-  europe_campaign_date_short: Oct. 10-25
+  latam_campaign_date_full_year: October 1, 2021 - December 12, 2021
+  europe_campaign_date_start_short: Oct. 9
+  europe_campaign_date_start_long: October 9
+  europe_campaign_date_short: Oct. 9-24
   europe_campaign_date_full: 10-25 жовтня
   europe_campaign_date_year: '2017'
   europe_campaign_date_full_year: 10-25 жовтня 2020
@@ -28,7 +28,7 @@ uk:
   africa_campaign_date_short: Oct. 1-31
   africa_campaign_date_full: October 1-31
   africa_campaign_date_year: '2017'
-  africa_campaign_date_full_year: October 1-31, 2020
+  africa_campaign_date_full_year: October 1-31, 2021
   hoc2020_header: Вчіться сьогодні, будуйте світле майбутнє.
   hoc2020_header_with_line_break_markdown: "Вчіться сьогодні, \n\nбудуйте світле майбутнє."
   social_hoc2020_cs_important: 'CS is more important than ever. Let''s build the future
@@ -138,11 +138,17 @@ uk:
     AI в рамках нашої навчальної програми.
   hoc_live: Hour of Code Live
   hoc_live_sign_up_title: Sign up for Hour of Code Live
+  hoc_live_learn_title: Learn with Hour of Code Live
   hoc_live_sign_up_message: Learn in real time alongside special guests! Students
     of all ages and abilities, including those without computers, are welcome. Join
     our mailing list to receive recordings of the episodes and resources to continue
     learning at home. See past episodes [here](%{episodes_url}).
+  hoc_live_learn_message: Learn basic concepts of computer science alongside special
+    guests! Students of all ages and abilities, including those without computers,
+    are welcome to our virtual workshop. Continue learning at home through our Hour
+    of Code Live episodes.
   hoc_live_join_us: Приєднуйтесь до нас
+  hoc_live_learn_more: Learn more
   hoc_overview_oceans_tutorial_header: Штучний інтелект для океанів
   hoc_overview_oceans_tutorial_desc: Дізнайтеся про штучний інтелект (AI), машинне
     навчання, дані про навчання та упередженість, вивчаючи етичні питання та способи
@@ -7871,13 +7877,13 @@ uk:
   tutorial_mbbuttons_string_platforms: Windows, Mac OS, Linux, or Chromebook
   tutorial_meteor_string_platforms: Windows, Mac OS, Linux, or Chromebook
   tutorial_ballbounce_string_platforms: Chrome, Firefox, Safari, Android tablet, Android
-    phone
+    phone, iPad, iPhone
   tutorial_mitcodi_string_platforms: Chrome, Firefox, Safari, Android tablet, Android
-    phone
+    phone, iPad, iPhone
   tutorial_mitdoodle_string_platforms: Chrome, Firefox, Safari, Android tablet, Android
-    phone
+    phone, iPad, iPhone
   tutorial_talktome_string_platforms: Chrome, Firefox, Safari, Android tablet, Android
-    phone
+    phone, iPad, iPhone
   tutorial_mobilecspmap_string_platforms: Chrome, Firefox, Android tablet, Android
     phone
   tutorial_ozorandom_string_platforms: ''
