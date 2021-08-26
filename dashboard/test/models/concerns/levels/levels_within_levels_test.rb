@@ -3,15 +3,35 @@ require 'test_helper'
 class LevelsWithinLevelsTest < ActiveSupport::TestCase
   test 'cannot delete levels that other levels reference as children' do
     child = create(:level, parent_levels: [create(:level)])
+
     refute child.destroy
+
     assert_equal ["Cannot delete record because dependent parent levels exist"],
       child.errors.full_messages
+    refute child.destroyed?
   end
 
   test 'can delete levels that other levels reference as parents' do
-    parent = create(:level, child_levels: [create(:level)])
+    child = create(:level)
+    parent = create(:level, child_levels: [child])
+
     assert parent.destroy
-    assert parent.errors.full_messages.empty?
+
+    assert parent.destroyed?
+    refute child.destroyed?
+  end
+
+  test 'deleting a parent level will also remove associations' do
+    child = create(:level)
+    parent = create(:level, child_levels: [child])
+    assert child.levels_parent_levels.present?
+
+    assert parent.destroy
+
+    child.reload
+    assert parent.destroyed?
+    refute child.destroyed?
+    assert child.levels_parent_levels.empty?
   end
 
   test 'parent levels and child levels' do
@@ -147,5 +167,14 @@ class LevelsWithinLevelsTest < ActiveSupport::TestCase
     real_level1.save!
 
     assert_equal template_level, real_level1.project_template_level
+  end
+
+  test 'can unset project template level' do
+    template_level = create(:level)
+    real_level = create(:level, project_template_level_name: template_level.name)
+    assert_equal template_level, real_level.project_template_level
+
+    real_level.update!(project_template_level_name: nil)
+    assert_nil real_level.project_template_level
   end
 end

@@ -15,12 +15,33 @@ export default function ControlButtons({
   disableFinishButton,
   onContinue,
   renderSettings,
-  disableRunButtons
+  disableRunButtons,
+  showTestButton,
+  isSubmittable,
+  isSubmitted
 }) {
+  /* The ids of these buttons are relied on in other parts of the codebase.
+   * All of them are relied on for UI tests
+   * The submit/unsubmit button ids are relied on for hooking in the submit
+   * utils, see https://github.com/code-dot-org/code-dot-org/blob/47be99d6cf7df2be746b592906f50c0f3860b80a/apps/src/submitHelper.js#L26
+   */
+  let finishButtonText, finishButtonId;
+  if (isSubmitted) {
+    finishButtonText = i18n.unsubmit();
+    finishButtonId = 'unsubmitButton';
+  } else if (isSubmittable) {
+    finishButtonText = i18n.submit();
+    finishButtonId = 'submitButton';
+  } else {
+    finishButtonText = i18n.finish();
+    finishButtonId = 'finishButton';
+  }
+
   return (
     <div>
       <div style={styles.leftButtons}>
         <JavalabButton
+          id="runButton"
           text={isRunning ? i18n.stop() : i18n.runProgram()}
           icon={
             <FontAwesome icon={isRunning ? 'stop' : 'play'} className="fa" />
@@ -29,26 +50,27 @@ export default function ControlButtons({
           isHorizontal
           style={{...styles.button.all, ...styles.button.orange}}
           isDisabled={disableRunButtons}
-          id="javalabRun"
         />
-        <JavalabButton
-          text={isTesting ? i18n.stopTests() : i18n.test()}
-          icon={<FontAwesome icon="flask" className="fa" />}
-          onClick={toggleTest}
-          isHorizontal
-          style={{...styles.button.all, ...styles.button.white}}
-          isDisabled={disableRunButtons}
-        />
+        {showTestButton && (
+          <JavalabButton
+            text={isTesting ? i18n.stopTests() : i18n.test()}
+            icon={<FontAwesome icon="flask" className="fa" />}
+            onClick={toggleTest}
+            isHorizontal
+            style={{...styles.button.all, ...styles.button.white}}
+            isDisabled={disableRunButtons}
+          />
+        )}
       </div>
       <div style={styles.rightButtons}>
         <JavalabSettings>{renderSettings()}</JavalabSettings>
         {!isEditingStartSources && (
           <JavalabButton
-            text={i18n.finish()}
-            onClick={onContinue}
+            text={finishButtonText}
+            onClick={isSubmittable ? null : onContinue}
             style={{...styles.button.all, ...styles.button.blue}}
             isDisabled={disableFinishButton}
-            id="javalabFinish"
+            id={finishButtonId}
           />
         )}
       </div>
@@ -65,7 +87,10 @@ ControlButtons.propTypes = {
   disableFinishButton: PropTypes.bool,
   onContinue: PropTypes.func.isRequired,
   renderSettings: PropTypes.func.isRequired,
-  disableRunButtons: PropTypes.bool
+  disableRunButtons: PropTypes.bool,
+  showTestButton: PropTypes.bool,
+  isSubmittable: PropTypes.bool,
+  isSubmitted: PropTypes.bool
 };
 
 const styles = {

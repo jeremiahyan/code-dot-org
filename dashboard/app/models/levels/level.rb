@@ -69,7 +69,6 @@ class Level < ApplicationRecord
     map_reference
     reference_links
     name_suffix
-    parent_level_id
     contained_level_names
     project_template_level_name
     hint_prompt_attempts_threshold
@@ -569,6 +568,12 @@ class Level < ApplicationRecord
     ["Javalab"].include?(type)
   end
 
+  # We hide this feature for contained levels because contained levels are currently not
+  # editable by students so setting the feedback review_state to keepWorking doesn't make sense.
+  def can_have_feedback_review_state?
+    contained_levels.empty?
+  end
+
   def display_as_unplugged?
     # Levelbuilders can select if External/
     # Markdown levels should display as Unplugged.
@@ -649,15 +654,14 @@ class Level < ApplicationRecord
     false
   end
 
-  # Create a copy of this level named new_name, and store the id of the original
-  # level in parent_level_id.
+  # Create a copy of this level named new_name
   # @param [String] new_name
   # @param [String] editor_experiment
   # @raise [ActiveRecord::RecordInvalid] if the new name already is taken.
   def clone_with_name(new_name, editor_experiment: nil)
     level = dup
     # specify :published to make should_write_custom_level_file? return true
-    level_params = {name: new_name, parent_level_id: id, published: true}
+    level_params = {name: new_name, published: true}
     level_params[:editor_experiment] = editor_experiment if editor_experiment
     level_params[:audit_log] = [{changed_at: Time.now, changed: ["cloned from #{name.dump}"], cloned_from: name}].to_json
     level.update!(level_params)
@@ -665,9 +669,9 @@ class Level < ApplicationRecord
   end
 
   # Create a copy of this level by appending new_suffix to the name, removing
-  # any previous suffix from the name first. Store the id of the original
-  # level in parent_level_id, and store the suffix in name_suffix. If a level
-  # with the same name already exists, us that instead of creating a new one.
+  # any previous suffix from the name first and storing the suffix in
+  # name_suffix. If a level with the same name already exists, us that instead
+  # of creating a new one.
   #
   # Also, copy over any project template level. If two levels with the same
   # project template level are copied using the same new_suffix, then the new

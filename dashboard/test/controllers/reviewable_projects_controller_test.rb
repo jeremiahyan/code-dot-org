@@ -12,7 +12,7 @@ class ReviewableProjectsControllerTest < ActionController::TestCase
     @project_storage_app_id = 78
 
     @teacher = create :teacher
-    @section = create :section, user: @teacher
+    @section = create :section, user: @teacher, code_review_enabled: true
     @another_student = create :student
 
     create :follower, student_user: @project_owner, section: @section
@@ -80,6 +80,7 @@ class ReviewableProjectsControllerTest < ActionController::TestCase
 
     assert_not status['reviewEnabled']
     assert status['canMarkReviewable']
+    assert_equal @project_owner.short_name, status['name']
   end
 
   test 'reviewable_status returns correct status for student when own project is reviewable' do
@@ -105,6 +106,7 @@ class ReviewableProjectsControllerTest < ActionController::TestCase
 
     assert status['reviewEnabled']
     assert status['canMarkReviewable']
+    assert_equal @project_owner.short_name, status['name']
     assert_equal reviewable_project.id, status['id']
   end
 
@@ -125,6 +127,7 @@ class ReviewableProjectsControllerTest < ActionController::TestCase
 
     assert_not status['reviewEnabled']
     assert_not status['canMarkReviewable']
+    assert_equal @project_owner.short_name, status['name']
     assert_nil status['id']
   end
 
@@ -151,6 +154,7 @@ class ReviewableProjectsControllerTest < ActionController::TestCase
 
     assert status['reviewEnabled']
     assert_not status['canMarkReviewable']
+    assert_equal @project_owner.short_name, status['name']
     assert_nil status['id']
   end
 

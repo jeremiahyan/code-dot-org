@@ -3,6 +3,7 @@ class Ability
   include Pd::Application::ActiveApplicationModels
 
   CSA_PILOT = 'csa-pilot'
+  CSA_PILOT_FACILITATORS = 'csa-pilot-facilitators'
 
   # Define abilities for the passed in user here. For more information, see the
   # wiki at https://github.com/ryanb/cancan/wiki/Defining-Abilities.
@@ -134,7 +135,8 @@ class Ability
 
           if reviewable_project &&
             user != user_to_assume &&
-            (user.sections_as_student & user_to_assume.sections_as_student).any?
+            !user_to_assume.student_of?(user) &&
+            CodeReviewComment.user_can_review_project?(user_to_assume, user)
             can_view_as_user_for_code_review = true
           end
         end
@@ -361,7 +363,10 @@ class Ability
     if user.persisted?
       if user.has_pilot_experiment?(CSA_PILOT) ||
         (!user.teachers.empty? &&
-          user.teachers.any? {|t| t.has_pilot_experiment?(CSA_PILOT)})
+          user.teachers.any? {|t| t.has_pilot_experiment?(CSA_PILOT)}) ||
+          user.has_pilot_experiment?(CSA_PILOT_FACILITATORS) ||
+        (!user.teachers.empty? &&
+          user.teachers.any? {|t| t.has_pilot_experiment?(CSA_PILOT_FACILITATORS)})
         can :get_access_token, :javabuilder_session
       end
     end

@@ -116,7 +116,9 @@ class Script < ApplicationRecord
   before_validation :hide_pilot_units
 
   def hide_pilot_units
-    self.published_state = SharedConstants::PUBLISHED_STATE.pilot unless get_pilot_experiment.blank?
+    if !unit_group && pilot_experiment.present?
+      self.published_state = SharedConstants::PUBLISHED_STATE.pilot
+    end
   end
 
   # As we read and write to files with the unit name, to prevent directory
@@ -129,7 +131,7 @@ class Script < ApplicationRecord
       message: 'cannot start with a tilde or dot or contain slashes'
     }
 
-  validates :published_state, acceptance: {accept: SharedConstants::PUBLISHED_STATE.to_h.values, message: 'must be in_development, pilot, beta, preview or stable'}
+  validates :published_state, acceptance: {accept: SharedConstants::PUBLISHED_STATE.to_h.values.push(nil), message: 'must be nil, in_development, pilot, beta, preview or stable'}
 
   def prevent_duplicate_levels
     reload
@@ -1296,7 +1298,7 @@ class Script < ApplicationRecord
           login_required: general_params[:login_required].nil? ? false : general_params[:login_required], # default false
           wrapup_video: general_params[:wrapup_video],
           family_name: general_params[:family_name].presence ? general_params[:family_name] : nil, # default nil
-          published_state: general_params[:published_state].nil? ? SharedConstants::PUBLISHED_STATE.in_development : general_params[:published_state],
+          published_state: general_params[:published_state],
           properties: Script.build_property_hash(general_params)
         },
         unit_data[:lesson_groups]
@@ -1492,6 +1494,8 @@ class Script < ApplicationRecord
       disablePostMilestone: disable_post_milestone?,
       isHocScript: hoc?,
       csf: csf?,
+      isCsd: csd?,
+      isCsp: csp?,
       only_instructor_review_required: only_instructor_review_required?,
       peerReviewsRequired: peer_reviews_to_complete || 0,
       peerReviewLessonInfo: peer_review_lesson_info,
@@ -1633,7 +1637,7 @@ class Script < ApplicationRecord
     end.to_h
 
     data[:description] = Services::MarkdownPreprocessor.process(I18n.t("data.script.name.#{name}.description", default: ''))
-    data[:student_description] = Services::MarkdownPreprocessor.process(I18n.t("data.script.name.#{name}.student_description", default: ''))
+    data[:studentDescription] = Services::MarkdownPreprocessor.process(I18n.t("data.script.name.#{name}.student_description", default: ''))
 
     if include_lessons
       data[:lessonDescriptions] = lessons.map do |lesson|
@@ -1810,6 +1814,10 @@ class Script < ApplicationRecord
     unit_group.try(:localized_title)
   end
 
+  def unversioned?
+    version_year.blank? || version_year == CourseVersion::UNVERSIONED
+  end
+
   # If there is an alternate version of this unit which the user should be on
   # due to existing progress or a course experiment, return that unit. Otherwise,
   # return nil.
@@ -1908,7 +1916,8 @@ class Script < ApplicationRecord
 
     review_state_labels = {
       keepWorking: "Needs more work",
-      completed: "Reviewed, completed"
+      completed: "Reviewed, completed",
+      waitingForReview: "Waiting for review"
     }
 
     feedback = {}
@@ -1924,12 +1933,15 @@ class Script < ApplicationRecord
     end
 
     script_levels.each do |script_level|
-      next unless script_level.oldest_active_level.can_have_feedback?
+      current_level = script_level.oldest_active_level
+      next unless current_level.can_have_feedback?
+
       section.students.each do |student|
-        current_level = script_level.oldest_active_level
         next unless feedback_hash[student.id]
         temp_feedback = feedback_hash[student.id][current_level.id]
         next unless temp_feedback
+
+        review_state = temp_feedback.awaiting_teacher_review?(true) ? :waitingForReview : temp_feedback.review_state&.to_sym
         feedback[temp_feedback.id] = {
           studentName: student.name,
           lessonNum: script_level.lesson.relative_position.to_s,
@@ -1940,8 +1952,8 @@ class Script < ApplicationRecord
           performance: rubric_performance_headers[temp_feedback.performance&.to_sym],
           comment: temp_feedback.comment,
           timestamp: temp_feedback.updated_at.localtime.strftime("%D at %r"),
-          reviewStateLabel: review_state_labels[temp_feedback.review_state&.to_sym] || "Never reviewed",
-          studentSeenFeedback: temp_feedback.student_seen_feedback&.localtime&.strftime("%D at %r")
+          reviewStateLabel: review_state_labels[review_state] || "Never reviewed",
+          studentSeenFeedback: temp_feedback.student_seen_feedback&.localtime&.strftime("%D at %r"),
         }
       end
     end
