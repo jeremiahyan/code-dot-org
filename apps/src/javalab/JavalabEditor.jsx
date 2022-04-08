@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import Radium from 'radium';
 import {
   setSource,
+  sourceTextUpdated,
   sourceVisibilityUpdated,
   sourceValidationUpdated,
   renameFile,
@@ -10,6 +11,7 @@ import {
   setRenderedHeight,
   setEditorColumnHeight
 } from './javalabRedux';
+import {DisplayTheme} from './DisplayTheme';
 import PropTypes from 'prop-types';
 import PaneHeader, {
   PaneSection,
@@ -35,6 +37,7 @@ import javalabMsg from '@cdo/javalab/locale';
 import {CompileStatus} from './constants';
 import {makeEnum} from '@cdo/apps/utils';
 import ProjectTemplateWorkspaceIcon from '../templates/ProjectTemplateWorkspaceIcon';
+import VersionHistoryWithCommits from '@cdo/apps/templates/VersionHistoryWithCommits';
 
 const MIN_HEIGHT = 100;
 // This is the height of the "editor" header and the file tabs combined
@@ -45,27 +48,64 @@ const Dialog = makeEnum(
   'CREATE_FILE',
   'COMMIT_FILES'
 );
+const DEFAULT_FILE_NAME = '.java';
+
+// Custom theme overrides (exported for tests)
+export const editorDarkModeThemeOverride = EditorView.theme(
+  {
+    // Sets the background color for the main editor area
+    '&': {
+      backgroundColor: color.darkest_slate_gray
+    },
+    // Sets the background color for the currently selected line
+    '.cm-activeLine': {
+      backgroundColor: color.dark_gray
+    },
+    // Sets the background color for the left-hand side gutters
+    '.cm-gutters': {
+      backgroundColor: color.darkest_slate_gray
+    }
+  },
+  {dark: true}
+);
+export const editorLightModeThemeOverride = EditorView.theme(
+  {
+    // Sets the background color for the main editor area
+    '&': {
+      backgroundColor: color.white
+    },
+    // Sets the background color for the left-hand side gutters
+    '.cm-gutters': {
+      backgroundColor: color.white
+    }
+  },
+  {dark: false}
+);
 
 class JavalabEditor extends React.Component {
   static propTypes = {
     style: PropTypes.object,
     onCommitCode: PropTypes.func.isRequired,
     showProjectTemplateWorkspaceIcon: PropTypes.bool.isRequired,
+    isProjectTemplateLevel: PropTypes.bool.isRequired,
+    handleClearPuzzle: PropTypes.func.isRequired,
+
     // populated by redux
     setRenderedHeight: PropTypes.func.isRequired,
     setEditorColumnHeight: PropTypes.func.isRequired,
     setSource: PropTypes.func,
     sourceVisibilityUpdated: PropTypes.func,
     sourceValidationUpdated: PropTypes.func,
+    sourceTextUpdated: PropTypes.func,
     renameFile: PropTypes.func,
     removeFile: PropTypes.func,
     sources: PropTypes.object,
     validation: PropTypes.object,
-    isDarkMode: PropTypes.bool,
+    displayTheme: PropTypes.oneOf(Object.values(DisplayTheme)),
     height: PropTypes.number,
     isEditingStartSources: PropTypes.bool,
-    handleVersionHistory: PropTypes.func.isRequired,
-    isReadOnlyWorkspace: PropTypes.bool.isRequired
+    isReadOnlyWorkspace: PropTypes.bool.isRequired,
+    backpackEnabled: PropTypes.bool
   };
 
   constructor(props) {
@@ -90,6 +130,7 @@ class JavalabEditor extends React.Component {
 
     // Used to manage dark and light mode configuration.
     this.editorModeConfigCompartment = new Compartment();
+    this.editorThemeOverrideCompartment = new Compartment();
 
     // fileMetadata is a dictionary of file key -> filename.
     let fileMetadata = {};
@@ -132,12 +173,20 @@ class JavalabEditor extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.isDarkMode !== this.props.isDarkMode) {
-      const newStyle = this.props.isDarkMode ? oneDark : lightMode;
+    if (prevProps.displayTheme !== this.props.displayTheme) {
+      const styleOverride =
+        this.props.displayTheme === DisplayTheme.DARK
+          ? editorDarkModeThemeOverride
+          : editorLightModeThemeOverride;
+      const newStyle =
+        this.props.displayTheme === DisplayTheme.DARK ? oneDark : lightMode;
 
       Object.keys(this.editors).forEach(editorKey => {
         this.editors[editorKey].dispatch({
-          effects: this.editorModeConfigCompartment.reconfigure(newStyle)
+          effects: [
+            this.editorThemeOverrideCompartment.reconfigure(styleOverride),
+            this.editorModeConfigCompartment.reconfigure(newStyle)
+          ]
         });
       });
     }
@@ -158,19 +207,28 @@ class JavalabEditor extends React.Component {
   }
 
   createEditor(key, doc) {
-    const {isDarkMode} = this.props;
+    const {displayTheme, isReadOnlyWorkspace} = this.props;
     const extensions = [...editorSetup];
 
-    if (isDarkMode) {
-      const darkModeExtension = this.editorModeConfigCompartment.of(oneDark);
-      extensions.push(darkModeExtension);
-    } else {
-      const lightModeExtension = this.editorModeConfigCompartment.of(lightMode);
-      extensions.push(lightModeExtension);
-    }
+    extensions.push(
+      displayTheme === DisplayTheme.DARK
+        ? [
+            this.editorThemeOverrideCompartment.of(editorDarkModeThemeOverride),
+            this.editorModeConfigCompartment.of(oneDark)
+          ]
+        : [
+            this.editorThemeOverrideCompartment.of(
+              editorLightModeThemeOverride
+            ),
+            this.editorModeConfigCompartment.of(lightMode)
+          ]
+    );
 
-    if (this.props.isReadOnlyWorkspace) {
-      extensions.push(EditorView.editable.of(false));
+    if (isReadOnlyWorkspace) {
+      extensions.push(
+        EditorView.editable.of(false),
+        EditorState.readOnly.of(true)
+      );
     }
 
     this.editors[key] = new EditorView({
@@ -184,6 +242,8 @@ class JavalabEditor extends React.Component {
   }
 
   dispatchEditorChange = key => {
+    const {sourceTextUpdated} = this.props;
+
     // tr is a code mirror transaction
     // see https://codemirror.net/6/docs/ref/#state.Transaction
     return tr => {
@@ -192,14 +252,15 @@ class JavalabEditor extends React.Component {
       this.editors[key].update([tr]);
       // if there are changes to the editor, update redux.
       if (!tr.changes.empty && tr.newDoc) {
-        this.props.setSource(
-          this.state.fileMetadata[key],
-          tr.newDoc.toString()
-        );
+        sourceTextUpdated(this.state.fileMetadata[key], tr.newDoc.toString());
         projectChanged();
       }
     };
   };
+
+  handleVersionHistory() {
+    this.setState({versionHistoryOpen: true});
+  }
 
   updateVisibility(key, isVisible) {
     this.props.sourceVisibilityUpdated(this.state.fileMetadata[key], isVisible);
@@ -295,19 +356,46 @@ class JavalabEditor extends React.Component {
     });
   }
 
+  // Checks if the given file name is valid and if not,
+  // updates the state with the appropriate error message.
+  // Returns whether or not the file name is valid.
+  validateFileName(filename, errorStateKey) {
+    let errorMessage;
+
+    if (!filename) {
+      errorMessage = javalabMsg.missingFilenameError();
+    } else if (
+      filename === '.java' ||
+      (filename.toLowerCase().endsWith('.java') && !filename.endsWith('.java'))
+    ) {
+      // if filename is either only '.java' or ends with a non-lowercase casing of '.java',
+      // give an error with an example Java filename.
+      errorMessage = javalabMsg.invalidJavaFilenameFormat();
+    } else if (filename.endsWith('.java') && /\s/g.test(filename)) {
+      // Java file names cannot contains spaces
+      errorMessage = javalabMsg.invalidJavaFilename();
+    }
+
+    if (errorMessage) {
+      this.setState({
+        [errorStateKey]: errorMessage
+      });
+    }
+
+    return !errorMessage;
+  }
+
   onRenameFile(newFilename) {
+    newFilename = newFilename.trim();
+    if (!this.validateFileName(newFilename, 'renameFileError')) {
+      return;
+    }
     const {fileMetadata, editTabKey} = this.state;
     // check for duplicate filename
-    if (Object.keys(this.props.sources).includes(newFilename)) {
+    const duplicateFileError = this.checkDuplicateFileName(newFilename);
+    if (duplicateFileError) {
       this.setState({
-        renameFileError: this.props.sources[newFilename].isVisible
-          ? this.duplicateFileError(newFilename)
-          : this.duplicateSupportFileError(newFilename)
-      });
-      return;
-    } else if (Object.keys(this.props.validation).includes(newFilename)) {
-      this.setState({
-        renameFileError: this.duplicateSupportFileError(newFilename)
+        renameFileError: duplicateFileError
       });
       return;
     }
@@ -328,10 +416,15 @@ class JavalabEditor extends React.Component {
   }
 
   onCreateFile(filename, fileContents) {
+    filename = filename.trim();
+    if (!this.validateFileName(filename, 'newFileError')) {
+      return;
+    }
     fileContents = fileContents || '';
-    if (Object.keys(this.props.sources).includes(filename)) {
+    const duplicateFileError = this.checkDuplicateFileName(filename);
+    if (duplicateFileError) {
       this.setState({
-        newFileError: this.duplicateFileError(filename)
+        newFileError: duplicateFileError
       });
       return;
     }
@@ -440,6 +533,20 @@ class JavalabEditor extends React.Component {
     return javalabMsg.duplicateSupportFilenameError({filename: filename});
   }
 
+  /**
+   * Checks if the new file name already exists in the project in both user and support code.
+   * Returns the appropriate error message if so.
+   */
+  checkDuplicateFileName(newFilename) {
+    if (Object.keys(this.props.sources).includes(newFilename)) {
+      return this.props.sources[newFilename].isVisible
+        ? this.duplicateFileError(newFilename)
+        : this.duplicateSupportFileError(newFilename);
+    } else if (Object.keys(this.props.validation).includes(newFilename)) {
+      return this.duplicateSupportFileError(newFilename);
+    }
+  }
+
   // This is called from the file explorer when we want to jump to a file
   onOpenFile(key) {
     let newTabs = [...this.state.orderedTabKeys];
@@ -483,16 +590,20 @@ class JavalabEditor extends React.Component {
       contextTarget,
       renameFileError,
       newFileError,
-      compileStatus
+      compileStatus,
+      versionHistoryOpen
     } = this.state;
     const {
       onCommitCode,
-      isDarkMode,
+      displayTheme,
       sources,
       isEditingStartSources,
       isReadOnlyWorkspace,
       showProjectTemplateWorkspaceIcon,
-      height
+      height,
+      isProjectTemplateLevel,
+      handleClearPuzzle,
+      backpackEnabled
     } = this.props;
 
     let menuStyle = {
@@ -504,6 +615,14 @@ class JavalabEditor extends React.Component {
     };
     return (
       <div style={this.props.style} ref={ref => (this.tabContainer = ref)}>
+        {versionHistoryOpen && (
+          <VersionHistoryWithCommits
+            handleClearPuzzle={handleClearPuzzle}
+            isProjectTemplateLevel={isProjectTemplateLevel}
+            onClose={() => this.setState({versionHistoryOpen: false})}
+            isOpen={versionHistoryOpen}
+          />
+        )}
         <PaneHeader hasFocus>
           <PaneButton
             id="javalab-editor-create-file"
@@ -515,21 +634,23 @@ class JavalabEditor extends React.Component {
             leftJustified
             isDisabled={isReadOnlyWorkspace}
           />
-          <PaneSection style={styles.backpackSection}>
-            <Backpack
-              id={'javalab-editor-backpack'}
-              isDarkMode={isDarkMode}
-              isDisabled={isReadOnlyWorkspace}
-              onImport={this.onImportFile}
-            />
-          </PaneSection>
+          {backpackEnabled && (
+            <PaneSection style={styles.backpackSection}>
+              <Backpack
+                id={'javalab-editor-backpack'}
+                displayTheme={displayTheme}
+                isButtonDisabled={isReadOnlyWorkspace}
+                onImport={this.onImportFile}
+              />
+            </PaneSection>
+          )}
           <PaneButton
             id="data-mode-versions-header"
             iconClass="fa fa-clock-o"
             label={msg.showVersionsHeader()}
             headerHasFocus
             isRtl={false}
-            onClick={this.props.handleVersionHistory}
+            onClick={() => this.handleVersionHistory()}
             isDisabled={isReadOnlyWorkspace}
           />
           <PaneButton
@@ -552,14 +673,14 @@ class JavalabEditor extends React.Component {
           activeKey={activeTabKey}
           onSelect={key => this.onChangeTabs(key)}
           id="javalab-editor-tabs"
-          className={isDarkMode ? 'darkmode' : ''}
+          className={displayTheme === DisplayTheme.DARK ? 'darkmode' : ''}
         >
           <div>
             <Nav bsStyle="tabs" style={styles.tabs}>
               <JavalabFileExplorer
                 fileMetadata={fileMetadata}
                 onSelectFile={this.onOpenFile}
-                isDarkMode={isDarkMode}
+                displayTheme={displayTheme}
               />
               {orderedTabKeys.map(tabKey => {
                 return (
@@ -589,7 +710,7 @@ class JavalabEditor extends React.Component {
                       type="button"
                       style={{
                         ...styles.fileMenuToggleButton,
-                        ...(this.props.isDarkMode &&
+                        ...(displayTheme === DisplayTheme.DARK &&
                           styles.darkFileMenuToggleButton),
                         ...(activeTabKey !== tabKey && {visibility: 'hidden'})
                       }}
@@ -615,7 +736,8 @@ class JavalabEditor extends React.Component {
                       ref={el => (this._codeMirrors[tabKey] = el)}
                       style={{
                         ...styles.editor,
-                        ...(isDarkMode && styles.darkBackground),
+                        ...(displayTheme === DisplayTheme.DARK &&
+                          styles.darkBackground),
                         ...{height: height - HEADER_OFFSET}
                       }}
                     />
@@ -651,7 +773,7 @@ class JavalabEditor extends React.Component {
           message={javalabMsg.deleteFileConfirmation({
             filename: fileMetadata[fileToDelete]
           })}
-          isDarkMode={isDarkMode}
+          displayTheme={displayTheme}
           confirmButtonText={javalabMsg.delete()}
           closeButtonText={javalabMsg.cancel()}
         />
@@ -662,7 +784,7 @@ class JavalabEditor extends React.Component {
           }
           filename={fileMetadata[editTabKey]}
           handleSave={this.onRenameFile}
-          isDarkMode={isDarkMode}
+          displayTheme={displayTheme}
           inputLabel="Rename the file"
           saveButtonText="Rename"
           errorMessage={renameFileError}
@@ -673,10 +795,11 @@ class JavalabEditor extends React.Component {
             this.setState({openDialog: null, newFileError: null})
           }
           handleSave={this.onCreateFile}
-          isDarkMode={isDarkMode}
+          displayTheme={displayTheme}
           inputLabel="Create new file"
           saveButtonText="Create"
           errorMessage={newFileError}
+          filename={DEFAULT_FILE_NAME}
         />
         <CommitDialog
           isOpen={openDialog === Dialog.COMMIT_FILES}
@@ -699,7 +822,7 @@ const styles = {
     backgroundColor: color.white
   },
   darkBackground: {
-    backgroundColor: color.dark_slate_gray
+    backgroundColor: color.darkest_slate_gray
   },
   fileMenuToggleButton: {
     margin: '0, 0, 0, 4px',
@@ -729,8 +852,7 @@ const styles = {
     textAlign: 'left',
     display: 'inline-block',
     float: 'left',
-    overflow: 'visible',
-    marginLeft: 3
+    overflow: 'visible'
   }
 };
 
@@ -738,9 +860,10 @@ export default connect(
   state => ({
     sources: state.javalab.sources,
     validation: state.javalab.validation,
-    isDarkMode: state.javalab.isDarkMode,
+    displayTheme: state.javalab.displayTheme,
     isEditingStartSources: state.pageConstants.isEditingStartSources,
-    isReadOnlyWorkspace: state.pageConstants.isReadOnlyWorkspace
+    isReadOnlyWorkspace: state.pageConstants.isReadOnlyWorkspace,
+    backpackEnabled: state.javalab.backpackEnabled
   }),
   dispatch => ({
     setSource: (filename, source) => dispatch(setSource(filename, source)),
@@ -748,6 +871,8 @@ export default connect(
       dispatch(sourceVisibilityUpdated(filename, isVisible)),
     sourceValidationUpdated: (filename, isValidation) =>
       dispatch(sourceValidationUpdated(filename, isValidation)),
+    sourceTextUpdated: (filename, text) =>
+      dispatch(sourceTextUpdated(filename, text)),
     renameFile: (oldFilename, newFilename) =>
       dispatch(renameFile(oldFilename, newFilename)),
     removeFile: filename => dispatch(removeFile(filename)),

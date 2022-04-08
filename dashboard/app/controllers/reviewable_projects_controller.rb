@@ -9,7 +9,7 @@ class ReviewableProjectsController < ApplicationController
   def create
     @reviewable_project = ReviewableProject.where(
       user_id: @project_owner.id,
-      storage_app_id: @storage_app_id,
+      project_id: @project_id,
       script_id: params[:script_id],
       level_id: params[:level_id]
     ).first_or_initialize
@@ -34,7 +34,7 @@ class ReviewableProjectsController < ApplicationController
   def reviewable_status
     @reviewable_project = ReviewableProject.where(
       user_id: @project_owner.id,
-      storage_app_id: @storage_app_id,
+      project_id: @project_id,
       script_id: params[:script_id],
       level_id: params[:level_id]
     ).first
@@ -63,9 +63,10 @@ class ReviewableProjectsController < ApplicationController
 
   def for_level
     peer_user_ids = current_user.
-      sections_as_student.
-      map(&:followers).
+      code_review_groups.
+      map(&:members).
       flatten.
+      map(&:follower).
       pluck(:student_user_id).
       select {|student_user_id| current_user.id != student_user_id}
 
@@ -75,12 +76,12 @@ class ReviewableProjectsController < ApplicationController
       script_id: params[:script_id]
     ).map(&:user)
 
-    return render json: peers_ready_for_review.pluck(:id, :name)
+    return render json: peers_ready_for_review.map {|user| {id: user.id, name: user.name}}
   end
 
   def decrypt_channel_id
     # TO DO: handle errors in decrypting, or can't find user
-    @storage_id, @storage_app_id = storage_decrypt_channel_id(params[:channel_id])
+    @storage_id, @project_id = storage_decrypt_channel_id(params[:channel_id])
     @project_owner = User.find_by(id: user_id_for_storage_id(@storage_id))
   end
 end

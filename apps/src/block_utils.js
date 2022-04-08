@@ -176,13 +176,13 @@ exports.generateSimpleBlock = function(blockly, generator, options) {
     helpUrl: helpUrl,
     init: function() {
       // Note: has a fixed HSV.  Could make this customizable if need be
-      this.setHSV(184, 1.0, 0.74);
+      Blockly.cdoUtils.setHSV(this, 184, 1.0, 0.74);
       var input = this.appendDummyInput();
       if (title) {
-        input.appendTitle(title);
+        input.appendField(title);
       }
       if (titleImage) {
-        input.appendTitle(new blockly.FieldImage(titleImage));
+        input.appendField(new blockly.FieldImage(titleImage));
       }
       this.setPreviousStatement(true);
       this.setNextStatement(true);
@@ -378,9 +378,9 @@ exports.functionalDefinitionXml = function(
   return (
     '<block type="functional_definition" inline="false">' +
     mutation +
-    '<title name="NAME">' +
+    '<field name="NAME">' +
     name +
-    '</title>' +
+    '</field>' +
     '<functional_input name="STACK">' +
     blockXml +
     '</functional_input>' +
@@ -447,7 +447,7 @@ exports.appendNewFunctions = function(blocksXml, functionsXml) {
       ? startBlocksDom.ownerDocument
       : document;
     const node = ownerDocument.evaluate(
-      'title[@name="NAME"]',
+      'field[@name="NAME"]',
       func,
       null,
       XPathResult.FIRST_ORDERED_NODE_TYPE,
@@ -463,7 +463,7 @@ exports.appendNewFunctions = function(blocksXml, functionsXml) {
     ).stringValue;
     const alreadyPresent =
       startBlocksDocument.evaluate(
-        `//block[@type="${type}"]/title[@id="${name}"]`,
+        `//block[@type="${type}"]/field[@id="${name}"]`,
         startBlocksDom,
         null,
         XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE,
@@ -683,13 +683,15 @@ const STANDARD_INPUT_TYPES = {
   [INLINE_DUMMY_INPUT]: {
     addInput(blockly, block, inputConfig, currentInputRow) {
       if (inputConfig.customOptions && inputConfig.customOptions.assetUrl) {
-        currentInputRow.appendTitle(
-          new Blockly.FieldImage(
-            Blockly.assetUrl(inputConfig.customOptions.assetUrl),
-            inputConfig.customOptions.width,
-            inputConfig.customOptions.height
-          )
-        );
+        currentInputRow
+          .appendField(inputConfig.label)
+          .appendField(
+            new Blockly.FieldImage(
+              Blockly.assetUrl(inputConfig.customOptions.assetUrl),
+              inputConfig.customOptions.width,
+              inputConfig.customOptions.height
+            )
+          );
       }
     },
     generateCode(block, inputConfig) {
@@ -706,13 +708,14 @@ const STANDARD_INPUT_TYPES = {
   },
   [DROPDOWN_INPUT]: {
     addInput(blockly, block, inputConfig, currentInputRow) {
-      const dropdown = new blockly.FieldDropdown(inputConfig.options);
+      const options = sanitizeOptions(inputConfig.options);
+      const dropdown = new blockly.FieldDropdown(options);
       currentInputRow
-        .appendTitle(inputConfig.label)
-        .appendTitle(dropdown, inputConfig.name);
+        .appendField(inputConfig.label)
+        .appendField(dropdown, inputConfig.name);
     },
     generateCode(block, inputConfig) {
-      let code = block.getTitleValue(inputConfig.name);
+      let code = block.getFieldValue(inputConfig.name);
       if (
         inputConfig.type === Blockly.BlockValueType.STRING &&
         !code.startsWith('"') &&
@@ -730,7 +733,7 @@ const STANDARD_INPUT_TYPES = {
       block.getVars = function() {
         return {
           [Blockly.Variables.DEFAULT_CATEGORY]: [
-            block.getTitleValue(inputConfig.name)
+            block.getFieldValue(inputConfig.name)
           ]
         };
       };
@@ -738,14 +741,14 @@ const STANDARD_INPUT_TYPES = {
       // The following functions make sure that the variable naming/renaming options work for this block
       block.renameVar = function(oldName, newName) {
         if (
-          Blockly.Names.equals(oldName, block.getTitleValue(inputConfig.name))
+          Blockly.Names.equals(oldName, block.getFieldValue(inputConfig.name))
         ) {
           block.setTitleValue(newName, inputConfig.name);
         }
       };
       block.removeVar = function(oldName) {
         if (
-          Blockly.Names.equals(oldName, block.getTitleValue(inputConfig.name))
+          Blockly.Names.equals(oldName, block.getFieldValue(inputConfig.name))
         ) {
           block.dispose(true, true);
         }
@@ -760,27 +763,28 @@ const STANDARD_INPUT_TYPES = {
 
       // Add the variable field to the block
       currentInputRow
-        .appendTitle(inputConfig.label)
-        .appendTitle(new Blockly.FieldVariable(null), inputConfig.name);
+        .appendField(inputConfig.label)
+        .appendField(new Blockly.FieldVariable(null), inputConfig.name);
     },
     generateCode(block, inputConfig) {
       return Blockly.JavaScript.translateVarName(
-        block.getTitleValue(inputConfig.name)
+        block.getFieldValue(inputConfig.name)
       );
     }
   },
   [FIELD_INPUT]: {
     addInput(blockly, block, inputConfig, currentInputRow) {
-      const fieldTextInput = new blockly.FieldTextInput(
+      const BlocklyField = Blockly.getFieldForInputType(inputConfig.type);
+      const field = new BlocklyField(
         '',
         getFieldInputChangeHandler(blockly, inputConfig.type)
       );
       currentInputRow
-        .appendTitle(inputConfig.label)
-        .appendTitle(fieldTextInput, inputConfig.name);
+        .appendField(inputConfig.label)
+        .appendField(field, inputConfig.name);
     },
     generateCode(block, inputConfig) {
-      let code = block.getTitleValue(inputConfig.name);
+      let code = block.getFieldValue(inputConfig.name);
       if (inputConfig.type === Blockly.BlockValueType.STRING) {
         // Wraps the value in quotes, and escapes quotes/newlines
         code = JSON.stringify(code);
@@ -868,7 +872,7 @@ const interpolateInputs = function(
     });
 
     // Finally append the last input's label
-    lastInput.appendTitle(lastInputConfig.label);
+    lastInput.appendField(lastInputConfig.label);
   });
 };
 exports.interpolateInputs = interpolateInputs;
@@ -1047,9 +1051,9 @@ exports.createJsWrapperBlockCreator = function(
       helpUrl: '',
       init: function() {
         if (color) {
-          this.setHSV(...color);
+          Blockly.cdoUtils.setHSV(this, ...color);
         } else if (!returnType) {
-          this.setHSV(...DEFAULT_COLOR);
+          Blockly.cdoUtils.setHSV(this, ...DEFAULT_COLOR);
         }
 
         if (returnType) {
@@ -1068,8 +1072,18 @@ exports.createJsWrapperBlockCreator = function(
           this.setPreviousStatement(true);
         }
 
-        if (miniToolboxBlocks) {
+        // Use window.appOptions, not global appOptions, because the levelbuilder
+        // block page doesn't have appOptions, but we *do* want to show the mini-toolbox
+        // there
+        if (
+          miniToolboxBlocks &&
+          (!window.appOptions || window.appOptions.level.miniToolbox)
+        ) {
           var toggle = new Blockly.FieldIcon('+');
+          if (this.blockSpace.isReadOnly()) {
+            toggle.setReadOnly();
+          }
+
           var miniToolboxXml = '<xml>';
           miniToolboxBlocks.forEach(block => {
             miniToolboxXml += `\n <block type="${block}"></block>`;
@@ -1079,10 +1093,14 @@ exports.createJsWrapperBlockCreator = function(
           this.isMiniFlyoutOpen = false;
           // On button click, open/close the horizontal flyout, toggle button text between +/-, and re-render the block.
           Blockly.bindEvent_(toggle.fieldGroup_, 'mousedown', this, () => {
+            if (this.blockSpace.isReadOnly()) {
+              return;
+            }
+
             if (this.isMiniFlyoutOpen) {
-              toggle.setText('+');
+              toggle.setValue('+');
             } else {
-              toggle.setText('-');
+              toggle.setValue('-');
             }
             this.isMiniFlyoutOpen = !this.isMiniFlyoutOpen;
             this.render();
@@ -1104,18 +1122,11 @@ exports.createJsWrapperBlockCreator = function(
               });
             }
           });
-          // Use window.appOptions, not global appOptions, because the levelbuilder
-          // block page doesn't have appOptions, but we *do* want to show the mini-toolbox
-          // there
-          if (
-            !window.appOptions ||
-            (window.appOptions.level.miniToolbox &&
-              !window.appOptions.readonlyWorkspace)
-          ) {
-            this.appendDummyInput()
-              .appendTitle(toggle)
-              .appendTitle(' ');
-          }
+
+          this.appendDummyInput()
+            .appendField(toggle, 'toggle')
+            .appendField(' ');
+
           this.initMiniFlyout(miniToolboxXml);
         }
 
@@ -1217,7 +1228,7 @@ exports.createJsWrapperBlockCreator = function(
       if (eventBlock) {
         const nextBlock =
           this.nextConnection && this.nextConnection.targetBlock();
-        let handlerCode = Blockly.JavaScript.blockToCode(nextBlock, true);
+        let handlerCode = Blockly.JavaScript.blockToCode(nextBlock, false);
         handlerCode = Blockly.Generator.prefixLines(handlerCode, '  ');
         if (callbackParams) {
           let params = callbackParams.join(',');
@@ -1313,4 +1324,18 @@ exports.installCustomBlocks = function({
   }
 
   return blocksByCategory;
+};
+
+/**
+ * Adds a second value to options array elements if a second one does not exist.
+ * The second value is used as the generated code for that option.
+ * Required for backwards compatibility with existing blocks that are missing the second value.
+ *
+ * @param  {string[][]| string[]} dropdownOptions
+ * @returns {string[][]} Sanitized array of dropdownOptions, ensuring that both a first and second value exist
+ */
+const sanitizeOptions = function(dropdownOptions) {
+  return dropdownOptions.map(option =>
+    option.length === 1 ? [option[0], option[0]] : option
+  );
 };

@@ -4,6 +4,9 @@
 
   ],
   "published_state": "beta",
+  "instruction_type": "teacher_led",
+  "participant_audience": "student",
+  "instructor_audience": "teacher",
   "properties": {
     "has_numbered_units": true
   },

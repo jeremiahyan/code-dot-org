@@ -4,6 +4,8 @@ require 'webmock/minitest'
 class LevelsControllerTest < ActionController::TestCase
   include Devise::Test::ControllerHelpers
 
+  STUB_ENCRYPTION_KEY = SecureRandom.base64(Encryption::KEY_LENGTH / 8)
+
   setup do
     Rails.application.config.stubs(:levelbuilder_mode).returns true
     Level.any_instance.stubs(:write_to_file?).returns(false) # don't write to level files
@@ -78,24 +80,35 @@ class LevelsControllerTest < ActionController::TestCase
     assert_equal 22, JSON.parse(@response.body)['numPages']
   end
 
+  test "should get filtered levels with name matching level key for blockly levels" do
+    game = Game.find_by_name("CustomMaze")
+    create(:level, name: 'blockly', level_num: 'special_blockly_level', game_id: game.id, type: "Maze")
+
+    get :get_filtered_levels, params: {name: 'blockly:CustomMaze:special_blockly_level'}
+    assert_equal 'blockly:CustomMaze:special_blockly_level', JSON.parse(@response.body)['levels'][0]["name"]
+  end
+
   test "should get filtered levels with level_type" do
+    existing_levels_count = Odometer.all.count
+    level = create(:odometer)
     get :get_filtered_levels, params: {page: 1, level_type: 'Odometer'}
-    assert_equal 1, JSON.parse(@response.body)['levels'].length
-    assert_equal "Odometer", JSON.parse(@response.body)['levels'][0]["name"]
+    assert_equal existing_levels_count + 1, JSON.parse(@response.body)['levels'].length
+    assert_equal level.name, JSON.parse(@response.body)['levels'][0]["name"]
     assert_equal 1, JSON.parse(@response.body)['numPages']
   end
 
   test "should get filtered levels with script_id" do
-    get :get_filtered_levels, params: {page: 1, script_id: 2}
+    script = create(:script, :with_levels, levels_count: 7)
+    get :get_filtered_levels, params: {page: 1, script_id: script.id}
     assert_equal 7, JSON.parse(@response.body)['levels'].length
-    assert_equal 3, JSON.parse(@response.body)['numPages']
+    assert_equal 1, JSON.parse(@response.body)['numPages']
   end
 
   test "should get filtered levels with owner_id" do
     Level.where(user_id: @levelbuilder.id).destroy_all
-    level = create :level, user: @levelbuilder
+    level = create :applab, user: @levelbuilder
     get :get_filtered_levels, params: {page: 1, owner_id: @levelbuilder.id}
-    assert_equal level[:name], JSON.parse(@response.body)['levels'][0]["name"]
+    assert_equal level.name, JSON.parse(@response.body)['levels'][0]["name"]
     assert_equal 1, JSON.parse(@response.body)['numPages']
   end
 
@@ -124,6 +137,48 @@ class LevelsControllerTest < ActionController::TestCase
     response: :forbidden,
     user: :teacher
   )
+
+  test "levelbuilder can get exemplar to edit" do
+    get :edit_exemplar,
+      params: {id: @level.id}
+    assert_response :success
+  end
+
+  test "teacher cannot get exemplar to edit" do
+    teacher = create(:teacher)
+    sign_out(@levelbuilder)
+    sign_in(teacher)
+
+    get :edit_exemplar,
+      params: {id: @level.id}
+    assert_response :forbidden
+  end
+
+  test "levelbuilder can update exemplar" do
+    CDO.stubs(:properties_encryption_key).returns(STUB_ENCRYPTION_KEY)
+    exemplar_sources = {"File.java" => "System.out.println()"}
+    javalab_level = create(:javalab)
+    assert_nil javalab_level.exemplar_sources
+
+    post :update_exemplar_code,
+      params: {id: javalab_level.id},
+      body: {exemplar_sources: {"File.java" => "System.out.println()"}}.to_json
+
+    assert_response :success
+    javalab_level.reload
+    assert_equal exemplar_sources, javalab_level.exemplar_sources
+  end
+
+  test "teacher cannot update exemplar" do
+    teacher = create(:teacher)
+    sign_out(@levelbuilder)
+    sign_in(teacher)
+
+    javalab_level = create(:javalab)
+    post :update_exemplar_code,
+      params: {id: javalab_level.id}
+    assert_response :forbidden
+  end
 
   test "should get new" do
     get :new, params: {game_id: @level.game}
@@ -561,7 +616,7 @@ class LevelsControllerTest < ActionController::TestCase
   end
 
   test "should not edit level if not custom level" do
-    level = Script.twenty_hour_unit.levels.first
+    level = create(:deprecated_blockly_level, user_id: nil)
     refute Ability.new(@levelbuilder).can? :edit, level
 
     post :update_blocks, params: @default_update_blocks_params.merge(
@@ -642,11 +697,14 @@ class LevelsControllerTest < ActionController::TestCase
   end
 
   test "should load encrypted file contents when editing a dsl defined level with the wrong encryption key" do
+    level_path = 'config/scripts/test_external_markdown.external'
+    data, _ = External.parse_file level_path
+    External.setup data
     CDO.stubs(:properties_encryption_key).returns("thisisafakekeyyyyyyyyyyyyyyyyyyyyy")
     level = Level.find_by_name 'Test External Markdown'
     get :edit, params: {id: level.id}
 
-    assert_equal 'config/scripts/test_external_markdown.external', assigns(:level).filename
+    assert_equal level_path, assigns(:level).filename
     assert_equal "name", assigns(:level).dsl_text.split("\n").first.split(" ").first
     assert_equal "encrypted", assigns(:level).dsl_text.split("\n")[1].split(" ").first
   end
@@ -694,7 +752,7 @@ class LevelsControllerTest < ActionController::TestCase
 
   test "should prevent rename of stanadalone project level" do
     level_name = ProjectsController::STANDALONE_PROJECTS.values.first[:name]
-    # standalone project levels are created when we generate fixtures
+    create(:level, name: level_name) unless Level.where(name: level_name).exists?
     level = Level.find_by(name: level_name)
 
     get :edit, params: {id: level.id}
@@ -720,6 +778,44 @@ class LevelsControllerTest < ActionController::TestCase
     assert_response :unprocessable_entity
 
     assert_match /JSON::ParserError/, JSON.parse(@response.body)['code_functions'].first
+  end
+
+  test "update_start_code encrypts validation" do
+    CDO.stubs(:properties_encryption_key).returns(STUB_ENCRYPTION_KEY)
+    level = create(:javalab)
+    post :update_start_code, params: {
+      id: level.id
+    }, body:
+        {
+          validation: {"Validation.java" => "{}"},
+          start_sources: {"MyClass.java" => "{}"}
+        }.to_json
+
+    assert_response :success
+    level = assigns(:level)
+
+    # this property is encrypted, not plaintext
+    assert_nil level.properties['validation']
+    assert level.validation
+    assert level.properties['encrypted_validation']
+
+    # this property is plaintext
+    assert level.properties['start_sources']
+  end
+
+  test "update_start_code works if level does not support validation" do
+    post :update_start_code, params: {
+      id: create(:applab).id,
+    }, body:
+           {
+             start_html: '<h1>foo</h1>',
+             start_blocks: 'console.log("hello world");',
+           }.to_json
+
+    assert_response :success
+    level = assigns(:level)
+    assert_equal '<h1>foo</h1>', level.properties['start_html']
+    assert_equal 'console.log("hello world");', level.properties['start_blocks']
   end
 
   test "should destroy level" do
@@ -805,9 +901,9 @@ class LevelsControllerTest < ActionController::TestCase
     assert_select "#level_skin option[value='pvz'][selected='selected']"
   end
 
-  test 'should render level num in title' do
+  test 'should render level name in title' do
     get :show, params: {id: @level, game_id: @level.game}
-    assert_match /#{Regexp.quote(@level.level_num)}/, Nokogiri::HTML(@response.body).css('title').text.strip
+    assert_match /#{Regexp.quote(@level.name)}/, Nokogiri::HTML(@response.body).css('title').text.strip
   end
 
   test "should update maze data properly" do
@@ -930,7 +1026,7 @@ class LevelsControllerTest < ActionController::TestCase
 
   test "should clone" do
     game = Game.find_by_name("Custom")
-    old = create(:level, game_id: game.id, name: "Fun Level", level_num: 'custom')
+    old = create(:level, game_id: game.id, name: "Fun Level")
     assert_creates(Level) do
       post :clone, params: {id: old.id, name: "Fun Level (copy 1)"}
     end
@@ -943,7 +1039,7 @@ class LevelsControllerTest < ActionController::TestCase
 
   test "should clone without redirect" do
     game = Game.find_by_name("Custom")
-    old = create(:level, game_id: game.id, name: "Fun Level", level_num: 'custom')
+    old = create(:level, game_id: game.id, name: "Fun Level")
     assert_creates(Level) do
       post :clone, params: {id: old.id, name: "Fun Level (copy 1)", do_not_redirect: true}
     end
@@ -955,7 +1051,7 @@ class LevelsControllerTest < ActionController::TestCase
   end
 
   test "cannot clone hard-coded levels" do
-    old = create(:level, game_id: Game.first.id, name: "Fun Level", user_id: nil)
+    old = create(:deprecated_blockly_level, game_id: Game.first.id, name: "Fun Level", user_id: nil)
     refute old.custom?
     refute_creates(Level) do
       post :clone, params: {id: old.id, name: "Fun Level (copy 1)"}
@@ -975,7 +1071,7 @@ class LevelsControllerTest < ActionController::TestCase
     sign_in @platformization_partner
 
     game = Game.find_by_name("Custom")
-    old = create(:level, game_id: game.id, name: "Fun Level", level_num: 'custom')
+    old = create(:level, game_id: game.id, name: "Fun Level")
     assert_creates(Level) do
       post :clone, params: {id: old.id, name: "Fun Level (copy 1)"}
     end
@@ -991,7 +1087,7 @@ class LevelsControllerTest < ActionController::TestCase
     sign_out @levelbuilder
     sign_in @platformization_partner
 
-    old = create(:level, game_id: Game.first.id, name: "Fun Level", user_id: nil)
+    old = create(:deprecated_blockly_level, game_id: Game.first.id, name: "Fun Level", user_id: nil)
     refute old.custom?
     refute_creates(Level) do
       post :clone, params: {id: old.id, name: "Fun Level (copy 1)"}

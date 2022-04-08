@@ -300,7 +300,7 @@ body.modal-open .supreme-container{
 }
 
 #homepage .action_buttons {
-  margin-bottom: 20px;
+  margin-bottom: 60px;
 }
 
 #homepage #actions a {
@@ -347,7 +347,7 @@ body.modal-open .supreme-container{
 }
 
 #homepage #actions .herohocbutton {
-  font-weight: 500;
+  font-weight: bold;
   font-size: 18px;
   min-width: 230px;
   height: 40px;
@@ -378,6 +378,18 @@ body.modal-open .supreme-container{
   color: black;
   background-color: white;
   border-color: white;
+}
+
+#homepage #actions .herohocbutton-solid-grey {
+  color: black;
+  background-color: lightgrey;
+  border-color: lightgrey;
+}
+
+#homepage #actions .herohocbutton-solid-black {
+  color: white;
+  background-color: black;
+  border-color: black;
 }
 
 #homepage #actions .herohocbutton-hollow-white {
@@ -646,4 +658,46 @@ body.modal-open .supreme-container{
 .below_hero_announcement {
   text-align: center;
   padding: 10px;
+}
+
+/* Custom styling for a vertical-stack hero layout. */
+
+#homepage .vertical-stack {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+  @media screen and (max-width: 512px){
+    #homepage .vertical-stack {
+      padding: 0 1em;
+    }
+  }
+
+#homepage .vertical-stack .image {
+  max-width: 100px;
+  margin-bottom: 20px;
+}
+
+#homepage .vertical-stack .thumbnail-wrapper{
+  width: 100%;
+}
+
+#homepage .vertical-stack .video_thumbnail {
+  width: 100%;
+  margin: 0 auto;
+}
+
+#homepage .vertical-stack .text {
+  color: black;
+  font-size: 1.25em;
+  line-height: 1.4em;
+  padding-bottom: 0px;
+  font-family: 'Gotham 4r', sans-serif;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+#homepage .vertical-stack .text strong {
+  font-family: 'Gotham 5r', sans-serif;
+  font-weight: normal;
 }

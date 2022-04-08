@@ -9,8 +9,7 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
-# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '5.2.4.4'
+gem 'rails', '6.0.4.1'
 gem 'rails-controller-testing', '~> 1.0.5'
 
 # Compile Sprockets assets concurrently in `assets:precompile`.
@@ -28,8 +27,6 @@ gem 'responders', '~> 3.0'
 gem 'sinatra', '2.0.2', require: 'sinatra/base'
 
 gem 'mysql2', '>= 0.4.1'
-
-gem 'seamless_database_pool', '>= 1.0.20'
 
 gem 'dalli' # memcached
 gem 'dalli-elasticache' # ElastiCache Auto Discovery memcached nodes
@@ -96,7 +93,7 @@ group :development, :test do
 
   # For UI testing.
   gem 'cucumber'
-  gem 'eyes_selenium', '3.17.19'
+  gem 'eyes_selenium', '3.18.4'
   gem 'minitest', '~> 5.5'
   gem 'minitest-around'
   gem 'minitest-reporters', '~> 1.2.0.beta3'
@@ -174,10 +171,7 @@ gem 'omniauth-rails_csrf_protection', '~> 0.1'
 
 gem 'bootstrap-sass', '~> 2.3.2.2'
 
-# Ref: https://github.com/haml/haml/issues/940
-# https://github.com/haml/haml/issues/982
-# https://github.com/haml/haml/issues/985
-gem 'haml', github: 'wjordan/haml', ref: 'cdo'
+gem 'haml', '~> 5.2.0'
 
 gem 'jquery-ui-rails', '~> 6.0.1'
 
@@ -297,7 +291,7 @@ gem 'firebase_token_generator'
 gem 'sshkit'
 gem 'validates_email_format_of'
 
-gem 'composite_primary_keys', '~> 11.0'
+gem 'composite_primary_keys', '~> 12.0'
 
 # GitHub API; used by the DotD script to automatically create new
 # releases on deploy

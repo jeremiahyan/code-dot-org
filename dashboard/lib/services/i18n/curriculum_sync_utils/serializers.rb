@@ -60,7 +60,7 @@ module Services
       end
 
       class ResourceCrowdinSerializer < CrowdinSerializer
-        attributes :name, :url
+        attributes :name, :url, :type
 
         # override
         def crowdin_key
@@ -81,6 +81,28 @@ module Services
         attribute :description
       end
 
+      class FrameworkCrowdinSerializer < CrowdinSerializer
+        attributes :name
+
+        delegate :crowdin_key, to: :object
+      end
+
+      class StandardCategoryCrowdinSerializer < CrowdinSerializer
+        attributes :description
+
+        delegate :crowdin_key, to: :object
+      end
+
+      class StandardCrowdinSerializer < CrowdinSerializer
+        attributes :description
+
+        belongs_to :framework, serializer: CurriculumSyncUtils::FrameworkCrowdinSerializer
+        belongs_to :parent_category, serializer: CurriculumSyncUtils::StandardCategoryCrowdinSerializer
+        belongs_to :category, serializer: CurriculumSyncUtils::StandardCategoryCrowdinSerializer
+
+        delegate :crowdin_key, to: :object
+      end
+
       class LessonCrowdinSerializer < CrowdinSerializer
         # Note that we don't include "name" here, because that's already
         # handled by existing logic. We could in the future consider moving
@@ -97,10 +119,13 @@ module Services
         has_many :objectives, serializer: CurriculumSyncUtils::ObjectiveCrowdinSerializer
         has_many :resources, serializer: CurriculumSyncUtils::ResourceCrowdinSerializer
         has_many :vocabularies, serializer: CurriculumSyncUtils::VocabularyCrowdinSerializer
+        has_many :standards, serializer: CurriculumSyncUtils::StandardCrowdinSerializer
+        has_many :opportunity_standards, serializer: CurriculumSyncUtils::StandardCrowdinSerializer
 
         # override
         def crowdin_key
-          Rails.application.routes.url_helpers.script_lesson_url(object.script, object)
+          path = Rails.application.routes.url_helpers.script_lesson_path(object.script, object)
+          URI.join("https://studio.code.org", path)
         end
       end
 
@@ -111,7 +136,8 @@ module Services
 
         # override
         def crowdin_key
-          Rails.application.routes.url_helpers.script_url(object)
+          path = Rails.application.routes.url_helpers.script_path(object)
+          URI.join("https://studio.code.org", path)
         end
       end
     end

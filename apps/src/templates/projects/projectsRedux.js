@@ -136,7 +136,9 @@ const initialProjectListState = {
   gamelab: [],
   playlab: [],
   artist: [],
-  dance: []
+  dance: [],
+  poetry: [],
+  thebadguys: []
 };
 
 function projectLists(state = initialProjectListState, action) {
@@ -170,6 +172,7 @@ function projectLists(state = initialProjectListState, action) {
 const initialHasOlderProjects = {
   special_topic: false,
   dance: true,
+  poetry: true,
   applab: true,
   spritelab: true,
   gamelab: true,

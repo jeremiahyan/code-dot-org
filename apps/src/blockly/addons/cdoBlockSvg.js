@@ -23,6 +23,12 @@ export default class BlockSvg extends GoogleBlockly.BlockSvg {
     super.mixin(mixinObj, true);
   }
 
+  isUnused() {
+    const isTopBlock = this.previousConnection === null;
+    const hasParentBlock = !!this.parentBlock_;
+    return !(isTopBlock || hasParentBlock);
+  }
+
   isVisible() {
     // TODO (eventually), but all Flappy blocks are visible, so this won't be a problem
     // until we convert other labs
@@ -33,71 +39,9 @@ export default class BlockSvg extends GoogleBlockly.BlockSvg {
     this.canDisconnectFromParent_ = canDisconnect;
   }
 
-  customContextMenu(menuOptions) {
-    // Only show context menu for levelbuilders
-    if (Blockly.editBlocks) {
-      const deletable = {
-        text: this.deletable_
-          ? 'Make Undeletable to Users'
-          : 'Make Deletable to Users',
-        enabled: true,
-        callback: function() {
-          this.setDeletable(!this.isDeletable());
-          Blockly.ContextMenu.hide();
-        }.bind(this)
-      };
-      const movable = {
-        text: this.movable_
-          ? 'Make Immovable to Users'
-          : 'Make Movable to Users',
-        enabled: true,
-        callback: function() {
-          this.setMovable(!this.isMovable());
-          Blockly.ContextMenu.hide();
-        }.bind(this)
-      };
-      const editable = {
-        text: this.editable_ ? 'Make Uneditable' : 'Make editable',
-        enabled: true,
-        callback: function() {
-          this.setEditable(!this.isEditable());
-          Blockly.ContextMenu.hide();
-        }.bind(this)
-      };
-      const lockToParent = {
-        text: this.canDisconnectFromParent_
-          ? 'Lock to Parent Block'
-          : 'Unlock from Parent Block',
-        enabled: true,
-        callback: function() {
-          this.setCanDisconnectFromParent(!this.canDisconnectFromParent_);
-          Blockly.ContextMenu.hide();
-        }.bind(this)
-      };
-      menuOptions.push(deletable);
-      menuOptions.push(movable);
-      menuOptions.push(editable);
-      menuOptions.push(lockToParent);
-    }
-  }
-
   dispose() {
     super.dispose();
     this.removeUnusedBlockFrame();
-  }
-
-  getTitles() {
-    let fields = [];
-    this.inputList.forEach(input => {
-      input.fieldRow.forEach(field => {
-        fields.push(field);
-      });
-    });
-    return fields;
-  }
-
-  getTitleValue(name) {
-    return super.getFieldValue(name);
   }
 
   isUserVisible() {
@@ -111,8 +55,8 @@ export default class BlockSvg extends GoogleBlockly.BlockSvg {
     super.onMouseDown_(e);
   }
 
-  render() {
-    super.render();
+  render(opt_bubble) {
+    super.render(opt_bubble);
     this.removeUnusedBlockFrame();
   }
 
@@ -123,7 +67,7 @@ export default class BlockSvg extends GoogleBlockly.BlockSvg {
     }
   }
 
-  setHSV(h, s, v) {
-    return super.setColour(Blockly.utils.colour.hsvToHex(h, s, v * 255));
+  getHexColour() {
+    return super.getColour();
   }
 }

@@ -3,6 +3,7 @@ require 'cdo/firehose'
 
 class ProjectsController < ApplicationController
   before_action :authenticate_user!, except: [:load, :create_new, :show, :edit, :readonly, :redirect_legacy, :public, :index, :export_config]
+  before_action :redirect_admin_from_labs, only: [:load, :create_new, :show, :edit, :remix]
   before_action :authorize_load_project!, only: [:load, :create_new, :edit, :remix]
   before_action :set_level, only: [:load, :create_new, :show, :edit, :readonly, :remix, :export_config, :export_create_channel]
   protect_from_forgery except: :export_config
@@ -141,7 +142,16 @@ class ProjectsController < ApplicationController
     },
     javalab: {
       name: 'New Java Lab Project',
-      levelbuilder_required: true
+      login_required: true
+    },
+    poetry: {
+      name: 'New Poetry Project'
+    },
+    poetry_hoc: {
+      name: 'New Poetry HOC Project'
+    },
+    thebadguys: {
+      name: 'New The Bad Guys Project'
     }
   }.with_indifferent_access.freeze
 
@@ -152,7 +162,7 @@ class ProjectsController < ApplicationController
   def index
     unless params[:tab_name] == 'public'
       return redirect_to '/projects/public' unless current_user
-      return redirect_to '/', flash: {alert: 'Labs not allowed for admins.'} if current_user.admin
+      redirect_admin_from_labs
     end
 
     view_options(full_width: true, responsive_content: false, no_padding_container: true, has_i18n: true)
@@ -162,11 +172,11 @@ class ProjectsController < ApplicationController
 
   def project_and_featured_project_fields
     [
-      :storage_apps__id___id,
-      :storage_apps__storage_id___storage_id,
-      :storage_apps__value___value,
-      :storage_apps__project_type___project_type,
-      :storage_apps__published_at___published_at,
+      :projects__id___id,
+      :projects__storage_id___storage_id,
+      :projects__value___value,
+      :projects__project_type___project_type,
+      :projects__published_at___published_at,
       :featured_projects__featured_at___featured_at,
       :featured_projects__unfeatured_at___unfeatured_at,
       :featured_projects__topic___topic
@@ -174,10 +184,10 @@ class ProjectsController < ApplicationController
   end
 
   def combine_projects_and_featured_projects_data
-    storage_apps = "#{CDO.pegasus_db_name}__storage_apps".to_sym
+    projects = "#{CDO.dashboard_db_name}__projects".to_sym
     project_featured_project_combo_data = DASHBOARD_DB[:featured_projects].
       select(*project_and_featured_project_fields).
-      join(storage_apps, id: :storage_app_id).all
+      join(projects, id: :storage_app_id, state: 'active').all
     extract_data_for_tables(project_featured_project_combo_data)
   end
 
@@ -230,13 +240,9 @@ class ProjectsController < ApplicationController
   end
 
   def load
-    if current_user.try(:admin)
-      redirect_to '/', flash: {alert: 'Labs not allowed for admins.'}
-      return
-    end
     return if redirect_under_13_without_tos_teacher(@level)
     if current_user
-      channel = StorageApps.new(storage_id_for_current_user).most_recent(params[:key])
+      channel = Projects.new(storage_id_for_current_user).most_recent(params[:key])
       if channel
         redirect_to action: 'edit', channel_id: channel
         return
@@ -247,14 +253,10 @@ class ProjectsController < ApplicationController
   end
 
   def create_new
-    if current_user.try(:admin)
-      redirect_to '/', flash: {alert: 'Labs not allowed for admins.'}
-      return
-    end
     return if redirect_under_13_without_tos_teacher(@level)
     channel = ChannelToken.create_channel(
       request.ip,
-      StorageApps.new(get_storage_id),
+      Projects.new(get_storage_id),
       data: initial_data,
       type: params[:key]
     )
@@ -268,7 +270,7 @@ class ProjectsController < ApplicationController
   private def initial_data
     data = {
       name: 'Untitled Project',
-      level: polymorphic_url([params[:key], 'project_projects'])
+      level: polymorphic_url([params[:key].to_sym, :project_projects])
     }
     default_image_url = STANDALONE_PROJECTS[params[:key]][:default_image_url]
     data[:thumbnailUrl] = default_image_url if default_image_url
@@ -276,10 +278,6 @@ class ProjectsController < ApplicationController
   end
 
   def show
-    if current_user.try(:admin)
-      redirect_to '/', flash: {alert: 'Labs not allowed for admins.'}
-      return
-    end
     if params.key?(:nosource)
       # projects can optionally be embedded without making their source
       # available. to keep people from just twiddling the url to get to the
@@ -325,11 +323,12 @@ class ProjectsController < ApplicationController
       small_footer: !iframe_embed_app_and_code && !sharing && (@game.uses_small_footer? || @level.enable_scrolling?),
       has_i18n: @game.has_i18n?,
       game_display_name: data_t("game.name", @game.name),
+      app_name: Rails.env.production? ? t(:appname) : "#{t(:appname)} [#{Rails.env}]",
       azure_speech_service_voices: azure_speech_service_options[:voices],
       disallowed_html_tags: disallowed_html_tags
     )
 
-    if params[:key] == 'artist'
+    if [Game::ARTIST, Game::SPRITELAB, Game::POETRY].include? @game.app
       @project_image = CDO.studio_url "/v3/files/#{@view_options['channel']}/.metadata/thumbnail.png", 'https:'
     end
 
@@ -339,7 +338,7 @@ class ProjectsController < ApplicationController
     end
 
     begin
-      _, storage_app_id = storage_decrypt_channel_id(params[:channel_id]) if params[:channel_id]
+      _, project_id = storage_decrypt_channel_id(params[:channel_id]) if params[:channel_id]
     rescue ArgumentError, OpenSSL::Cipher::CipherError
       # continue as normal, as we only use this value for stats.
     end
@@ -349,8 +348,8 @@ class ProjectsController < ApplicationController
       {
         study: 'project-views',
         event: project_view_event_type(iframe_embed, sharing),
-        # allow cross-referencing with the storage_apps table.
-        project_id: storage_app_id,
+        # allow cross-referencing with the projects table.
+        project_id: project_id,
         # make it easier to group by project_type.
         data_string: params[:key],
         data_json: {
@@ -365,19 +364,11 @@ class ProjectsController < ApplicationController
   end
 
   def edit
-    if current_user.try(:admin)
-      redirect_to '/', flash: {alert: 'Labs not allowed for admins.'}
-      return
-    end
     return if redirect_under_13_without_tos_teacher(@level)
     show
   end
 
   def remix
-    if current_user.try(:admin)
-      redirect_to '/', flash: {alert: 'Labs not allowed for admins.'}
-      return
-    end
     return if redirect_under_13_without_tos_teacher(@level)
     src_channel_id = params[:channel_id]
     begin
@@ -388,12 +379,13 @@ class ProjectsController < ApplicationController
     project_type = params[:key]
     new_channel_id = ChannelToken.create_channel(
       request.ip,
-      StorageApps.new(get_storage_id),
+      Projects.new(get_storage_id),
       src: src_channel_id,
       type: project_type,
       remix_parent_id: remix_parent_id,
     )
     AssetBucket.new.copy_files src_channel_id, new_channel_id if uses_asset_bucket?(project_type)
+    AssetBucket.new.copy_level_starter_assets src_channel_id, new_channel_id if uses_starter_assets?(project_type)
     animation_list = uses_animation_bucket?(project_type) ? AnimationBucket.new.copy_files(src_channel_id, new_channel_id) : []
     SourceBucket.new.remix_source src_channel_id, new_channel_id, animation_list
     FileBucket.new.copy_files src_channel_id, new_channel_id if uses_file_bucket?(project_type)
@@ -401,7 +393,7 @@ class ProjectsController < ApplicationController
   end
 
   private def uses_asset_bucket?(project_type)
-    %w(applab makerlab gamelab spritelab).include? project_type
+    %w(applab makerlab gamelab spritelab javalab).include? project_type
   end
 
   private def uses_animation_bucket?(project_type)
@@ -412,6 +404,10 @@ class ProjectsController < ApplicationController
     %w(weblab).include? project_type
   end
 
+  private def uses_starter_assets?(project_type)
+    %w(javalab).include? project_type
+  end
+
   def export_create_channel
     return if redirect_under_13_without_tos_teacher(@level)
     src_channel_id = params[:channel_id]
@@ -420,14 +416,14 @@ class ProjectsController < ApplicationController
     rescue ArgumentError, OpenSSL::Cipher::CipherError
       return head :bad_request
     end
-    storage_app = StorageApps.new(get_storage_id)
-    src_data = storage_app.get(src_channel_id)
+    project = Projects.new(get_storage_id)
+    src_data = project.get(src_channel_id)
     data = initial_data
     data['name'] = "Exported: #{src_data['name']}"
     data['hidden'] = true
     new_channel_id = ChannelToken.create_channel(
       request.ip,
-      storage_app,
+      project,
       data: data,
       type: params[:key],
       remix_parent_id: remix_parent_id,

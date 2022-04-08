@@ -2,22 +2,44 @@ import React from 'react';
 import {expect} from '../../util/reconfiguredChai';
 import {shallow, mount} from 'enzyme';
 import sinon from 'sinon';
+import i18n from '@cdo/javalab/locale';
+import BackpackClientApi from '@cdo/apps/code-studio/components/backpack/BackpackClientApi';
 import {UnconnectedCommitDialog as CommitDialog} from '@cdo/apps/javalab/CommitDialog';
+import CommitDialogBody from '@cdo/apps/javalab/CommitDialogBody';
+import CommitDialogFileRow from '@cdo/apps/javalab/CommitDialogFileRow';
 
 describe('CommitDialog test', () => {
-  let defaultProps, handleCommitSpy, backpackSaveFilesSpy;
+  let defaultProps,
+    handleCommitSpy,
+    backpackSaveFilesSpy,
+    backpackGetFileListStub,
+    hasBackpackStub;
 
   beforeEach(() => {
     handleCommitSpy = sinon.spy();
     backpackSaveFilesSpy = sinon.spy();
+    backpackGetFileListStub = sinon
+      .stub(BackpackClientApi.prototype, 'getFileList')
+      .callsArgWith(1, ['backpackFile.java']);
+    hasBackpackStub = sinon.stub().returns(true);
+
     defaultProps = {
       isOpen: true,
       files: [],
       handleClose: () => {},
       handleCommit: handleCommitSpy,
       sources: {},
-      backpackApi: {saveFiles: backpackSaveFilesSpy}
+      backpackApi: {
+        saveFiles: backpackSaveFilesSpy,
+        getFileList: backpackGetFileListStub,
+        hasBackpack: hasBackpackStub
+      },
+      backpackEnabled: true
     };
+  });
+
+  afterEach(() => {
+    BackpackClientApi.prototype.getFileList.restore();
   });
 
   it('cannot commit with message', () => {
@@ -36,6 +58,33 @@ describe('CommitDialog test', () => {
         .find('FooterButton')
         .props().disabled
     ).to.be.false;
+  });
+
+  it('shows warning when file already in backpack included in commit', () => {
+    const wrapper = mount(
+      <CommitDialog {...defaultProps} files={['backpackFile.java']} />
+    );
+    const file = wrapper.find(CommitDialogFileRow).first();
+
+    expect(file.text()).to.not.contain(i18n.backpackFileNameConflictWarning());
+    file
+      .find('input[type="checkbox"]')
+      .first()
+      .simulate('change');
+    expect(file.text()).to.contain(i18n.backpackFileNameConflictWarning());
+  });
+
+  it('does not show warning when file not already in backpack included in commit', () => {
+    const wrapper = mount(
+      <CommitDialog {...defaultProps} files={['fileNotInBackpack.java']} />
+    );
+    const file = wrapper.find(CommitDialogFileRow).first();
+
+    file
+      .find('input[type="checkbox"]')
+      .first()
+      .simulate('change');
+    expect(file.text()).to.not.contain(i18n.backpackFileNameConflictWarning());
   });
 
   it('can commit and save', () => {
@@ -92,5 +141,17 @@ describe('CommitDialog test', () => {
 
     wrapper.instance().handleBackpackSaveSuccess();
     expect(handleCloseSpy.callCount).to.equal(1);
+  });
+
+  it('hides the backpack sesion in the dialog body if backpack disabled', () => {
+    const wrapper = mount(
+      <CommitDialog {...defaultProps} backpackEnabled={false} />
+    );
+    expect(
+      wrapper
+        .find(CommitDialogBody)
+        .first()
+        .props().showSaveToBackpackSection
+    ).to.be.false;
   });
 });

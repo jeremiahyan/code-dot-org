@@ -102,6 +102,7 @@ class Pd::WorkshopMailer < ActionMailer::Base
     @enrollment = enrollment
     @workshop = enrollment.workshop
     @organizer = @workshop.organizer
+    @regional_partner_name = @workshop.regional_partner&.name
     @cancel_url = url_for controller: 'pd/workshop_enrollment', action: :cancel, code: enrollment.code
     @is_reminder = true
     @pre_workshop_survey_url = enrollment.pre_workshop_survey_url
@@ -233,21 +234,6 @@ class Pd::WorkshopMailer < ActionMailer::Base
     mail content_type: 'text/html',
       from: from_survey,
       subject: 'Please complete the survey before your workshop!',
-      to: email_address(@enrollment.full_name, @enrollment.email),
-      reply_to: email_address(@workshop.organizer.name, @workshop.organizer.email)
-  end
-
-  def teacher_virtual_order_form_reminder(enrollment)
-    @enrollment = enrollment
-    @workshop = enrollment.workshop
-    course = @workshop.course
-
-    return unless @workshop.virtual? && @workshop.local_summer? && (course == Pd::Workshop::COURSE_CSP || course == Pd::Workshop::COURSE_CSD)
-
-    # Pre-workshop virtual order form reminder
-    mail content_type: 'text/html',
-      from: from_teacher,
-      subject: 'Tell Code.org where to send materials for your upcoming workshop!',
       to: email_address(@enrollment.full_name, @enrollment.email),
       reply_to: email_address(@workshop.organizer.name, @workshop.organizer.email)
   end

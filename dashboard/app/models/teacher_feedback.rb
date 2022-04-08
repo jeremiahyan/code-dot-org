@@ -96,7 +96,11 @@ class TeacherFeedback < ApplicationRecord
     find(
       where(
         query
-      ).group([:student_id, :level_id]).pluck('MAX(teacher_feedbacks.id)')
+      ).group([:student_id, :level_id]).pluck(
+        # This SQL string is not at risk for injection vulnerabilites because
+        # it's just a hardcoded string, so it's safe to wrap in Arel.sql
+        Arel.sql('MAX(teacher_feedbacks.id)')
+      )
     )
   end
 
@@ -106,7 +110,9 @@ class TeacherFeedback < ApplicationRecord
     where(id: joins(:student_sections).
         where('sections.user_id = teacher_id').
         group([:teacher_id, :student_id, :level_id]).
-        pluck('MAX(teacher_feedbacks.id)')
+        # This SQL string is not at risk for injection vulnerabilites because
+        # it's just a hardcoded string, so it's safe to wrap in Arel.sql
+        pluck(Arel.sql('MAX(teacher_feedbacks.id)'))
   )
   end
 
@@ -122,7 +128,7 @@ class TeacherFeedback < ApplicationRecord
       seen_on_feedback_page_at: nil,
       student_first_visited_at: nil
     ).select do |feedback|
-      User.find(feedback.teacher_id).authorized_teacher?
+      User.find(feedback.teacher_id).verified_instructor?
     end
 
     all_unseen_feedbacks.count

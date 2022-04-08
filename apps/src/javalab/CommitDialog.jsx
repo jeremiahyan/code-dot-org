@@ -6,44 +6,82 @@ import StylizedBaseDialog, {
   FooterButton
 } from '@cdo/apps/componentLibrary/StylizedBaseDialog';
 import {connect} from 'react-redux';
+import _ from 'lodash';
+import CommitDialogBody from './CommitDialogBody';
+
+const PADDING = 8;
 
 export class UnconnectedCommitDialog extends React.Component {
   state = {
     filesToBackpack: [],
+    existingBackpackFiles: [],
     commitNotes: '',
     backpackSaveInProgress: false,
     commitSaveInProgress: false,
+    hasBackpackLoadError: false,
     hasBackpackSaveError: false,
     hasCommitSaveError: false
   };
 
+  componentDidMount() {
+    if (this.props.backpackEnabled) {
+      this.updateBackpackFileList();
+    }
+  }
+
+  // Get updated backpack file list every time we open the modal
+  componentDidUpdate(prevProps) {
+    if (this.props.backpackEnabled && this.props.isOpen && !prevProps.isOpen) {
+      this.updateBackpackFileList();
+    }
+  }
+
+  updateBackpackFileList() {
+    if (this.props.backpackEnabled && this.props.backpackApi.hasBackpack()) {
+      this.props.backpackApi.getFileList(
+        () => this.setState({hasBackpackLoadError: true}),
+        filenames => this.setState({existingBackpackFiles: filenames})
+      );
+    }
+  }
+
   renderFooter = () => {
+    const {
+      backpackSaveInProgress,
+      commitSaveInProgress,
+      commitNotes,
+      hasBackpackLoadError,
+      hasBackpackSaveError,
+      hasCommitSaveError,
+      filesToBackpack
+    } = this.state;
     let footerIcon = '';
     let footerMessageTitle = '';
     let footerMessageText = '';
     let commitText = i18n.commit();
-    const saveInProgress =
-      this.state.backpackSaveInProgress || this.state.commitSaveInProgress;
-    const isCommitButtonDisabled = !this.state.commitNotes || saveInProgress;
-    if (this.state.filesToBackpack.length > 0) {
+    const saveInProgress = backpackSaveInProgress || commitSaveInProgress;
+    const hasError =
+      hasBackpackSaveError || hasCommitSaveError || hasBackpackLoadError;
+    const isCommitButtonDisabled =
+      !commitNotes || saveInProgress || hasBackpackLoadError;
+    if (filesToBackpack.length > 0) {
       commitText = i18n.commitAndSave();
     }
 
     // TODO: Add compile status here
-    if (this.state.saveInProgress) {
+    if (saveInProgress) {
       footerIcon = (
         <span className="fa fa-spin fa-spinner" style={styles.spinner} />
       );
       footerMessageTitle = i18n.saving();
-    } else if (
-      this.state.hasBackpackSaveError ||
-      this.state.hasCommitSaveError
-    ) {
+    } else if (hasError) {
       footerIcon = (
         <span className="fa fa-exclamation-circle" style={styles.iconError} />
       );
-      footerMessageTitle = i18n.backpackSaveErrorTitle();
-      footerMessageText = i18n.backpackSaveErrorMessage();
+      footerMessageTitle = i18n.backpackErrorTitle();
+      footerMessageText = hasBackpackLoadError
+        ? i18n.backpackListLoadErrorMessageCommitDialog()
+        : i18n.backpackSaveErrorMessage();
     }
 
     return [
@@ -76,7 +114,16 @@ export class UnconnectedCommitDialog extends React.Component {
 
   commitAndSaveToBackpack = () => {
     this.saveCommit();
-    this.saveToBackpack();
+    if (this.props.backpackEnabled) {
+      this.saveToBackpack();
+    }
+  };
+
+  getConflictingBackpackFiles = () => {
+    return _.intersection(
+      this.state.filesToBackpack,
+      this.state.existingBackpackFiles
+    );
   };
 
   saveCommit = () => {
@@ -115,15 +162,20 @@ export class UnconnectedCommitDialog extends React.Component {
   handleBackpackSaveSuccess = () => {
     const canClose =
       !this.state.commitSaveInProgress && !this.state.hasCommitSaveError;
+
     this.setState({
       hasBackpackSaveError: false,
       backpackSaveInProgress: false,
       filesToBackpack: []
     });
+    this.updateBackpackFileList();
+
     if (canClose) {
       this.props.handleClose();
     }
   };
+
+  handleBackpackLoadError = () => this.setState({hasBackpackLoadError: true});
 
   handleCommitSaveError = () => {
     this.setState({
@@ -148,6 +200,7 @@ export class UnconnectedCommitDialog extends React.Component {
   clearSaveStateAndClose = () => {
     this.setState({
       hasBackpackSaveError: false,
+      hasBackpackLoadError: false,
       backpackSaveInProgress: false,
       hasCommitSaveError: false,
       commitSaveInProgress: false
@@ -184,11 +237,15 @@ export class UnconnectedCommitDialog extends React.Component {
           <CommitDialogBody
             files={files.map(name => ({
               name,
-              commit: filesToBackpack.includes(name)
+              commit: filesToBackpack.includes(name),
+              hasConflictingName: this.getConflictingBackpackFiles().includes(
+                name
+              )
             }))}
             notes={commitNotes}
             onToggleFile={this.toggleFileToBackpack}
             onChangeNotes={this.updateNotes}
+            showSaveToBackpackSection={this.props.backpackEnabled}
           />
         }
         renderFooter={this.renderFooter}
@@ -206,61 +263,11 @@ UnconnectedCommitDialog.propTypes = {
   handleCommit: PropTypes.func.isRequired,
   // populated by redux
   sources: PropTypes.object,
-  backpackApi: PropTypes.object
+  backpackApi: PropTypes.object,
+  backpackEnabled: PropTypes.bool
 };
 
-function CommitDialogBody({files, notes, onToggleFile, onChangeNotes}) {
-  return (
-    <div>
-      <label htmlFor="commit-notes" style={{...styles.bold, ...styles.notes}}>
-        {i18n.commitNotes()}
-      </label>
-      <textarea
-        id="commit-notes"
-        placeholder={i18n.commitNotesPlaceholder()}
-        onChange={e => onChangeNotes(e.target.value)}
-        style={styles.textarea}
-        value={notes}
-      />
-      <div style={{...styles.bold, ...styles.filesHeader}}>
-        {i18n.saveToBackpack()}
-      </div>
-      {files.map(file => (
-        <div key={file.name} style={styles.fileRow}>
-          <label htmlFor={`commit-${file.name}`} style={styles.fileLabel}>
-            {file.name}
-          </label>
-          <input
-            id={`commit-${file.name}`}
-            type="checkbox"
-            checked={file.commit}
-            onChange={() => onToggleFile(file.name)}
-            style={styles.checkbox}
-          />
-        </div>
-      ))}
-    </div>
-  );
-}
-
-CommitDialogBody.propTypes = {
-  files: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      commit: PropTypes.bool.isRequired
-    })
-  ).isRequired,
-  notes: PropTypes.string,
-  onToggleFile: PropTypes.func.isRequired,
-  onChangeNotes: PropTypes.func.isRequired
-};
-
-const PADDING = 8;
 const styles = {
-  bold: {
-    fontFamily: '"Gotham 5r", sans-serif',
-    color: color.dark_charcoal
-  },
   footerStatus: {
     display: 'flex',
     alignItems: 'center'
@@ -268,34 +275,6 @@ const styles = {
   iconSuccess: {
     color: color.level_perfect,
     marginRight: 5
-  },
-  filesHeader: {
-    fontSize: 14,
-    backgroundColor: color.lightest_gray,
-    padding: PADDING
-  },
-  fileRow: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    padding: PADDING,
-    paddingBottom: PADDING / 2,
-    borderBottom: `1px solid ${color.lightest_gray}`
-  },
-  fileLabel: {
-    flexGrow: 2,
-    color: color.default_text
-  },
-  checkbox: {
-    width: 18,
-    height: 18
-  },
-  notes: {
-    paddingTop: PADDING * 2
-  },
-  textarea: {
-    width: '98%',
-    height: 75,
-    resize: 'none'
   },
   iconError: {
     color: color.light_orange,
@@ -323,5 +302,6 @@ const styles = {
 
 export default connect(state => ({
   sources: state.javalab.sources,
-  backpackApi: state.javalab.backpackApi
+  backpackApi: state.javalab.backpackApi,
+  backpackEnabled: state.javalab.backpackEnabled
 }))(UnconnectedCommitDialog);

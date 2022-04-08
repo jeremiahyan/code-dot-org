@@ -154,6 +154,15 @@ When /^I wait until "([^"]*)" in localStorage equals "([^"]*)"$/ do |key, value|
   wait_until {@browser.execute_script("return localStorage.getItem('#{key}') === '#{value}';")}
 end
 
+And /^I add another version to the project$/ do
+  steps <<-STEPS
+    And I add code "// comment A" to ace editor
+    And I wait until element "#resetButton" is visible
+    And I press "resetButton"
+    And I click selector "#runButton" once I see it
+  STEPS
+end
+
 When /^I reset the puzzle to the starting version$/ do
   steps <<-STEPS
     Then I click selector "#versions-header"
@@ -196,6 +205,10 @@ end
 
 When /^I wait until the first (?:element )?"([^"]*)" (?:has|contains) text "([^"]*)"$/ do |selector, text|
   wait_until {@browser.execute_script("return $(#{selector.dump}).first().text();").include? text}
+end
+
+When /^I wait until (?:element )?"([^"]*)" is (not )?checked$/ do |selector, negation|
+  wait_until {@browser.execute_script("return $(\"#{selector}\").is(':checked');") == negation.nil?}
 end
 
 def jquery_is_element_visible(selector)
@@ -359,6 +372,10 @@ end
 
 When /^I select the "([^"]*)" option in dropdown "([^"]*)"( to load a new page)?$/ do |option_text, element_id, load|
   select_dropdown(@browser.find_element(:id, element_id), option_text, load)
+end
+
+When /^I select the "([^"]*)" option in dropdown with class "([^"]*)"( to load a new page)?$/ do |option_text, class_name, load|
+  select_dropdown(@browser.find_element(:css, ".#{class_name}"), option_text, load)
 end
 
 When /^I select the "([^"]*)" option in dropdown named "([^"]*)"( to load a new page)?$/ do |option_text, element_name, load|
@@ -533,6 +550,10 @@ Then /^I should see title "([^"]*)"$/ do |title|
   expect(@browser.title).to eq(title)
 end
 
+Then /^I should see title includes "([^"]*)"$/ do |title|
+  expect(@browser.title).to include(title)
+end
+
 Then /^evaluate JavaScript expression "([^"]*)"$/ do |expression|
   expect(@browser.execute_script("return #{expression}")).to eq(true)
 end
@@ -610,7 +631,7 @@ Then /^I wait to see a congrats dialog with title containing "((?:[^"\\]|\\.)*)"
 end
 
 Then /^I reopen the congrats dialog unless I see the sharing input/ do
-  next if @browser.execute_script("return $('#sharing-input').length > 0;")
+  next if @browser.execute_script("return $('#sharing-dialog-copy-button').length > 0;")
   puts "reopening congrats dialog"
   individual_steps %{
     And I press "again-button"
@@ -794,6 +815,7 @@ Then /^I print the HTML contents of element "([^"]*)"$/ do |element_to_print|
 end
 
 Then /^I wait to see an image "([^"]*)"$/ do |path|
+  wait_for_jquery
   wait_until {@browser.execute_script("return $('img[src*=\"#{path}\"]').length != 0;")}
 end
 
@@ -921,6 +943,14 @@ Given(/^I am assigned to unit "([^"]*)"$/) do |script_name|
   )
 end
 
+Given(/^I am assigned to course "([^"]*)" and unit "([^"]*)"$/) do |course_name, script_name|
+  browser_request(
+    url: '/api/test/assign_course_and_unit_as_student',
+    method: 'POST',
+    body: {script_name: script_name, course_name: course_name}
+  )
+end
+
 Then(/^I fake completion of the assessment$/) do
   browser_request(url: '/api/test/fake_completion_assessment', method: 'POST', code: 204)
 end
@@ -1016,10 +1046,6 @@ And(/^I submit this level$/) do
     And I wait to see ".modal"
     And I press "confirm-button" to load a new page
   }
-end
-
-And(/^I get hidden script access$/) do
-  browser_request(url: '/api/test/hidden_script_access', method: 'POST')
 end
 
 And(/^I wait until I am on the join page$/) do

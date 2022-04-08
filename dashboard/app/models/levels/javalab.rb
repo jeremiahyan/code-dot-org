@@ -10,7 +10,7 @@
 #  level_num             :string(255)
 #  ideal_level_source_id :bigint           unsigned
 #  user_id               :integer
-#  properties            :text(16777215)
+#  properties            :text(4294967295)
 #  type                  :string(255)
 #  md5                   :string(255)
 #  published             :boolean          default(FALSE), not null
@@ -27,7 +27,8 @@
 class Javalab < Level
   serialized_attrs %w(
     start_sources
-    validation
+    encrypted_exemplar_sources
+    encrypted_validation
     hide_share_and_remix
     is_project_level
     submittable
@@ -76,7 +77,7 @@ class Javalab < Level
       end
     end
     # paint bucket asset id is 303
-    if serialized_maze.include?("303") && (maze.length > 16)
+    if serialized_maze.include?("303") && (maze.length >= 20)
       raise ArgumentError.new("Large mazes cannot have paint buckets")
     end
     self.serialized_maze = maze
@@ -129,6 +130,16 @@ class Javalab < Level
       # Set the javabuilder url
       level_prop['javabuilderUrl'] = CDO.javabuilder_url
 
+      # Send validation file names without code to prevent naming collisions. If we are in start mode,
+      # the actual validation code will be sent by levels_controller.
+      if validation
+        validation_names_only = validation
+        validation_names_only.each do |key, _|
+          validation_names_only[key] = ""
+        end
+        level_prop['validation'] = validation_names_only
+      end
+
       # Don't set nil values
       level_prop.reject! {|_, value| value.nil?}
     end
@@ -153,5 +164,9 @@ class Javalab < Level
     return true unless starter_assets
     starter_assets.delete(friendly_name)
     save!
+  end
+
+  def age_13_required?
+    true
   end
 end
